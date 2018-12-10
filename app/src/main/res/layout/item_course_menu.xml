@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.bean.Course" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@{viewModel.isSelected ? @color/text_white : @android:color/transparent}"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@{viewModel.title}"
+            android:textColor="@{viewModel.isSelected ? @color/theme_color : @color/text_white}"
+            android:textSize="15sp"
+            tools:background="@color/text_white"
+            tools:text="上元会计"
+            tools:textColor="@color/theme_color" />
+    </FrameLayout>
+</layout>

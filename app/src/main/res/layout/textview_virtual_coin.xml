@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_virtual_coin"
+    android:layout_width="140dp"
+    android:layout_height="@dimen/common_50"
+    android:background="@drawable/pay_way_bg_selector"
+    android:drawableLeft="@drawable/virtual_coin"
+    android:gravity="center"
+    android:paddingLeft="22dp" />
+

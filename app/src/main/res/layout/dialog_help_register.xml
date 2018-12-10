@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_white_corner_6"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tipView"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="首次进行此操作，需输入验证码进行身份验证"
+            android:textColor="@color/text_black"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/inputCodeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="120dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codeView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@color/bg_white"
+                        android:gravity="center"
+                        android:textColor="@color/text_black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/bg_dark_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codeView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@color/bg_white"
+                        android:gravity="center"
+                        android:textColor="@color/text_black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/bg_dark_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codeView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@color/bg_white"
+                        android:gravity="center"
+                        android:textColor="@color/text_black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/bg_dark_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codeView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@color/bg_white"
+                        android:gravity="center"
+                        android:textColor="@color/text_black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/bg_dark_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codeView5"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@color/bg_white"
+                        android:gravity="center"
+                        android:textColor="@color/text_black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/bg_dark_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/codeView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="28dp"
+                        android:background="@color/bg_white"
+                        android:gravity="center"
+                        android:textColor="@color/text_black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/bg_dark_gray" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/codeEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="6"
+                android:textColor="@android:color/transparent"
+                android:textCursorDrawable="@drawable/sy_cursor_transparent" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/cancelView"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_gray_bottom_left_corner_6"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/text_white"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/sendCodeView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_theme_color_bottom_right_corner_6"
+                android:gravity="center"
+                android:text="发送验证码"
+                android:textColor="@color/text_white"
+                android:textSize="14dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

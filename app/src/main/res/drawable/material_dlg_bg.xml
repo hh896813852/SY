@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <corners android:radius="1dp" />
+    <stroke
+        android:width="1px"
+        android:color="@color/material_dlg_stroke" />
+    <!-- shape的颜色，支持渐变 -->
+    <gradient
+        android:angle="270"
+        android:centerColor="@color/material_dlg_bg"
+        android:centerY="0.45"
+        android:endColor="@color/material_dlg_bg"
+        android:startColor="@color/material_dlg_bg" />
+
+</shape>

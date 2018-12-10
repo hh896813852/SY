@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<item name="plugins" type="xml"></item>-->
+
+    <!--<item name="decode" type="id" />-->
+    <!--<item name="decode_failed" type="id" />-->
+    <!--<item name="decode_succeeded" type="id" />-->
+    <!--<item name="launch_product_query" type="id" />-->
+    <!--<item name="quit" type="id" />-->
+    <!--<item name="restart_preview" type="id" />-->
+    <!--<item name="return_scan_result" type="id" />-->
+    <!--<item name="es_webview_pb" type="id" />-->
+    <!--<item type="id" name="expandable_text" />-->
+    <!--<item type="id" name="expand_collapse" />-->
+
+    <!--<item type="id" name="question_stem" />-->
+    <!--<item type="id" name="chat_content" />-->
+    <item type="id" name="custom_status_view" />
+
+    <!-- 扫码 -->
+    <item name="decode" type="id"/>
+    <item name="decode_failed" type="id"/>
+    <item name="decode_succeeded" type="id"/>
+    <item name="quit" type="id"/>
+    <item name="restart_preview" type="id"/>
+    <item name="return_scan_result" type="id"/>
+
+    <item name="mcv_pager" type="id"/>
+</resources>

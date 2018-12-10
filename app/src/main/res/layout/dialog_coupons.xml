@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="330dp">
+
+    <TextView
+        android:gravity="center"
+        android:text="@string/coupons"
+        android:textColor="@color/primary_font_color"
+        android:textSize="@dimen/font_xl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <ListView
+        android:id="@+id/rv_content"
+        tools:listitem="@layout/item_coupons_layout"
+        android:dividerHeight="@dimen/common_20"
+        android:divider="@android:color/transparent"
+        android:scrollbars="none"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginBottom="@dimen/common_20"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</LinearLayout>

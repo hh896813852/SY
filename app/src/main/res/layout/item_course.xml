@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.bean.Course" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/bg_light_gray1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@drawable/icon_title_left_diandian"
+            android:drawablePadding="15dp"
+            android:drawableRight="@drawable/icon_title_right_diandian"
+            android:gravity="center"
+            android:text="@{viewModel.title}"
+            android:textColor="@color/text_black"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            tools:text="中级会计" />
+
+        <LinearLayout
+            android:id="@+id/containerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/lookMoreView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:drawableRight="@drawable/icon_look_over"
+            android:padding="10dp"
+            android:text="查看更多"
+            android:textColor="@color/theme_color"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+</layout>

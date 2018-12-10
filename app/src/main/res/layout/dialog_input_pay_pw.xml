@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:background="@drawable/dialog_white_top_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:text="@string/input_pay_password"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textSize="@dimen/font_xl"
+        android:textColor="@color/primary_font_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/et_input_pw"
+        android:inputType="textPassword"
+        android:background="@null"
+        android:lines="1"
+        android:focusable="true"
+        android:imeOptions="actionDone"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/secondary2_font_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <TextView
+        android:text="@string/setting_password_hint"
+        android:gravity="center"
+        android:textSize="@dimen/font_s_"
+        android:textColor="@color/secondary_font_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

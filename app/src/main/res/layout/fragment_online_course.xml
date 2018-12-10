@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.course.ChildCourseFragment" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/icon_live"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="@{viewModel.title}"
+                android:textColor="@color/text_black"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                tools:text="免费直播课" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:drawableRight="@drawable/icon_arrow_more"
+                android:drawablePadding="3dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:text="更多"
+                android:textColor="@color/text_gray"
+                android:textSize="13dp"
+                bind:clickCommand="@{viewModel.onLookMoreClicked}" />
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_light_gray0"
+            android:paddingBottom="5dp" />
+
+        <com.edusoho.yunketang.widget.NoScrollListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            bind:adapter="@{viewModel.adapter}" />
+    </LinearLayout>
+</layout>

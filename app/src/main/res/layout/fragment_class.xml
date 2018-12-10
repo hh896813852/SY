@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.classes.ClassFragment" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_light_gray1"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.hasClass ? View.VISIBLE : View.GONE}">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/theme_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="班级"
+                android:textColor="@color/text_white"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="8dp"
+                android:clickable="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon__scan"
+                bind:clickCommand="@{viewModel.onScanClicked}" />
+
+            <com.edusoho.yunketang.widget.CustomScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="80dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="15dp"
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+                <com.edusoho.yunketang.widget.NoScrollListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.adapter}" />
+            </com.edusoho.yunketang.widget.CustomScrollView>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.hasClass ? View.GONE : View.VISIBLE}"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="班级"
+                android:textColor="@color/text_black"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="45dp"
+                android:background="@color/line_light_gray" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableTop="@drawable/bg_no_course"
+                android:drawablePadding="5dp"
+                android:text="@{viewModel.isLogin ? @string/no_class : @string/not_login}"
+                android:textColor="@color/text_light_green"
+                tools:text="@string/not_login" />
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="60dp"
+                android:background="@drawable/bg_dark_green_corner_23"
+                android:text="去  登  录"
+                android:textColor="@color/text_white"
+                android:textSize="17dp"
+                android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
+                bind:clickCommand="@{viewModel.onLoginClicked}" />
+        </FrameLayout>
+    </LinearLayout>
+</layout>

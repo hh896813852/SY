@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="onFinishClick"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/bg_white">
+
+        <com.edusoho.yunketang.widget.ValidateImageView
+            android:id="@+id/viv_captcha"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="20dp" />
+
+        <com.edusoho.yunketang.widget.ESContentLoadingLayout
+            android:id="@+id/es_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:layout_marginTop="40dp"
+            android:visibility="visible" />
+
+        <com.edusoho.yunketang.widget.slide.SlideView
+            android:id="@+id/sv_validate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viv_captcha"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="40dp"
+            app:sv_buttonBackgroundColor="@color/bg_white"
+            app:sv_buttonImage="@drawable/sb_double_right"
+            app:sv_slideBackgroundColor="@color/bg_primary"
+            app:sv_slideText="拖动滑块完成上方拼图"
+            app:sv_slideTextCenter="true"
+            app:sv_slideTextSize="12sp" />
+    </RelativeLayout>
+</FrameLayout>

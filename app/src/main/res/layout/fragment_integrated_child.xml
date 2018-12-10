@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.exercise.IntegratedChildFragment" />
+    </data>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@color/bg_white"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:lineSpacingExtra="4dp"
+                android:text="2、题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目"
+                android:textColor="@color/text_black"
+                android:textSize="16sp" />
+
+            <com.edusoho.yunketang.widget.NoScrollListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none"
+                bind:adapter="@{viewModel.picAdapter}" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/bg_light_gray1"
+                android:hint="请写下你的答案"
+                android:lineSpacingExtra="2dp"
+                android:padding="10dp"
+                android:scrollbars="none"
+                android:textColor="@color/text_black"
+                android:textSize="15sp" />
+
+            <com.edusoho.yunketang.widget.NoScrollGridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:horizontalSpacing="10dp"
+                android:numColumns="3"
+                android:scrollbars="none"
+                android:verticalSpacing="10dp"
+                bind:adapter="@{viewModel.adapter}" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bg_primary">#03c777</color>
+
+    <!-- 字体 -->
+    <!-- 字体 -->
+    <!-- 字体 -->
+    <!-- 字体 白色 -->
+    <color name="text_white">#ffffffff</color>
+    <!-- 字体 黑色 -->
+    <color name="text_black">#ff333333</color>
+    <!-- 字体 灰色 -->
+    <color name="text_gray">#999999</color>
+    <!-- 字体 深灰色 -->
+    <color name="text_dark_gray">#696969</color>
+    <!-- 字体 黄色 -->
+    <color name="text_yellow">#FFAA00</color>
+    <!-- 字体 浅绿色 -->
+    <color name="text_light_green">#D0E9E3</color>
+    <!-- 背景 hint -->
+    <color name="text_hint">#D6D6D6</color>
+
+    <!-- 背景 -->
+    <!-- 背景 -->
+    <!-- 背景 -->
+    <!-- 背景 白色 -->
+    <color name="theme_color">#17A884</color>
+    <color name="bg_transparent">#00ffffff</color>
+    <!-- 背景 深绿色 -->
+    <color name="bg_dark_green_color">#129977</color>
+    <!-- 背景 淡绿色 -->
+    <color name="bg_light_green_color">#B8E0D6</color>
+    <!-- 背景 白色 -->
+    <color name="bg_white">#ffffffff</color>
+    <!-- 背景 黑色 -->
+    <color name="bg_black">#ff333333</color>
+    <!-- 背景 灰色 -->
+    <color name="bg_gray">#C6C6C6</color>
+    <!-- 背景 淡灰色 -->
+    <color name="bg_light_gray0">#F8F8F8</color>
+    <!-- 背景 淡灰色 -->
+    <color name="bg_light_gray1">#F6F6F6</color>
+    <!-- 背景 淡灰色 -->
+    <color name="bg_light_gray">#F0F0F0</color>
+    <!-- 背景 淡灰色 -->
+    <color name="bg_light_gray2">#E5E5E5</color>
+    <!-- 背景 深灰色 -->
+    <color name="bg_dark_gray">#949494</color>
+    <!-- 背景 半透明黑 -->
+    <color name="alpha_bg_black">#99000000</color>
+    <!-- 背景 半透明白 -->
+    <color name="alpha_bg_white">#e6ffffff</color>
+    <!-- 背景 折-->
+    <color name="bg_discount">#FD4852</color>
+    <!-- 背景 红色-->
+    <color name="bg_red">#F44848</color>
+    <!-- 背景 红色-->
+    <color name="bg_orange">#F5A623</color>
+
+    <!-- 分隔线 -->
+    <!-- 分隔线 -->
+    <!-- 分隔线 -->
+    <!-- 分隔线 灰色 -->
+    <color name="line_gray">#ffe5e5e5</color>
+    <!-- 分隔线 浅灰色 -->
+    <color name="line_light_gray">#fff7f7f7</color>
+    <!-- 分隔线 绿色 -->
+    <color name="line_green">#129977</color>
+    <!-- 分隔线 深灰色 -->
+    <color name="line_dark_gray">#ff969696</color>
+
+    <!-- 背景 单选题 -->
+    <color name="bg_single_choice">#FFF0D7</color>
+    <!-- 背景 多选题 -->
+    <color name="bg_multiple_choice">#E0F4FF</color>
+    <!-- 背景 判断题 -->
+    <color name="bg_true_or_false">#D2F8FC</color>
+    <!-- 背景 阅读选择题 -->
+    <color name="bg_read_choice">#FFD1F2AC</color>
+    <!-- 背景 听力选择题 -->
+    <color name="bg_listen_choice">#FFA3EAA3</color>
+    <!-- 背景 综合题 -->
+    <color name="bg_content_analyze">#EFD3FD</color>
+    <!-- 背景 简答题 -->
+    <color name="bg_simple_answer">#FFF7C7AD</color>
+
+
+    <!-- 以下为上元在线资源 -->
+    <!--kuozhi 4.0 color guideline-->
+    <color name="primary_color">#03c777</color>
+    <color name="secondary_color">#FD4852</color>
+    <color name="secondary2_color">#FFAA00</color>
+    <color name="secondary3_color">#E3B470</color>
+    <color name="primary_font_color">#2b333b</color>
+    <color name="secondary_font_color">#71777D</color>
+    <color name="secondary2_font_color">#BDC2C6</color>
+    <color name="disabled_hint_color">#D8D8D8</color>
+    <color name="disabled0_hint_color">#F6F6F6</color>
+    <color name="disabled1_hint_color">#F9F9F9</color>
+    <color name="disabled2_hint_color">#FFFFFF</color>
+    <color name="gray_base">#36FFFFFF</color>
+
+    <color name="school_news_bg">#66CDFD</color>
+    <color name="primary_disabled_color">#DD03C777</color>
+    <color name="primary_color_disabled">#50DDAF</color>
+    <color name="vip_header_color">#B0BDC9</color>
+    <color name="vip_info_label_bg">#F7F7F7</color>
+    <color name="vip_label_bg">#F1F1F1</color>
+    <color name="vip_term_bg">#37FD4852</color>
+
+    <!-- end -->
+
+    <color name="color_gray">#F6F6F6</color>
+    <color name="base_card_bg">#ffffff</color>
+    <color name="base_light">#fdb933</color>
+    <color name="base_light_red">#ff5822</color>
+    <color name="base_bg_color">#ffffff</color>
+    <color name="base_white_normal">#ffffff</color>
+    <color name="base_black_normal">#000000</color>
+    <color name="base_black_35">#35000000</color>
+    <color name="base_white_40">#35ffffff</color>
+    <color name="base_white_ab">#abffffff</color>
+    <color name="base_black_87">#dd000000</color>
+    <color name="base_black_54">#8a000000</color>
+    <color name="base_black_26">#66000000</color>
+    <color name="base_black_12">#1e000000</color>
+    <color name="base_black_low">#f2f2f2</color>
+    <color name="base_gray">#ececec</color>
+    <color name="base_btn_pressed">#DFDFDF</color>
+    <color name="base_color_normal">#2ec368</color>
+    <color name="base_list_background_color">#e5e5e5</color>
+
+    <color name="material_grey">#cfd0d1</color>
+    <color name="material_green">#37b97d</color>
+    <color name="material_green_alpha">#dd37b97d</color>
+    <color name="material_green_beta">#73cea5</color>
+
+
+    <color name="found_title_btn_color">#66ffffff</color>
+    <color name="text_press">#ccc</color>
+    <color name="logout_btn_gradient">#ddff5d47</color>
+    <color name="logout_btn_gradient_pressed">#ff5d47</color>
+
+
+    <color name="lesson_item_bg_pressed">#E5E5E5</color>
+    <color name="lesson_item_bg">#ffffff</color>
+    <color name="header_bg">#ffffff</color>
+    <color name="recommend_sch_item_bg_normal">#FFFFFF</color>
+    <color name="recommend_sch_item_bg_pressed">#87CEEB</color>
+    <color name="system_window_bg">#F1F1F1</color>
+    <color name="system_text">#333</color>
+    <color name="recommend_sch_info">#8A8A8A</color>
+    <color name="course_content_head">#03b884</color>
+    <color name="course_content_head_pressed">#ffffff</color>
+    <color name="load_bg">#fff</color>
+    <color name="load_bg_stroke">#f0f0f0</color>
+    <color name="course_title">#4d4d4d</color>
+    <color name="course_info_title">#03b884</color>
+    <color name="course_teacher">#808080</color>
+    <color name="course_time">#999</color>
+    <color name="setting_line">#DFDFDF</color>
+    <color name="setting_item_pressed">#e0e0e0</color>
+    <color name="course_price">#fdb933</color>
+    <color name="qr_btn_bg">#ccc</color>
+
+    <color name="setting_logout_btn_text">#ffffff</color>
+
+    <color name="menu_btn_normal">#ccc</color>
+    <color name="menu_btn_pressed">#03b884</color>
+
+    <!-- QuestionActivity-->
+    <color name="teacher_reply">#ffc947</color>
+    <color name="question_title">#4d4d4d</color>
+    <color name="question_lesson">#808080</color>
+    <color name="question_reply_time">#ccc</color>
+    <color name="question_background">#f5f5f5</color>
+    <color name="question_select">#e6e6e6</color>
+    <color name="post_edit_color">#38bf6c</color>
+    <color name="normal_reply_tag">#ff067BD4</color>
+    <color name="reply_button_normal">#ffc947</color>
+    <color name="reply_button_pressed">#fdb933</color>
+
+    <!--note-->
+    <color name="list_title_textcolor">#212121</color>
+    <color name="line">#e6e6e6</color>
+    <color name="list_course">#ffc947</color>
+    <color name="list_course_title">#4d4d4d</color>
+    <color name="list_course_content">#757575</color>
+    <color name="note_content_title">#2ec368</color>
+    <color name="note_content">#4d4d4d</color>
+    <color name="note_background">#f0f0f0</color>
+    <color name="note_main_background">#f5f5f5</color>
+    <color name="list_title_background">#f5f5f5</color>
+    <color name="list_background">#ffffff</color>
+    <color name="note_content_background">#ffffff</color>
+    <color name="content_title_background">#f5f5f5</color>
+    <color name="content_background">#f5f5f5</color>
+
+    <!-- custom player -->
+    <color name="custom_play_time">#ffffff</color>
+
+    <color name="learn_btn_normal">#03b884</color>
+    <color name="learn_btn_pressed">#ffffff</color>
+    <color name="school_card_bg">#ffffff</color>
+    <color name="school_card_title">#000000</color>
+    <color name="title_bar">#CBD2D8</color>
+    <color name="qrback">#808080</color>
+    <color name="login_text">#ffffff</color>
+    <color name="register_text">#03b884</color>
+    <color name="lesson_icon">#ccc</color>
+    <color name="lesson_menu_icon">#2BA3F3</color>
+    <color name="lesson_comment_time">#ccc</color>
+    <color name="notify_icon">#03b884</color>
+    <color name="lesson_chapter_bg">#EEEEEE</color>
+    <color name="lesson_menu_text_normal">#000000</color>
+    <color name="lesson_menu_text_pressed">#03b884</color>
+
+    <color name="learn_subtitle">#635F5F</color>
+    <!-- custom acitonbar style -->
+    <color name="titleTextColor">#03b884</color>
+    <color name="backPressedColor">#e0e0e0</color>
+    <color name="actionBarMenu">#03b884</color>
+    <color name="nav_btn_normal">#97989a</color>
+    <color name="nav_btn_pressed">#36b57b</color>
+
+    <!-- popup -->
+    <color name="popup_btn_normal">#03b884</color>
+    <color name="popup_btn_pressed">#000000</color>
+    <color name="popup_color">#777</color>
+    <color name="qucik_comment_color">#999</color>
+    <color name="qucik_comment_pressed">#fff</color>
+    <color name="popup_bg_color">#FFFFFF</color>
+    <!-- -->
+    <color name="lesson_menu_bg">#ffffff</color>
+    <color name="lesson_menu_border">#ddd</color>
+    <!-- qr -->
+    <color name="contents_text">#ff000000</color>
+    <color name="encode_view">#ffffffff</color>
+    <color name="possible_result_points">#c0ffbd21</color>
+    <!-- Android standard ICS color -->
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c099cc00</color>
+    <!-- Android standard ICS color -->
+    <color name="result_text">#ffffffff</color>
+    <color name="result_view">#b0000000</color>
+    <color name="status_text">#ffffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="viewfinder_laser">#ffcc0000</color>
+    <!-- Android standard ICS color -->
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="gray">#808080</color>
+    <color name="lightgreen">#99CC33</color>
+    <color name="green">#00CC00</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="image_view_bg">#000000</color>
+    <color name="enter_sch">#ffffff</color>
+
+    <color name="action_bg_stroke">#DFDFDF</color>
+    <color name="action_bg_gradient">#F9F9F9</color>
+    <color name="audio_thum_nomal_stroke">#03b884</color>
+    <color name="audio_thum_nomal_gradient">#ccc</color>
+    <color name="view_pager_point_bg_normal">#1EFFFFFF</color>
+    <color name="view_pager_point_bg_sel">#FFFFFF</color>
+    <color name="normal_bg_gradient">#ffffff</color>
+    <color name="normal_bg_stroke">#DFDFDF</color>
+
+    <color name="course_list_bottom_bg_gradient">#ffffff</color>
+    <color name="course_list_bottom_bg_stroke">#ECE8E8</color>
+    <color name="course_tab_stroke">#03b884</color>
+    <color name="course_tab_gradient">#ffffff</color>
+    <color name="course_tab_pressed_gradient">#03b884</color>
+    <color name="custom_play_bg_stroke">#463F37</color>
+    <color name="custom_play_bg_gradient_start">#ff37403F</color>
+    <color name="custom_play_bg_gradient_center">#ff242320</color>
+    <color name="custom_play_bg_gradient_end">#ff0F0D0E</color>
+    <color name="enter_btn_normal_gradient">#99ffffff</color>
+    <color name="enter_btn_normal_gradient_pressed">#33ffffff</color>
+
+    <color name="learn_btn_stroke">#03b884</color>
+    <color name="learn_btn_grdient">#ffffff</color>
+    <color name="learn_btn_grdient_pressed">#03b884</color>
+    <color name="learn_status_stroke">#DFDFDF</color>
+    <color name="learn_status_gradient">#ffffff</color>
+    <color name="learn_status_gradient_pressed">#03b884</color>
+
+    <color name="lesson_status_progress_stroke">#ccc</color>
+    <color name="lesson_status_progress_bg_gradient">#808080</color>
+    <color name="lesson_status_progress_sp_gradient">#ffffff</color>
+    <color name="lesson_status_progress_gradient">#ffc947</color>
+
+    <color name="loading_progress_gradient">#03b884</color>
+    <color name="loading_progress_bg_gradient">#ddd</color>
+    <color name="login_btn_stroke">#ccc</color>
+    <color name="login_btn_gradient">@color/primary_color</color>
+    <color name="login_btn_gradient_pressed">#38bf6c</color>
+
+    <color name="regist_btn_stroke">#03b884</color>
+    <color name="regist_btn_gradient">#ffffff</color>
+    <color name="regist_btn_gradient_pressed">#fff7f7f7</color>
+
+    <color name="accent_color">#ffc501</color>
+    <color name="standby_accent_color_hint">#ffd740</color>
+    <color name="standby_accent_color_middle">#ffac01</color>
+    <color name="standby_accent_color_deep">#ff5822</color>
+    <color name="standby_stress_color">#ff5822</color>
+    <color name="logout_btn_stroke">#aaa</color>
+    <color name="my_sch_bg_noraml_stroke">#DFDFDF</color>
+    <color name="my_sch_bg_noraml_gradient">#F5F5F5</color>
+    <color name="my_sch_bg_noraml_gradient_pressed">#ffffff</color>
+    <color name="my_sch_list_selbg_stroke">#DFDFDF</color>
+    <color name="my_sch_list_selbg_gradient">#ff00ff</color>
+
+    <color name="popup_bg_stroke">#ccc</color>
+    <color name="popup_bg_gradient">#ffffff</color>
+    <color name="popup_btn_stroke">#ccc</color>
+    <color name="popup_btn_gradient">#ffffff</color>
+    <color name="quick_comment_btn_stroke">#ccc</color>
+    <color name="quick_comment_btn_gradient">#ffffff</color>
+    <color name="quick_comment_btn_gradient_pressed">#ddd</color>
+
+    <color name="search_edit_input_bg_stroke">#DFDFDF</color>
+    <color name="search_edit_input_bg_gradient">#ffffff</color>
+    <color name="search_history_bg_gradient">#55cccccc</color>
+    <color name="search_history_bg_gradient_pressed">#99cccccc</color>
+
+    <color name="set_check_bg_stroke">#cccccc</color>
+    <color name="set_check_bg_sel_gradient">#cccccc</color>
+    <color name="set_check_bg_gradient">#ffffff</color>
+    <color name="set_check_bg_stroke_pressed">@color/base_color_normal</color>
+    <color name="set_check_bg_sel_gradient_pressed">@color/base_color_normal</color>
+    <color name="set_check_bg_gradient_pressed">#ffffff</color>
+
+    <color name="set_check_ovel_bg_stroke">#A6A6A6</color>
+    <color name="set_check_ovel_bg_gradient">#ffffff</color>
+    <color name="set_check_ovel_bg_sel_gradient">#A6A6A6</color>
+    <color name="set_check_ovel_bg_stroke_pressed">#03b884</color>
+    <color name="set_check_ovel_bg_gradient_pressed">#03b884</color>
+    <color name="set_check_ovel_bg_sel_gradient_pressed">#ffffff</color>
+
+    <color name="splash_notice_btn_stroke">#FF6600</color>
+    <color name="splash_notice_btn_gtadient">#ffffff</color>
+
+    <color name="video_sk_bg_gradient">#808080</color>
+    <color name="video_sk_bg_2_gradient">#4d4d4d</color>
+    <color name="video_sk_gradient">#38bf6c</color>
+    <color name="video_thum_gradient">#38bf6c</color>
+    <color name="video_thum_gradient_pressed">#9938bf6c</color>
+
+    <color name="viewpager_index_bg_gradinet">#03b884</color>
+    <color name="viewpager_index_bg_sel_gradinet">#ffffff</color>
+
+    <color name="circle_btn_normal">#03b884</color>
+    <color name="course_menu_list_selector">#5503b884</color>
+
+    <color name="login_qr_btn_stroke">#03b884</color>
+    <color name="login_qr_btn_gradinet">#55cccccc</color>
+
+    <!-- 2.0 -->
+    <color name="splash_ok_btn">#ffffff</color>
+    <color name="splash_ok_bg">#22808080</color>
+    <color name="qr_logo_text">#808080</color>
+    <color name="action_bar_bg_stroke">#298c4f</color>
+    <color name="action_bar_bg_stroke_alpha">#00298c4f</color>
+    <color name="qr_layout_label">#ebebeb</color>
+    <color name="qr_search_btn_normal">#ffca4a</color>
+    <color name="qr_search_btn_text">#ffffff</color>
+    <color name="qr_search_btn_pressed">#77ffca4a</color>
+    <color name="qr_school_url_input_text">#ccc</color>
+    <color name="qr_school_url_btn_text">#ffffff</color>
+    <color name="qr_school_url_btn_normal">#d1d1d1</color>
+    <color name="qr_school_url_btn_pressed">#77d1d1d1</color>
+
+    <color name="action_bar_title">#ffffff</color>
+    <color name="action_bar_dark_bg">#c8f9f9f9</color>
+    <color name="action_bar_bg">#38bf6c</color>
+    <color name="action_bar_bg_alpha">#0038bf6c</color>
+    <color name="system_bg">#ffffff</color>
+    <color name="system_bg_f5f5f5">#f5f5f5</color>
+    <color name="nav_layout_bg">#494a4d</color>
+    <color name="nav_layout_bg_stroke">#000000</color>
+    <color name="material_dlg_bg">#ffffff</color>
+    <color name="material_dlg_stroke">#ccc</color>
+    <color name="material_ok_normal">#2196F3</color>
+    <color name="material_ok_pressed">#772196F3</color>
+    <color name="material_cancel_normal">#000</color>
+    <color name="material_cancel_pressed">#77000000</color>
+    <color name="material_title">#000000</color>
+    <color name="material_content">#727272</color>
+    <color name="recommend_announcement_bg">#f5f5f5</color>
+    <color name="recommend_announcement">#808080</color>
+    <color name="recommend_label_bg">#e6e6e6</color>
+    <color name="recommend_announcement_label">#4d4d4d</color>
+    <color name="recommend_announcement_label_icon_bg">#ffc947</color>
+    <color name="recommend_new_label_icon_bg">#38bf6c</color>
+    <color name="recommend_weed_label_icon_bg">#ffff291c</color>
+    <color name="recommend_view_more">#ffc947</color>
+    <color name="recommend_view_more_pressed">#55ffc947</color>
+    <color name="recommend_bg">#f5f5f5</color>
+    <color name="week_course_title">#808080</color>
+    <color name="qr_other_btn">#ffca4a</color>
+
+    <color name="action_bar_back">#ffffff</color>
+    <color name="system_normal_bg">#f5f5f5</color>
+    <color name="system_light_bg">#e6e6e6</color>
+    <color name="shallow_found_bg">#f2f2f2</color>
+    <color name="system_normal_text">@color/base_bg_color</color>
+    <color name="system_gray_text">#757575</color>
+    <color name="system_normal_text_pressed">#77808080</color>
+    <color name="system_light_text">#4d4d4d</color>
+    <color name="found_search_bg">@color/base_bg_color</color>
+    <color name="myinfo_bg">#f5f5f5</color>
+    <color name="normal_list_listselector">#ffffff</color>
+    <color name="normal_list_listselector_pressed">#e6e6e6</color>
+    <color name="found_list_divider">#e5e5e5</color>
+    <color name="found_list_item_all">#ffc947</color>
+    <color name="learn_status_widget_bg">#e6e6e6</color>
+    <color name="search_popwindow_bg">@color/base_color_normal</color>
+    <color name="login_edt_hit">#b3b3b3</color>
+    <color name="regist_label_text">#38bf6c</color>
+    <color name="login_regist_btn">#45d17b</color>
+    <color name="login_regist_btn_pressed">#38bf6c</color>
+    <color name="more_setting_line">#e5e5e5</color>
+    <color name="course_divider">#e5e5e5</color>
+    <color name="course_details_info_bg">#bbffffff</color>
+    <color name="course_details_btn">@color/base_white_normal</color>
+    <color name="lesson_item_free">#ffc947</color>
+    <color name="pay_course_old_price">#ffc947</color>
+    <color name="pay_course_end_price">#ff4747</color>
+
+    <color name="course_favorited">#ff6a47</color>
+    <color name="lesson_item_chapter_bg">#e6e6e6</color>
+    <color name="lesson_item_unit_bg">#f2f2f2</color>
+    <color name="lesson_item_lesson_bg">#ffffff</color>
+    <color name="course_lesson_item_bg_normal">#ffffff</color>
+    <color name="course_lesson_item_bg_pressed">#e6e6e6</color>
+    <color name="lesson_reource_btn_normal">#ccc</color>
+    <color name="lesson_reource_btn_pressed">#77cccccc</color>
+    <color name="lesson_learn_btn_normal">#45d17b</color>
+    <color name="lesson_learn_btn_pressed">#38bf6c</color>
+    <color name="testpaper_enter_btn_normal">#45d17b</color>
+    <color name="testpaper_enter_btn_pressed">#38bf6c</color>
+    <color name="lesson_learned_btn_normal">#ffc947</color>
+    <color name="lesson_learned_btn_pressed">#FFB40D</color>
+
+    <color name="lesson_resouce_btn_normal">#45d17b</color>
+    <color name="lesson_resouce_btn_pressed">#38bf6c</color>
+
+    <color name="icon_font_pressed">#00ddff</color>
+    <color name="question_stem">#212121</color>
+
+    <color name="question_btn_bg">#000000</color>
+    <color name="question_btn_bg_checked">#ffc947</color>
+    <color name="question_btn_bg_selected">#ff4747</color>
+    <color name="question_fill_hit">#757575</color>
+    <color name="question_fill_text">#4d4d4d</color>
+    <color name="color_red">#d9534f</color>
+    <color name="splash_bg">#fbfbf9</color>
+    <color name="audio_fragment_bg">#000000</color>
+    <color name="testpaper_result_item_total">#ff4747</color>
+    <color name="testpaper_result_right">#ff4747</color>
+    <color name="testpaper_result_analysis">#ffc947</color>
+    <color name="notify_title">#ffffff</color>
+    <color name="update_color">#ff4747</color>
+
+    <!-- -->
+    <color name="my_testpaper_do_btn_bg">#45d17b</color>
+    <color name="my_testpaper_btn_bg">#f2f2f2</color>
+    <color name="my_testpaper_btn_bg_pressed">#99f2f2f2</color>
+    <color name="my_testpaper_do_btn_bg_pressed">#9945d17b</color>
+    <color name="my_testpaper_btn_blue">#38bf6c</color>
+    <color name="my_testpaper_btn_white">#ffffff</color>
+
+    <!-- note-->
+    <color name="note_list_item_bg">#f9f9f9</color>
+    <color name="note_list_item_bg_pressed">#e6e6e6</color>
+
+    <!-- lesson -->
+    <color name="lesson_tools_normal">#757575</color>
+    <color name="lesson_tools_pressed">#fec856</color>
+    <color name="lesson_redirect_disabled">#32000000</color>
+
+    <!-- course_notice -->
+    <color name="course_notice_content">#4d4d4d</color>
+    <color name="course_notice_refreshlist">#ffffff</color>
+    <color name="course_notice_issue">#808080</color>
+    <color name="course_notice_issue_time">#f9ce4f</color>
+
+    <!-- 学堂 -->
+    <color name="schoolroom_course">#ff5757</color>
+    <color name="schoolroom_question">#f8bc04</color>
+    <color name="schoolroom_discussion">#1f89e2</color>
+    <color name="schoolroom_note">#38bf6c</color>
+    <color name="schoolroom_letter">#1fcde2</color>
+
+    <color name="tag_color">#df000000</color>
+
+    <color name="drawer_bg_color_normal">#00ffffff</color>
+    <color name="drawer_bg_color_press">#ffeeeeee</color>
+
+    <!--直播-->
+    <color name="live_course_button_focus">#259c54</color>
+
+    <color name="green_alpha">#37b97d</color>
+    <color name="green_alpha_12">#2e37b97d</color>
+    <color name="green_beta">#59c593</color>
+    <color name="green_feedback">#0e9e5c</color>
+    <color name="green_background">#D3EEE2</color>
+    <color name="orange_alpha">#f5a623</color>
+    <color name="orange_beta">#FFAA00</color>
+    <color name="blue_alpha">#4a90e2</color>
+    <color name="grey">#444444</color>
+    <color name="grey_hint">#BDC2C6</color>
+    <color name="grey_666666">#666666</color>
+    <color name="grey_dddddd">#dddddd</color>
+    <color name="grey_cccccc">#cccccc</color>
+    <color name="grey_alpha">#999999</color>
+    <color name="grey_919191">#919191</color>
+    <color name="grey_beta">#97989a</color>
+    <color name="grey_btn_color">#7c7c7c</color>
+    <color name="grey_feedback1">#f0f0f0</color>
+    <color name="grey_feedback2">#d9d9d9</color>
+    <color name="grey_feedback">#e5e5e5</color>
+    <color name="grey_bg">#f7f7f7</color>
+    <color name="grey_main">#c8cacd</color>
+    <color name="badge_red">#ff0000</color>
+    <color name="red">#e96969</color>
+    <color name="blue_beta">#576b95</color>
+    <color name="blue_beta_press">#7f9cd9</color>
+    <color name="red_primary">#ea3329</color>
+    <color name="green_primary">#70d445</color>
+    <color name="blue_primary">#0099ff</color>
+    <color name="edit_text_color">#2B333B</color>
+    <color name="underline_color">#D8D8D8</color>
+
+    <!-- pym color -->
+    <color name="btn_bg">#ff884a</color>
+    <color name="btn_bg_grey">#ccc</color>
+    <color name="btn_bg_black">#0b0b0b</color>
+    <color name="primary">#37b97d</color>
+    <color name="primary_fb">#0e935c</color>
+    <color name="green_1">#46C37B</color>
+    <color name="assist">#444</color>
+    <color name="error">#e96969</color>
+    <color name="background">#ebebeb</color>
+
+    <!-- todo del-->
+    <color name="chat_background">#F4F7F9</color>
+    <color name="chat_tool_background">#FAFAFA</color>
+
+    <color name="find_fragment_background">#F4F7F9</color>
+    <color name="font_1">#444444</color>
+    <color name="font_2">#666666</color>
+    <color name="font_3">#999999</color>
+    <color name="font_4">#bbbbbb</color>
+    <color name="unlearn">#bbbbbb</color>
+    <color name="grounding">#f7f7f7</color>
+    <color name="grounding_operation">#fafafa</color>
+    <color name="feedback">#f0f0f0</color>
+
+    <color name="process_lesson_start">#f5a623</color>
+    <color name="process_lesson_start_bg">#f5edd6</color>
+    <color name="process_question">#4a90e2</color>
+    <color name="process_question_bg">#d6e7f9</color>
+    <color name="process_testpaper">#37b97d</color>
+    <color name="process_testpaper_bg">#cfefe2</color>
+
+    <color name="thread_type_question">#FF8A0C</color>
+    <color name="thread_type_discuss">#2DB7F5</color>
+
+    <color name="live_notice_list_bg">#e8e8e8</color>
+    <color name="register_send">#ffaa00</color>
+    <color name="register_send_auth">#2b333b</color>
+    <color name="register_tv_show_hint">#bdc2c6</color>
+    <color name="register_view">#d8d8d8</color>
+    <color name="trans_color">#00000000</color>
+    <color name="question_detail">#97BCF0</color>
+    <color name="dialog_gradient">#29CB89</color>
+</resources>

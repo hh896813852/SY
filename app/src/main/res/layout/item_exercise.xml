@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.bean.Examination" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@{viewModel.finishState == 2 ? @drawable/bg_theme_color_corner_5 : @drawable/bg_gray_corner_5}"
+                        tools:background="@drawable/bg_theme_color_corner_5" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="@{viewModel.examinationName}"
+                        android:textColor="@color/text_black"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        tools:text="试题名称" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@{viewModel.getExamStatus}"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.finishState == 0 ? View.VISIBLE : View.GONE}"
+                        tools:text="共66题" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@{viewModel.getExamStatus}"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.finishState == 1 ? View.VISIBLE : View.GONE}"
+                        tools:text="220/290" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@{viewModel.getExamStatus}"
+                        android:textColor="@color/text_gray"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.finishState == 2 ? View.VISIBLE : View.GONE}"
+                        tools:text="对:200    错:0" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_white_stroke_theme_color_corner_16"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="已完成"
+                android:textColor="@color/theme_color"
+                android:visibility="@{viewModel.finishState == 2 ? View.VISIBLE : View.GONE}" />
+
+            <TextView
+                android:id="@+id/continueView"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_white_stroke_yellow_corner_16"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="继续"
+                android:textColor="@color/text_yellow"
+                android:visibility="@{viewModel.finishState == 1 ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
+
+            <TextView
+                android:id="@+id/startView"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_theme_color_corner_16"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="开始"
+                android:textColor="@color/text_white"
+                android:visibility="@{viewModel.finishState == 0 ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical"
+             />
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <SurfaceView
+        android:id="@+id/capture_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/capture_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/capture_mask_top"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@drawable/shadow"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@color/alpha_bg_black">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:onClick="onBackButtonClick"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_arrow_left_color_white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="二维码"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/capture_crop_view"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_below="@id/capture_mask_top"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/scan_kuang">
+
+            <ImageView
+                android:id="@+id/capture_scan_line"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/scan_line" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/capture_mask_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/capture_crop_view"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/shadow">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="将二维码放入框内，即可自动扫描"
+                android:textColor="@color/text_white"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/capture_mask_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@id/capture_mask_bottom"
+            android:layout_below="@id/capture_mask_top"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/capture_crop_view"
+            android:background="@drawable/shadow" />
+
+        <ImageView
+            android:id="@+id/capture_mask_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@id/capture_mask_bottom"
+            android:layout_below="@id/capture_mask_top"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/capture_crop_view"
+            android:background="@drawable/shadow" />
+    </RelativeLayout>
+
+</RelativeLayout>

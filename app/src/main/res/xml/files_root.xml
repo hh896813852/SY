@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 定义对外暴露的文件夹路径 -->
+    <external-path name="edusoho_yunketang_images" path="Pictures"/>
+    <external-path name="edusoho_yunketang_download" path="Download"/>
+</paths>

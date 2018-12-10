@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.exercise.JudgeSelectFragment" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="1、鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是（     ）。"
+                android:textColor="@color/text_black"
+                android:textSize="16sp" />
+
+            <com.edusoho.yunketang.widget.NoScrollListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none"
+                bind:adapter="@{viewModel.picAdapter}" />
+
+            <com.edusoho.yunketang.widget.NoScrollListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none"
+                bind:adapter="@{viewModel.adapter}" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

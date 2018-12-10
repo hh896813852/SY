@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/disabled1_hint_color"
+        android:navigationIcon="@drawable/action_icon_back"
+        app:navigationIcon="@drawable/action_icon_back">
+
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/selector_payments"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_xl" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/disabled_hint_color" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_15"
+        android:layout_marginTop="31dp"
+        android:text="@string/pay_way"
+        android:textColor="@color/primary_font_color"
+        android:textSize="@dimen/font_l" />
+
+    <LinearLayout
+        android:id="@+id/rg_pay_way"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_15"
+        android:layout_marginTop="@dimen/common_15"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_wx_pay"
+            android:layout_width="140dp"
+            android:layout_height="@dimen/common_50"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/wx_way_bg_selector"
+            android:gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/wx_pay" />
+
+        <ImageView
+            android:id="@+id/iv_alipay"
+            android:layout_width="140dp"
+            android:layout_height="@dimen/common_50"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/pay_way_bg_selector"
+            android:gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/alipay" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rg_pay_way1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_15"
+        android:layout_marginTop="@dimen/common_15"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/available_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_15"
+        android:layout_marginTop="@dimen/common_15"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_available_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_s" />
+
+        <TextView
+            android:id="@+id/tv_available_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_color"
+            android:textSize="@dimen/font_s" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/common_15"
+        android:layout_marginTop="@dimen/common_15"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pay_the_amount"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_s" />
+
+        <TextView
+            android:id="@+id/tv_discount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/secondary_color"
+            android:textSize="@dimen/font_s"
+            tools:text="200元" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_pay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_45"
+        android:layout_margin="@dimen/common_15"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:text="@string/go_pay"
+        android:textColor="@color/disabled2_hint_color"
+        android:textSize="@dimen/font_xl" />
+
+</LinearLayout>

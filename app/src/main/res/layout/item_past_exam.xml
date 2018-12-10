@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <!--<variable-->
+            <!--name="viewModel"-->
+            <!--type="" />-->
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_corner_4"
+        android:orientation="vertical">
+
+        <com.edusoho.yunketang.widget.RoundedImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_free_test" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="2018《中级会计职称》真题一"
+            android:textColor="@color/text_black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="02:40:00"
+            android:textColor="@color/text_gray"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="3567人已完成"
+            android:textColor="@color/text_gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_theme_color_corner_25"
+            android:gravity="center"
+            android:text="开始"
+            android:textColor="@color/text_white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_theme_color_corner_25"
+            android:gravity="center"
+            android:text="继续"
+            android:textColor="@color/text_white"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_theme_color_corner_25"
+            android:gravity="center"
+            android:text="完成"
+            android:textColor="@color/text_white"
+            android:textSize="16sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.testlib.MyFaultsActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_title_black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/bg_light_gray0" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:onRefreshListener="@{viewModel.onRefreshListener}">
+
+                <com.edusoho.yunketang.widget.LoadMoreListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/bg_light_gray0"
+                    android:dividerHeight="8dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.adapter}" />
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.hasFaults ? View.GONE : View.VISIBLE}"
+                tools:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/bg_no_faults" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="暂时没有错题"
+                        android:textColor="@color/text_light_green"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:clickable="true"
+                        android:onClick="onLoginClick"
+                        android:padding="5dp"
+                        android:text="请登录查看"
+                        android:textColor="@color/theme_color"
+                        android:textSize="15sp"
+                        android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}" />
+                </LinearLayout>
+            </FrameLayout>
+        </FrameLayout>
+    </LinearLayout>
+</layout>

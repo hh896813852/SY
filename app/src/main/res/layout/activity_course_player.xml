@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.course.CoursePlayerActivity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_white"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.edusoho.yunketang.widget.SYVideoPlayer
+                    android:id="@+id/videoPlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp">
+
+                    <FrameLayout
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:onClick="onBackButtonClick">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/icon_arrow_left_color_white" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:clickable="true"
+                        android:onClick="onShareClick">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/icon_share_white" />
+                    </FrameLayout>
+                </FrameLayout>
+            </FrameLayout>
+
+            <ExpandableListView
+                android:id="@+id/expandableView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:dividerHeight="0dp"
+                android:groupIndicator="@null" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="80dp"
+            android:onClick="onEvaluateClick"
+            android:src="@drawable/icon_evaluate" />
+    </FrameLayout>
+</layout>

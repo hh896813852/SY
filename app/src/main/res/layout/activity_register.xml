@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.login.RegisterActivity" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_white"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:onClick="onBackToLoginClick"
+                android:padding="15dp"
+                android:src="@drawable/icon_close_black" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/icon_logo_syjy" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="欢迎回来上元教育"
+                android:textColor="@color/text_black"
+                android:textSize="18dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.registerStep == 2 ? View.VISIBLE : View.INVISIBLE}">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:onClick="onPasswordVisibleClick"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="5dp"
+                    android:src="@{viewModel.passwordVisible ? @drawable/icon_password_visible : @drawable/icon_password_hint}"
+                    tools:src="@drawable/icon_password_hint" />
+
+                <com.edusoho.yunketang.widget.ClearEditText
+                    android:id="@+id/passwordEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_white"
+                    android:hint="设置密码（6-20位字母数字组合）"
+                    android:inputType="textPassword"
+                    android:paddingRight="20dp"
+                    android:text="@={viewModel.password}"
+                    android:textColorHint="@color/text_hint"
+                    android:textCursorDrawable="@drawable/sy_cursor"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/line_green"
+                android:visibility="@{viewModel.registerStep == 2 ? View.VISIBLE : View.INVISIBLE}" />
+
+            <com.edusoho.yunketang.widget.ClearEditText
+                android:id="@+id/phoneNoEdit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="25dp"
+                android:background="@color/bg_white"
+                android:hint="手机号"
+                android:inputType="number"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@={viewModel.phoneNo}"
+                android:textColorHint="@color/text_hint"
+                android:textCursorDrawable="@drawable/sy_cursor"
+                android:textSize="15dp"
+                android:visibility="@{viewModel.registerStep == 1 ? View.VISIBLE : View.GONE}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.registerStep == 2 ? View.VISIBLE : View.GONE}">
+
+                <com.edusoho.yunketang.widget.ClearEditText
+                    android:id="@+id/verifyCodeEdit"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:background="@color/bg_white"
+                    android:hint="验证码"
+                    android:inputType="number"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="@={viewModel.verifyCode}"
+                    android:textColorHint="@color/text_hint"
+                    android:textCursorDrawable="@drawable/sy_cursor"
+                    android:textSize="15dp"
+                    android:visibility="@{viewModel.registerStep == 2 ? View.VISIBLE : View.GONE}" />
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/bg_dark_green_corner_23"
+                    android:clickable="@{viewModel.canSend}"
+                    android:onClick="onSendVerifyCodeClick"
+                    android:text="@{viewModel.verifyCodeText}"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_white"
+                    android:textSize="16dp"
+                    tools:text="发送验证码" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/line_green" />
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="40dp"
+                android:background="@{viewModel.canClick ? @drawable/bg_dark_green_corner_23 : @drawable/bg_light_green_corner_23}"
+                android:clickable="@{viewModel.canClick}"
+                android:onClick="onRegisterClick"
+                tools:text="完成"
+                android:text="@{viewModel.registerText}"
+                android:textColor="@color/text_white"
+                android:textSize="17dp"
+                tools:background="@drawable/bg_dark_green_corner_23" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:clickable="true"
+                android:onClick="onBackToLoginClick"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="登录"
+                android:textColor="@color/theme_color"
+                android:textSize="15dp" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

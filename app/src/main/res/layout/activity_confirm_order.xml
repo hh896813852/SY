@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_gray"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/disabled1_hint_color"
+        android:navigationIcon="@drawable/action_icon_back"
+        app:navigationIcon="@drawable/action_icon_back">
+
+        <TextView
+            android:id="@+id/tv_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="确认订单"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_xl" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/disabled_hint_color" />
+
+    <RelativeLayout
+        android:id="@+id/rl_vip_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/disabled2_hint_color"
+        android:padding="@dimen/common_20"
+        android:visibility="gone">
+
+        <com.edusoho.yunketang.widget.CircleImageView
+            android:id="@+id/iv_vip_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icon_default_vip" />
+
+        <TextView
+            android:id="@+id/tv_vip_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_40"
+            android:layout_marginTop="@dimen/common_16"
+            android:layout_toRightOf="@id/iv_vip_icon"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_l"
+            tools:text="VIP_name" />
+
+        <TextView
+            android:id="@+id/tv_vip_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_vip_name"
+            android:layout_below="@id/tv_vip_name"
+            android:layout_marginTop="@dimen/common_10"
+            android:textColor="@color/secondary_color"
+            android:textSize="@dimen/font_xs"
+            tools:text="12.8" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_course_or_class_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/disabled2_hint_color"
+        android:padding="@dimen/common_20"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_course_image"
+            android:layout_width="130dp"
+            android:layout_height="73dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_load_default_4x3" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/common_15"
+            android:layout_marginTop="@dimen/common_16"
+            android:layout_toRightOf="@id/iv_course_image"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_l"
+            tools:text="新概念CG创作理念" />
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_title"
+            android:layout_below="@id/tv_title"
+            android:layout_marginTop="@dimen/common_10"
+            android:textColor="@color/secondary_color"
+            android:textSize="@dimen/font_xs"
+            tools:text="12.8" />
+
+        <View
+            android:id="@+id/from_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignLeft="@id/tv_title"
+            android:layout_below="@id/iv_course_image"
+            android:layout_marginTop="@dimen/common_10"
+            android:background="@color/disabled_hint_color" />
+
+        <TextView
+            android:id="@+id/tv_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_price"
+            android:layout_below="@id/iv_course_image"
+            android:layout_marginTop="25dp"
+            android:text="@string/from_course_set"
+            android:textColor="@color/secondary2_color"
+            android:textSize="@dimen/font_s" />
+
+        <TextView
+            android:id="@+id/tv_from_course"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tv_from"
+            android:layout_toRightOf="@id/tv_from"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingTop="2dp"
+            android:textColor="@color/secondary_font_color"
+            android:textSize="@dimen/font_xs"
+            tools:text="摄影后期高手班" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_15" />
+
+    <RelativeLayout
+        android:id="@+id/rl_coupon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_40"
+        android:background="@color/disabled2_hint_color"
+        android:paddingLeft="@dimen/common_15"
+        android:paddingRight="@dimen/common_15"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/coupons"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/font_l" />
+
+        <com.edusoho.yunketang.widget.EduSohoNewIconView
+            android:id="@+id/iv_coupon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/common_10"
+            android:text="@string/new_font_more"
+            android:textColor="@color/primary_font_color"
+            android:textSize="@dimen/common_13" />
+
+        <TextView
+            android:id="@+id/tv_coupon_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/iv_coupon"
+            android:textColor="@color/secondary_color"
+            android:textSize="@dimen/font_s"
+            tools:text="有哦挥拳" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_15" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_50"
+        android:layout_gravity="bottom"
+        android:background="@color/disabled2_hint_color"
+        android:paddingRight="@dimen/common_15">
+
+        <TextView
+            android:id="@+id/tv_pay"
+            android:layout_width="80dp"
+            android:layout_height="36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_theme_color_corner_4"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/disabled2_hint_color"
+            android:textSize="@dimen/font_l" />
+
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/common_13"
+            android:layout_toLeftOf="@id/tv_pay"
+            android:textColor="@color/secondary_color"
+            android:textSize="@dimen/font_l"
+            tools:text="合计: 188元" />
+
+        <TextView
+            android:id="@+id/tv_original"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/common_10"
+            android:layout_toLeftOf="@id/tv_total_price"
+            android:textColor="@color/secondary2_font_color"
+            android:textSize="@dimen/font_l"
+            android:visibility="gone"
+            tools:text="¥233" />
+
+    </RelativeLayout>
+
+</LinearLayout>

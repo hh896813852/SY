@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/questionTypeView"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_single_choice"
+            android:gravity="center"
+            android:textColor="@color/text_dark_gray"
+            android:textSize="15sp"
+            tools:text="单选题" />
+
+        <TextView
+            android:id="@+id/questionInfoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_gray_right_corner_4"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:textColor="@color/text_dark_gray"
+            android:textSize="15sp"
+            tools:text="共18题，每题5分" />
+    </LinearLayout>
+</FrameLayout>

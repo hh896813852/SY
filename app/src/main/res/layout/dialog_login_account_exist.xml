@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_white_corner_6"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/syjyView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/icon_syjy_gray"
+                android:gravity="center"
+                android:text="上元教育"
+                android:textColor="@color/text_gray"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/syzxView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/icon_syzx_gray"
+                android:gravity="center"
+                android:text="上元在线"
+                android:textColor="@color/text_gray"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/sykjView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:drawablePadding="5dp"
+                android:drawableTop="@drawable/icon_sykj_gray"
+                android:gravity="center"
+                android:text="上元会计"
+                android:textColor="@color/text_gray"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tipView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_theme_color_bottom_corner_6"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="您在上元在线和上元会计已有账号，请选择上元在线和上元会计登录"
+            android:textColor="@color/text_white"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/closeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/icon_dialog_close" />
+</LinearLayout>

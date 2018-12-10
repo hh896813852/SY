@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.course.CourseEvaluateActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp">
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:onClick="onBackButtonClick">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/icon_close_black" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="评价"
+                android:textColor="@color/text_black"
+                android:textSize="16dp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_light_gray" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="为课程评分"
+            android:textColor="@color/text_black"
+            android:textSize="15dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:onClick="onStarClick"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.rating > 0 ? @drawable/icon_star_green : @drawable/icon_star_white}"
+                android:tag="1"
+                tools:src="@drawable/icon_star_green" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="8dp"
+                android:onClick="onStarClick"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.rating > 1 ? @drawable/icon_star_green : @drawable/icon_star_white}"
+                android:tag="2"
+                tools:src="@drawable/icon_star_green" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="8dp"
+                android:onClick="onStarClick"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.rating > 2 ? @drawable/icon_star_green : @drawable/icon_star_white}"
+                android:tag="3"
+                tools:src="@drawable/icon_star_green" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="8dp"
+                android:onClick="onStarClick"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.rating > 3 ? @drawable/icon_star_green : @drawable/icon_star_white}"
+                android:tag="4"
+                tools:src="@drawable/icon_star_white" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="8dp"
+                android:onClick="onStarClick"
+                android:scaleType="fitXY"
+                android:src="@{viewModel.rating > 4 ? @drawable/icon_star_green : @drawable/icon_star_white}"
+                android:tag="5"
+                tools:src="@drawable/icon_star_white" />
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_white_stroke_gray_corner_4"
+            android:gravity="left|top"
+            android:hint="填写您对课程的建议"
+            android:padding="10dp"
+            android:text="@={viewModel.evaluate}"
+            android:textColor="@color/text_black"
+            android:textCursorDrawable="@drawable/sy_cursor"
+            android:textSize="15dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/theme_color"
+            android:gravity="center"
+            android:text="发 布"
+            android:onClick="onReleaseClick"
+            android:textColor="@color/text_white"
+            android:textSize="17dp" />
+    </LinearLayout>
+</layout>

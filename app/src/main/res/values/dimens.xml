@@ -1,0 +1,258 @@
+<resources>
+    <dimen name="actionbarHeight">48dp</dimen>
+    <dimen name="statusBarHeight">22dp</dimen>
+    <dimen name="actionbarTitleSize">18sp</dimen>
+    <dimen name="actionbarTextButtonSize">14sp</dimen>
+    <dimen name="nhs_line_height">0.34dp</dimen>
+    <dimen name="grid_expected_size">120dp</dimen>
+
+    <dimen name="captcha_margin">20dp</dimen>
+    <dimen name="captcha_width">300dp</dimen>
+    <dimen name="captcha_height">170dp</dimen>
+
+    <dimen name="mcv_arrow_padding">4dp</dimen>
+    <dimen name="mcv_arrow_margin">4dp</dimen>
+
+    <!-- 以下为上元在线资源 -->
+    <!--kuozhi 4.0 font size guideline-->
+    <dimen name="font_xxxxl">24sp</dimen>
+    <dimen name="font_xxxl">24sp</dimen>
+    <dimen name="font_xxl">20sp</dimen>
+    <dimen name="font_xl">17sp</dimen>
+    <dimen name="font_l">15sp</dimen>
+    <dimen name="font_m">14sp</dimen>
+    <dimen name="font_s">13sp</dimen>
+    <dimen name="font_s_">12sp</dimen>
+    <dimen name="font_xs">11sp</dimen>
+    <dimen name="font_xxs">10sp</dimen>
+    <dimen name="font_size_xxxx_s">9sp</dimen>
+
+    <dimen name="button_height">45dp</dimen>
+    <dimen name="action_bar_height">44dp</dimen>
+    <dimen name="vip_card_margin">30dp</dimen>
+
+    <!-- end -->
+
+    <dimen name="font_size_l">20sp</dimen>
+    <dimen name="font_size_m">18sp</dimen>
+    <dimen name="font_size_s">16sp</dimen>
+    <dimen name="font_size_x_s">14sp</dimen>
+    <dimen name="font_size_xx_s">12sp</dimen>
+    <dimen name="font_size_xxx_s">8sp</dimen>
+
+    <dimen name="card_grid_width">158dp</dimen>
+    <dimen name="discovery_classroom_card_height">106dp</dimen>
+    <dimen name="discovert_course_card_height">88dp</dimen>
+    <!-- base size -->
+    <dimen name="base_size">14sp</dimen>
+    <dimen name="base_small_size">12sp</dimen>
+    <dimen name="base_x_small_size">10sp</dimen>
+    <dimen name="base_large_size">16sp</dimen>
+    <dimen name="base_x_large_size">20sp</dimen>
+    <dimen name="base_xx_large_size">24sp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="xxxx_large_font_size">36sp</dimen>
+    <dimen name="xxx_large_font_size">32sp</dimen>
+    <dimen name="xx_large_font_size">28sp</dimen>
+    <dimen name="x_large_font_size">24sp</dimen>
+    <!--大字-->
+    <dimen name="large_font_size">20sp</dimen>
+    <dimen name="_large_font_size">18sp</dimen>
+
+    <!--中字-->
+    <dimen name="medium_font_size">16sp</dimen>
+    <dimen name="x_medium_font_size">15sp</dimen>
+    <!--小一/二字-->
+    <dimen name="small_font_size">14sp</dimen>
+    <!--超小字-->
+    <dimen name="_x_small_font_size">13sp</dimen>
+    <dimen name="x_small_font_size">12sp</dimen>
+
+    <dimen name="xx_small_font_size">10sp</dimen>
+    <dimen name="xxx_small_font_size">8sp</dimen>
+
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="header_font">18dp</dimen>
+    <dimen name="nav_font">12dp</dimen>
+    <dimen name="course_teacher_nickname">14sp</dimen>
+    <dimen name="course_content_head">18dp</dimen>
+    <dimen name="sys_normal">18dp</dimen>
+    <dimen name="sys_small_normal">10dp</dimen>
+    <dimen name="course_more_btn">15dp</dimen>
+    <dimen name="recommend_sch_size">15dp</dimen>
+    <dimen name="course_list_item_title">14sp</dimen>
+    <dimen name="recommend_sch_info_size">12dp</dimen>
+    <dimen name="course_info_title">16dp</dimen>
+    <dimen name="course_info_normal">14dp</dimen>
+    <dimen name="school_search">16dp</dimen>
+    <dimen name="qr_sch_btn">100dp</dimen>
+    <dimen name="normal_btn">16dp</dimen>
+
+    <dimen name="actionbarSearch">15dp</dimen>
+    <dimen name="actionbarTitle">18dp</dimen>
+    <dimen name="actionbarBack">18dp</dimen>
+    <dimen name="actionbarMenu">25dp</dimen>
+    <dimen name="refresh_btn">20dp</dimen>
+    <dimen name="actionbarMenuMin">20dp</dimen>
+    <dimen name="lesson_type">13dp</dimen>
+    <dimen name="lesson_title">16dp</dimen>
+    <dimen name="navBtn">25dp</dimen>
+    <dimen name="navBtnText">12dp</dimen>
+    <dimen name="slidingMenuWidth">200dp</dimen>
+    <dimen name="behindOffsetRes">10dp</dimen>
+
+    <dimen name="comment_rating_label">16dp</dimen>
+    <dimen name="searchBtn">22sp</dimen>
+    <dimen name="lessonNumber">18dp</dimen>
+    <dimen name="lessonLength">10dp</dimen>
+
+    <dimen name="audio_play_btn">20dp</dimen>
+
+    <dimen name="notify_icon">30dp</dimen>
+    <dimen name="login_icon">25dp</dimen>
+    <dimen name="popup_title">20dp</dimen>
+    <dimen name="popup_input">15dp</dimen>
+
+    <!--icon font -->
+    <dimen name="icon_vip">16dp</dimen>
+    <dimen name="font_close">20dp</dimen>
+    <dimen name="large_font_cancel">25dp</dimen>
+
+    <dimen name="search_history">20dp</dimen>
+    <dimen name="enter_sch_size">18dp</dimen>
+
+    <!--2.0 -->
+    <dimen name="splash_ok_btn">24dp</dimen>
+    <dimen name="normal_padding">6dp</dimen>
+    <dimen name="action_bar_title">20dp</dimen>
+    <dimen name="qr_layout_label">48px</dimen>
+    <dimen name="qr_layout_label_text">14sp</dimen>
+    <dimen name="nav_layout_btn_size">10sp</dimen>
+    <dimen name="nav_layout_btn_text_size">12sp</dimen>
+    <dimen name="material_title">20dp</dimen>
+    <dimen name="material_content">14sp</dimen>
+    <dimen name="material_btn">14sp</dimen>
+    <dimen name="recommend_announcement">10sp</dimen>
+    <dimen name="recommend_announcement_label">22sp</dimen>
+    <dimen name="recommend_view_more">18sp</dimen>
+    <dimen name="material_normal_btn">18sp</dimen>
+    <dimen name="found_search_text">18sp</dimen>
+    <dimen name="found_search_text_icon">22sp</dimen>
+    <dimen name="found_list_item_text">22sp</dimen>
+    <dimen name="myinfo_plugin_list_item_text">18sp</dimen>
+    <dimen name="myinfo_name">16sp</dimen>
+    <dimen name="myinfo_group">12sp</dimen>
+    <dimen name="myinfo_content">14sp</dimen>
+    <dimen name="learn_status_widget_learnbtn">15sp</dimen>
+
+    <dimen name="search_popwindow_cancel_btn">18dp</dimen>
+    <dimen name="login_btn_text">22sp</dimen>
+    <dimen name="login_edt_text">18dp</dimen>
+    <dimen name="more_setting_text">16sp</dimen>
+    <dimen name="course_details_widget">18sp</dimen>
+    <dimen name="course_details_widget_label_padding">6dp</dimen>
+    <dimen name="course_details_lesson_item_chapter">@dimen/base_size</dimen>
+    <dimen name="course_details_lesson_item_title">@dimen/base_size</dimen>
+    <dimen name="course_details_lesson_item_type">@dimen/base_small_size</dimen>
+    <dimen name="course_details_info_tab">14sp</dimen>
+    <dimen name="review_course_student">14sp</dimen>
+    <dimen name="pay_course_text">18sp</dimen>
+
+    <!--问答列表标题字体 -->
+    <dimen name="question_item_title_size">18sp</dimen>
+    <dimen name="question_fill">12sp</dimen>
+    <dimen name="big_rating_height">42px</dimen>
+    <dimen name="question_edit_button_font">8sp</dimen>
+    <dimen name="question_content_image_num_font_size">10sp</dimen>
+    <dimen name="question_reply_image_num_font_size">8sp</dimen>
+
+    <dimen name="lesson_entry_right_arrow">8dp</dimen>
+
+    <dimen name="schoolroom_item_logo">6dp</dimen>
+    <dimen name="message_head_icon">30dp</dimen>
+
+    <!--3.0-->
+    <dimen name="login_widget_margin_bottom">20dp</dimen>
+    <dimen name="btn_loading_margin">20dp</dimen>
+    <dimen name="title_bottom_edge_height">2px</dimen>
+    <dimen name="item_edge_height">1dp</dimen>
+
+    <dimen name="head_icon_large">52dp</dimen>
+
+    <dimen name="head_icon_medium">40dp</dimen>
+
+    <dimen name="head_icon_small">32dp</dimen>
+
+    <dimen name="empty_list_icon">40sp</dimen>
+
+    <dimen name="btn_loading_padding">15dp</dimen>
+
+    <dimen name="lesson_tool_height">48dp</dimen>
+    <dimen name="testpaper_tool_height">56dp</dimen>
+
+    <!--3.8-->
+    <dimen name="tv_register_size">16sp</dimen>
+    <dimen name="class_catalog_iv_weight">130dp</dimen>
+    <dimen name="class_catalog_iv_height">73dp</dimen>
+    <dimen name="rl_register_margingTop">50dp</dimen>
+    <dimen name="iv_register">48dp</dimen>
+    <dimen name="view_marginTop">45dp</dimen>
+    <dimen name="head_register_height">44dp</dimen>
+    <dimen name="rl_register_margin">31dp</dimen>
+    <dimen name="btn_register_width">21dp</dimen>
+    <dimen name="btn_register_height">16dp</dimen>
+    <dimen name="view_register_margin">15dp</dimen>
+    <dimen name="view_register_height">1px</dimen>
+    <dimen name="register_btn_next">17sp</dimen>
+    <dimen name="complete_iv_width">80dp</dimen>
+    <dimen name="complete_iv_height">40dp</dimen>
+    <dimen name="common_height_xl">50dp</dimen>
+    <dimen name="common_dimen_xl">40dp</dimen>
+    <dimen name="common_dimen_l">30dp</dimen>
+    <dimen name="catalog_margin_left">25dp</dimen>
+    <dimen name="common_margin_right">15dp</dimen>
+    <dimen name="common_55">55dp</dimen>
+    <dimen name="common_50">50dp</dimen>
+    <dimen name="common_45">45dp</dimen>
+    <dimen name="common_44">44dp</dimen>
+    <dimen name="common_40">40dp</dimen>
+    <dimen name="common_25">25dp</dimen>
+    <dimen name="common_22">22dp</dimen>
+    <dimen name="common_20">20dp</dimen>
+    <dimen name="common_18">18dp</dimen>
+    <dimen name="common_16">16dp</dimen>
+    <dimen name="common_15">15dp</dimen>
+    <dimen name="common_14">14dp</dimen>
+    <dimen name="common_13">13dp</dimen>
+    <dimen name="common_10">10dp</dimen>
+    <dimen name="common_9">9dp</dimen>
+    <dimen name="common_7">7dp</dimen>
+    <dimen name="common_6">6dp</dimen>
+    <dimen name="common_5">5dp</dimen>
+
+    <dimen name="common_maring0">15dp</dimen>
+    <dimen name="common_margin">10dp</dimen>
+    <dimen name="common_margin1">9dp</dimen>
+    <dimen name="common_margin2">6dp</dimen>
+    <dimen name="common_marginl">5dp</dimen>
+    <dimen name="space_height">53dp</dimen>
+    <dimen name="catelog_chapter_height">54dp</dimen>
+    <dimen name="catelog_section_height">34dp</dimen>
+    <dimen name="catelog_lesson_height">53dp</dimen>
+    <dimen name="catelog_lesson_status">6dp</dimen>
+    <dimen name="lesson_status_height">16dp</dimen>
+    <dimen name="lesson_status_width">0.5dp</dimen>
+    <dimen name="lesson_free_top">19dp</dimen>
+    <dimen name="lesson_status">12dp</dimen>
+    <dimen name="lesson_view_height">21dp</dimen>
+    <dimen name="class_margin_right">20dp</dimen>
+    <!--字体大小-->
+    <!--<dimen name="font_size_l"-->
+
+    <!-- course toolbar height -->
+    <dimen name="course_toolbar_height">210dp</dimen>
+
+    <dimen name="common_dialog_width">300dp</dimen>
+</resources>

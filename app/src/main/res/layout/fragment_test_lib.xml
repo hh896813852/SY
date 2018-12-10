@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.testlib.TestLibFragment" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.isFirstSelect ? View.GONE : View.VISIBLE}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@color/theme_color"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:text="@{viewModel.businessName}"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    tools:text="会计" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/icon_arrow_down_white"
+                    android:drawablePadding="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@{viewModel.levelName}"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    bind:clickCommand="@{viewModel.onCoursePickClicked}"
+                    tools:text="注册会计师" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_white" />
+
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/mainTabIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/theme_color" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="160dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:background="@color/theme_color" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/bg_light_gray0" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_marginLeft="140dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30"
+                            android:textColor="@color/text_white"
+                            android:textScaleX="0.8"
+                            android:textSize="40dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="班级排行"
+                            android:textColor="@color/text_white"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="40"
+                                android:textColor="@color/text_white"
+                                android:textScaleX="0.8"
+                                android:textSize="40dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="1dp"
+                                android:text="%"
+                                android:textColor="@color/text_white"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="击败率"
+                            android:textColor="@color/text_white"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/shape_oval_bg_gray" />
+
+                <FrameLayout
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="35dp">
+
+                    <com.edusoho.yunketang.widget.CircleBarView
+                        android:id="@+id/circleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:bar_width="10dp"
+                        app:bg_color="@color/bg_black"
+                        app:progress_color="@color/theme_color"
+                        app:start_angle="-90"
+                        app:sweep_angle="360" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/progressText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/theme_color"
+                            android:textScaleX="0.8"
+                            android:textSize="50dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="1dp"
+                            android:text="%"
+                            android:textColor="@color/theme_color"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:text="正确率"
+                        android:textColor="@color/theme_color"
+                        android:textSize="13dp" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <GridView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg_light_gray0"
+                android:horizontalSpacing="1dp"
+                android:numColumns="2"
+                android:verticalSpacing="1dp"
+                bind:adapter="@{viewModel.adapter}"
+                bind:onItemClick="@{viewModel.onItemClick}" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_light_gray1"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.isFirstSelect ? View.VISIBLE : View.GONE}"
+            tools:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/bg_white"
+                android:gravity="center_horizontal|bottom"
+                android:paddingBottom="10dp"
+                android:text="题库"
+                android:textColor="@color/text_black"
+                android:textSize="18sp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_category_kj"
+                        android:tag="1"
+                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_category_jg"
+                        android:tag="2"
+                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_category_wy"
+                        android:tag="3"
+                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_category_jsjy"
+                        android:tag="4"
+                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_category_rlzy"
+                        android:tag="5"
+                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clickable="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg_category_xl"
+                        android:tag="6"
+                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/bgLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#90000000"
+            android:visibility="gone"
+            bind:clickCommand="@{viewModel.onBgClicked}">
+
+            <LinearLayout
+                android:id="@+id/layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="80dp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="30dp"
+                            android:drawableLeft="@drawable/icon_orange_dot"
+                            android:drawablePadding="5dp"
+                            android:text="行业"
+                            android:textColor="@color/text_black"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <com.edusoho.yunketang.widget.TagLayout
+                            android:id="@+id/tagLayout1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            app:horizontalSpacing="12dp"
+                            app:verticalSpacing="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="30dp"
+                            android:drawableLeft="@drawable/icon_blue_dot"
+                            android:drawablePadding="5dp"
+                            android:text="职业/等级"
+                            android:textColor="@color/text_black"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <com.edusoho.yunketang.widget.TagLayout
+                            android:id="@+id/tagLayout2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            app:horizontalSpacing="12dp"
+                            app:verticalSpacing="20dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="30dp"
+                            android:drawableLeft="@drawable/icon_rosered_dot"
+                            android:drawablePadding="5dp"
+                            android:text="课程"
+                            android:textColor="@color/text_black"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <com.edusoho.yunketang.widget.TagLayout
+                            android:id="@+id/tagLayout3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            app:horizontalSpacing="12dp"
+                            app:verticalSpacing="20dp" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@color/theme_color"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:text="完成"
+                    android:textColor="@color/text_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    bind:clickCommand="@{viewModel.onCoursePickFinishClicked}" />
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+</layout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/actionbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:onClick="onBackButtonClick"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_arrow_left_color_gray" />
+
+        <TextView
+            android:id="@+id/actionbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="设置标题"
+            android:textColor="@color/text_black"
+            android:textSize="18sp" />
+    </FrameLayout>
+
+</LinearLayout>

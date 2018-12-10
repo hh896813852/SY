@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="@dimen/common_15"
+    android:background="@drawable/item_coupons_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_type"
+        tools:text="500元"
+        android:textColor="@color/secondary_color"
+        android:textSize="@dimen/font_xxl"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_validity"
+        tools:text="有效期至2017-3-5"
+        android:layout_below="@id/tv_type"
+        android:layout_marginTop="@dimen/common_15"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/font_s"
+        android:textColor="@color/secondary_font_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_application_type"
+        tools:text="全站通用"
+        android:textSize="@dimen/font_s"
+        android:textColor="@color/secondary_font_color"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_validity"
+        android:layout_marginTop="@dimen/common_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/iv_selector"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:scaleType="centerCrop"
+        android:background="@drawable/item_unselector"
+        android:layout_centerVertical="true"
+        android:layout_width="@dimen/common_20"
+        android:layout_height="@dimen/common_20" />
+
+</RelativeLayout>

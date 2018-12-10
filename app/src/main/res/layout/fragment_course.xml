@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.course.CourseFragment" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.edusoho.yunketang.widget.CustomScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_white"
+                android:orientation="vertical">
+
+                <com.youth.banner.Banner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:banner_default_image="@drawable/bg_load_default_4x3"
+                    app:delay_time="3000"
+                    app:is_auto_play="true" />
+
+                <net.lucode.hackware.magicindicator.MagicIndicator
+                    android:id="@+id/mainTabIndicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/bg_white" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/line_light_gray" />
+
+                <com.edusoho.yunketang.widget.CustomViewPager
+                    android:id="@+id/vpMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </com.edusoho.yunketang.widget.CustomScrollView>
+
+        <LinearLayout
+            android:id="@+id/titleIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/tabIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/bg_white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line_light_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="18dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/bg_gray_left_corner_18"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.isMenuShowed ? View.GONE : View.VISIBLE}"
+            bind:clickCommand="@{viewModel.onMenuShowClicked}">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/bg_white" />
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/bg_white" />
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/bg_white" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/bgLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            bind:clickCommand="@{viewModel.onBgClicked}">
+
+            <LinearLayout
+                android:id="@+id/layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginTop="100dp"
+                android:background="@drawable/bg_gray_left_corner_18"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.edusoho.yunketang.widget.NoScrollListView
+                    android:id="@+id/listView"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.adapter}"
+                    bind:onItemClick="@{viewModel.onItemClick}" />
+            </LinearLayout>
+        </FrameLayout>
+    </FrameLayout>
+</layout>

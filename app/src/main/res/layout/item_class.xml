@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.bean.ClassInfo" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="46dp">
+
+            <TextView
+                android:id="@+id/classNameView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@{viewModel.getTitleNmae}"
+                android:textColor="@color/text_black"
+                android:textSize="17dp"
+                android:textStyle="bold"
+                tools:text="班级名称" />
+
+            <TextView
+                android:id="@+id/classStatusView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:text="@{viewModel.classStatus}"
+                android:textColor="@color/text_dark_gray"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                tools:text="开课中" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/itemView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_white_corner_6"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="总课次/分钟"
+                    android:textColor="@color/text_dark_gray"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="班级时段"
+                    android:textColor="@color/text_dark_gray"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.totalClassCount}"
+                    android:textColor="@color/text_black"
+                    android:textSize="14dp"
+                    tools:text="6" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:text="次"
+                    android:textColor="@color/text_black"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" / "
+                    android:textColor="@color/text_black"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.getTotalClassMin}"
+                    android:textColor="@color/text_black"
+                    android:textSize="14dp"
+                    tools:text="900" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:text="分"
+                    android:textColor="@color/text_black"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="@{viewModel.getClassTime}"
+                    android:textColor="@color/text_black"
+                    android:textSize="14dp"
+                    tools:text="2018/07-2019/07" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.alreadyCourses}"
+                            android:textColor="@color/theme_color"
+                            android:textSize="50dp"
+                            tools:text="2" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="4dp"
+                            android:text="/"
+                            android:textColor="@color/text_gray"
+                            android:textSize="40dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.getTotalClassCount}"
+                            android:textColor="@color/text_gray"
+                            android:textSize="30dp"
+                            tools:text="06" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:max="@{viewModel.getProgressMax}"
+                        android:progress="@{viewModel.getProgress}"
+                        android:progressDrawable="@drawable/progress_bg_gray_pg_theme_color"
+                        tools:max="6"
+                        tools:progress="2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/classScheduleView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:drawableRight="@drawable/icon_arrow_right_theme_color"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:text="查看课表"
+                        android:textColor="@color/text_black"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/taskView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="10dp"
+                        android:drawableRight="@drawable/icon_arrow_right_theme_color"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:text="课程作业"
+                        android:textColor="@color/text_black"
+                        android:textSize="16dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/itemView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_white_corner_6"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="@{viewModel.studyModality}"
+                android:textColor="@color/text_black"
+                android:textSize="14dp"
+                tools:text="远程教育" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="@{viewModel.majorName}"
+                    android:textColor="@color/text_black"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    tools:text="经济管理专业" />
+
+                <TextView
+                    android:id="@+id/taskView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/icon_arrow_right_theme_color"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:text="课程作业"
+                    android:textColor="@color/text_black"
+                    android:textSize="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>
