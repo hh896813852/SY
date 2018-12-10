@@ -94,29 +94,17 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
-                        android:text="单选题"
+                        tools:text="单选题"
+                        android:text="@{viewModel.questionTypeName}"
                         android:textColor="@color/theme_color"
                         android:textSize="17sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2"
-                        android:textColor="@color/text_black"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="/"
-                        android:textColor="@color/text_black"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
-                        android:text="26"
+                        tools:text="2/26"
+                        android:text="@{viewModel.questionTypeInfo}"
                         android:textColor="@color/text_black"
                         android:textSize="17sp" />
                 </LinearLayout>

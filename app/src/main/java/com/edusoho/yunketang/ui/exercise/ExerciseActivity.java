@@ -27,6 +27,7 @@ import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.SimpleDialog;
+import com.google.gson.reflect.TypeToken;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,6 +48,17 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public ObservableField<Boolean> isAnswerCardShowed = new ObservableField<>(false);
     public ObservableField<Boolean> isAnswerAnalysisShowed = new ObservableField<>(false);
     public ObservableField<String> inputText = new ObservableField<>("0");
+
+    public ObservableField<String> questionTypeName = new ObservableField<>(); // 题型别名
+    public ObservableField<String> questionTypeInfo = new ObservableField<>(); // 题型信息
+
+    private List<Question> questionStem = new ArrayList<>(); // 题干集合
+    private Question currentLoadQuestionStem;     // 当前加载题目的题干
+    private int currentLoadQuestionStemIndex = 0; // 当前加载题目的题干的下标
+    private String[] currentLoadQuestionIds;    // 当前加载题目的题干的题目id数组
+    private String currentLoadQuestionId;       // 当前加载题目的题干的题目id
+    private int currentLoadQuestionIdIndex = 0; // 当前加载题目的题干的题目id的下标
+    private String currentLoadQuestionStemSum;  // 当前加载题型的题目总数
 
     private StringBuilder inputOne = new StringBuilder("0"); // 计算器输入的第一个数字
     private StringBuilder inputTwo = new StringBuilder();    // 计算器输入的第二个数字
@@ -77,17 +89,6 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         examinationId = getIntent().getStringExtra(EXAMINATION_ID);
         initView();
         loadQuestionStem();
-        loadData();
-    }
-
-    /**
-     * 加载题干
-     */
-    private void loadQuestionStem() {
-        SYDataTransport.create(SYConstants.QUESTION_STEM_QUERY)
-                .addParam("examinationId", examinationId)
-                .execute(new SYDataListener() {
-                });
     }
 
     private void initView() {
@@ -107,7 +108,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
             @Override
             public void onPageSelected(int position) {
-
+                // 刷新界面
+                refreshView(questionList.get(position));
             }
 
             @Override
@@ -115,9 +117,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
             }
         });
-    }
 
-    private void loadData() {
         // 答题卡
         for (int i = 0; i < 10; i++) {
             list.add(i + "");
@@ -129,49 +129,106 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             picList.add(i + "");
         }
         picAdapter.notifyDataSetChanged();
-
-        // 题目
-        for (int i = 0; i < 12; i++) {
-            if (i == 0) {
-                Question question = new Question();
-                question.questionType = 0;
-                question.questionTypeName = "题干";
-                questionList.add(question);
-            } else if (i < 2) {
-                Question question = new Question();
-                question.questionType = 1;
-                question.questionTypeName = "单选题";
-                questionList.add(question);
-            } else if (i < 4) {
-                Question question = new Question();
-                question.questionType = 2;
-                question.questionTypeName = "多选题";
-                questionList.add(question);
-            } else if (i < 6) {
-                Question question = new Question();
-                question.questionType = 3;
-                question.questionTypeName = "阅读选择题";
-                questionList.add(question);
-            } else if (i < 8) {
-                Question question = new Question();
-                question.questionType = 4;
-                question.questionTypeName = "听力单选题";
-                questionList.add(question);
-            } else if (i < 10) {
-                Question question = new Question();
-                question.questionType = 5;
-                question.questionTypeName = "判断题";
-                questionList.add(question);
-            } else {
-                Question question = new Question();
-                question.questionType = 6;
-                question.questionTypeName = "综合题";
-                questionList.add(question);
-            }
-        }
-        viewPagerAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 加载题干
+     */
+    private void loadQuestionStem() {
+        SYDataTransport.create(SYConstants.QUESTION_STEM_QUERY)
+                .addParam("examinationId", examinationId)
+                .execute(new SYDataListener<List<Question>>() {
+
+                    @Override
+                    public void onSuccess(List<Question> data) {
+                        questionStem.addAll(data);
+                        if (questionStem.size() > 0) {
+                            // 获取当前题干（第一个题干）
+                            currentLoadQuestionStem = questionStem.get(currentLoadQuestionStemIndex);
+                            // 获取当前题型的题目总数
+                            currentLoadQuestionStemSum = currentLoadQuestionStem.sum;
+                            // 将题干添加到题目集合
+                            questionList.add(currentLoadQuestionStem);
+                            // 改题型下有题目
+                            if (currentLoadQuestionStem.sids.length() > 0) {
+                                // 获取当前题干下的题目id数组
+                                currentLoadQuestionIds = currentLoadQuestionStem.sids.split(",");
+                                // 获取第一道题目的id
+                                currentLoadQuestionId = currentLoadQuestionIds[0];
+                                // 加载当前题型的题目
+                                loadQuestion();
+                                // 刷新界面
+                                refreshView(questionList.get(0));
+                            }
+                        }
+                    }
+                }, new TypeToken<List<Question>>() {
+                });
+    }
+
+    /**
+     * 加载题目
+     */
+    private void loadQuestion() {
+        SYDataTransport.create(SYConstants.QUESTION_QUERY)
+                .addParam("examinationId", examinationId)
+                .addParam("questionType", currentLoadQuestionStem.type)
+                .addParam("questionId", currentLoadQuestionId)
+                .addParam("limit", SYConstants.PAGE_SIZE)
+                .execute(new SYDataListener<List<Question>>() {
+
+                    @Override
+                    public void onSuccess(List<Question> data) {
+                        // 遍历赋值题目序号和题目总数
+                        for (int i = 0; i < data.size(); i++) {
+                            Question question = data.get(i);
+                            question.questionSort = i + 1;
+                            question.sum = currentLoadQuestionStemSum;
+                            questionList.add(question);
+                        }
+                        // 如果加载的数据最后一条id等于该题型最后一条数据的id，则该题型问题全部加载完毕
+                        if (data.size() > 0 && data.get(data.size() - 1).questionId.equals(currentLoadQuestionIds[currentLoadQuestionIds.length - 1])) {
+                            // 重置题目id的下标
+                            currentLoadQuestionIdIndex = 0;
+                            // 如果还存在下一题型，则加载下一题型的问题
+                            if (currentLoadQuestionStemIndex < questionStem.size() - 1) {
+                                // 题干集合下标+1
+                                currentLoadQuestionStemIndex++;
+                                // 获取下一题型
+                                currentLoadQuestionStem = questionStem.get(currentLoadQuestionStemIndex);
+                                // 获取下一题型的题目总数
+                                currentLoadQuestionStemSum = currentLoadQuestionStem.sum;
+                                // 题目集合添加下一题题干
+                                questionList.add(currentLoadQuestionStem);
+                                // 获取下一题型的题目数组
+                                currentLoadQuestionIds = currentLoadQuestionStem.sids.split(",");
+                                // 获取下一题型的第一道题目id
+                                currentLoadQuestionId = currentLoadQuestionIds[0];
+                                // 加载下一题型的题目
+                                loadQuestion();
+                            }
+                        } else { // 该题型问题并未全部加载完毕，则继续加载
+                            // 获取下次加载题目的第一个id下标
+                            currentLoadQuestionIdIndex = currentLoadQuestionIdIndex + SYConstants.PAGE_SIZE;
+                            // 获取下次加载题目的第一个id
+                            currentLoadQuestionId = currentLoadQuestionIds[currentLoadQuestionIdIndex];
+                            // 继续加载题目
+                            loadQuestion();
+                        }
+                        // 刷新ViewPager
+                        viewPagerAdapter.notifyDataSetChanged();
+                    }
+                }, new TypeToken<List<Question>>() {
+                });
+    }
+
+    /**
+     * 刷新界面
+     */
+    private void refreshView(Question question) {
+        questionTypeName.set(question.getQuestionTypeName());
+        questionTypeInfo.set(question.questionType == 0 ? "共" + question.sum + "题" : question.questionSort + "/" + question.sum);
+    }
 
     @Override
     public void onBackButtonClick(View view) {
