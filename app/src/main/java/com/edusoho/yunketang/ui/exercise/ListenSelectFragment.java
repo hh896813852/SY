@@ -6,8 +6,10 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.SeekBar;
 
 import com.edusoho.yunketang.R;
@@ -20,6 +22,7 @@ import com.edusoho.yunketang.utils.DateUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Layout(value = R.layout.fragment_listen_select)
@@ -32,17 +35,24 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
     public ObservableField<String> audioCurrentTime = new ObservableField<>("00:00");// 音频播放了的时间
     public ObservableField<String> audioDuration = new ObservableField<>();         // 音频时长
 
-    public List<String> list = new ArrayList<>();
-    public SYBaseAdapter adapter = new SYBaseAdapter() {
+    public ObservableField<String> questionTopic = new ObservableField<>(); // 题目
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            // 选项点击
-            view.findViewById(R.id.optionView).setOnClickListener(v -> {
-
-            });
-            return view;
+    public List<Question.QuestionDetails.Option> list = new ArrayList<>();
+    public SYBaseAdapter adapter = new SYBaseAdapter();
+    public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
+        // 是否是第一次选择
+        boolean isFirstPick = true;
+        for (int i = 0; i < list.size(); i++) {
+            // 有选项选过，则不是第一次选择
+            if (list.get(i).isPicked) {
+                isFirstPick = false;
+            }
+            list.get(i).isPicked = position == i;
+        }
+        adapter.notifyDataSetChanged();
+        if (isFirstPick && getActivity() != null) {
+            // 第一次选择，显示下一页
+            ((ExerciseActivity) getActivity()).showNextPage();
         }
     };
 
@@ -59,10 +69,14 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
         super.onActivityCreated(savedInstanceState);
         question = (Question) getArguments().getSerializable("question");
 
-        list.add("");
-        list.add("");
-        list.add("");
-        list.add("");
+        initView();
+
+    }
+
+    private void initView() {
+        questionTopic.set(question.questionSort + "、" + question.topic);
+
+        list.addAll(question.details.get(0).options);
         adapter.init(getSupportedActivity(), R.layout.item_single_option, list);
     }
 

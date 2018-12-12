@@ -82,6 +82,8 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 } else {
                     Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
                     intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
+                    intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
+                    intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
                     startActivity(intent);
                 }
             });

@@ -3,9 +3,13 @@ package com.edusoho.yunketang.ui.exercise;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.databinding.ObservableField;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,7 +21,7 @@ import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
-import com.edusoho.yunketang.databinding.FragmentIntegratedChildBinding;
+import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -25,15 +29,26 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-@Layout(value = R.layout.fragment_integrated_child)
-public class IntegratedChildFragment extends BaseFragment<FragmentIntegratedChildBinding> {
+@Layout(value = R.layout.fragment_child_integrated_exercises)
+public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChildIntegratedExercisesBinding> {
     private static final int REQUEST_IMAGE = RequestCodeUtil.next();
-    private Question question;
+    private Question.QuestionDetails childQuestion;
+
+    public ObservableField<String> questionTopic = new ObservableField<>();
 
     public List<String> picList = new ArrayList<>();
-    public SYBaseAdapter picAdapter = new SYBaseAdapter();
+    public SYBaseAdapter picAdapter = new SYBaseAdapter() {
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            ImageView imageView = view.findViewById(R.id.imageView);
+            Glide.with(getSupportedActivity()).load(picList.get(position)).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
+            return view;
+        }
+    };
 
     public List<Object> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
@@ -61,6 +76,14 @@ public class IntegratedChildFragment extends BaseFragment<FragmentIntegratedChil
         }
     };
 
+    public static ChildIntegratedExercisesFragment newInstance(Question.QuestionDetails childQuestion) {
+        ChildIntegratedExercisesFragment fragment = new ChildIntegratedExercisesFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("childQuestion", childQuestion);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -74,28 +97,48 @@ public class IntegratedChildFragment extends BaseFragment<FragmentIntegratedChil
         }
     }
 
-    public static IntegratedChildFragment newInstance(Question question) {
-        IntegratedChildFragment fragment = new IntegratedChildFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("question", question);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        question = (Question) getArguments().getSerializable("question");
+        childQuestion = (Question.QuestionDetails) getArguments().getSerializable("childQuestion");
         initView();
     }
 
     private void initView() {
-        picList.add("");
-        picList.add("");
+        if (!TextUtils.isEmpty(childQuestion.topicSubsidiary)) {
+            questionTopic.set(childQuestion.childQuestionSort + "、" + childQuestion.topicSubsidiary);
+        }
+
+        if (!TextUtils.isEmpty(childQuestion.topicSubsidiaryUrl)) {
+            picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
+        }
         picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
 
+        // 添加图片初始化
         list.add("");
         adapter.init(getSupportedActivity(), R.layout.item_pic_pick, list);
+
+        // 输入答案内容监听，实时更新
+        getDataBinding().answerContentView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s.toString().trim())) {
+                    childQuestion.myAnswerContent = "";
+                } else {
+                    childQuestion.myAnswerContent = s.toString();
+                }
+            }
+        });
     }
 
     /**

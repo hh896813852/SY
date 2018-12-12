@@ -21,7 +21,7 @@ import java.util.List;
 @Layout(value = R.layout.activity_answer_report, title = "答题报告", rightButton = "再做一遍")
 public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBinding> {
 
-    public List<String> list = new ArrayList<>();
+    public List<Integer> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
 
         @Override
@@ -43,7 +43,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
 
     private void loadData() {
         for (int i = 0; i < 10; i++) {
-            list.add(i + "");
+            list.add(i);
         }
         adapter.notifyDataSetChanged();
     }

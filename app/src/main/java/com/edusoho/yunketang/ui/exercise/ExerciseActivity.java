@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYConstants;
@@ -18,12 +19,16 @@ import com.edusoho.yunketang.adapter.QuestionViewPagerAdapter;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.annotation.Layout;
+import com.edusoho.yunketang.bean.EducationCourse;
+import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.ActivityExerciseBinding;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.utils.BitmapUtil;
 import com.edusoho.yunketang.utils.DialogUtil;
+import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.SimpleDialog;
@@ -36,7 +41,13 @@ import java.util.List;
 @Layout(value = R.layout.activity_exercise)
 public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public static final String EXAMINATION_ID = "examination_id";
+    public static final String MODULE_ID = "module_id";
+    public static final String SELECTED_COURSE = "selected_course";
+    public static final String CLASS_ID = "class_id";
     public String examinationId;
+    private int moduleId;
+    private EducationCourse selectedCourse;
+    private String classId;
 
     private static final String ADD = "+";
     private static final String SUBTRACT = "-";
@@ -68,14 +79,19 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     private List<Question> questionList = new ArrayList<>(); // 试卷题目集合（包含题干）
     private QuestionViewPagerAdapter viewPagerAdapter;       // 试卷adapter
 
-    public List<String> list = new ArrayList<>();
+    private List<Question> preCommitQuestionList = new ArrayList<>(); // 预提交问题集合（包含未作答问题，不包含题干）
+    private List<Question> canCommitQuestionList = new ArrayList<>(); // 可提交问题集合（不包含题干）
+
+    public List<List<Integer>> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
+            TextView questionTypeView = view.findViewById(R.id.questionTypeView);
+            questionTypeView.setText(questionStem.get(position).getQuestionTypeName());
             AnswerResultLayout answerResultLayout = view.findViewById(R.id.answerResultLayout);
-            answerResultLayout.setTags(list);
+            answerResultLayout.setTags(list.get(position));
             return view;
         }
     };
@@ -87,6 +103,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         examinationId = getIntent().getStringExtra(EXAMINATION_ID);
+        moduleId = getIntent().getIntExtra(MODULE_ID, 0);
+        selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
+        classId = getIntent().getStringExtra(CLASS_ID);
         initView();
         loadQuestionStem();
     }
@@ -103,32 +122,121 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         getDataBinding().viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
+                // 检查"预提交问题集合"里的问题，并提交已作答
+                checkPreCommitQuestion();
+                // 如果不是题干，添加该问题到"预提交问题集合"
+                if (questionList.get(position).questionType > 0) {
+                    preCommitQuestionList.add(questionList.get(position));
+                }
                 // 刷新界面
                 refreshView(questionList.get(position));
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
-
-        // 答题卡
-        for (int i = 0; i < 10; i++) {
-            list.add(i + "");
-        }
-        adapter.notifyDataSetChanged();
-
         // 答案解析图片
         for (int i = 0; i < 3; i++) {
             picList.add(i + "");
         }
         picAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 检查"预提交问题集合"里的问题
+     */
+    private void checkPreCommitQuestion() {
+        // 清空可提交问题集合
+        canCommitQuestionList.clear();
+        for (Question question : preCommitQuestionList) {
+            // 如果已作答，即可提交
+            if (checkAnswer(question)) {
+                canCommitQuestionList.add(question);
+            }
+        }
+        if (canCommitQuestionList.size() > 0) {
+            // 提交"可提交问题集合"里的问题
+            commitQuestionAnswer();
+        }
+    }
+
+    /**
+     * 提交"可提交问题集合"里的问题
+     */
+    private void commitQuestionAnswer() {
+        for (Question question : canCommitQuestionList) {
+            SYDataTransport dataTransport = SYDataTransport.create(SYConstants.QUESTION_COMMIT);
+            dataTransport.addParam("examinationId", examinationId)
+                    .addParam("userId", getLoginUser().syjyUser.id)
+                    .addParam("businessType", selectedCourse.businessId)
+                    .addParam("levelId", selectedCourse.levelId)
+                    .addParam("courseId", selectedCourse.courseId)
+                    .addParam("questionType", question.questionType)
+                    .addParam("homeworkType", TextUtils.isEmpty(classId) ? 1 : 0) // 0：班级作业，1：模块练习
+                    .addParam("questionIndex", question.questionSort)
+                    .addParam("questionId", question.questionId);
+            if (!TextUtils.isEmpty(classId)) {
+                dataTransport.addParam("classId", classId);
+            }
+            if (moduleId != 0) {
+                dataTransport.addParam("moduleId", moduleId);
+            }
+            dataTransport.addParam("correctResult", getAnswerList(question))
+                    .execute(new SYDataListener() {
+
+                        @Override
+                        public void onSuccess(Object data) {
+                            // 提交成功，则删除"预提交问题集合"中的问题
+                            preCommitQuestionList.remove(question);
+                        }
+
+                        @Override
+                        public void onFail(int status, String failMessage) {
+                            super.onFail(status, failMessage);
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 获取该问题的作答选项或内容
+     */
+    private ArrayList getAnswerList(Question question) {
+        ArrayList<MyAnswer> answerList = new ArrayList<>();
+        for (Question.QuestionDetails details : question.details) {
+            MyAnswer mAnswer = new MyAnswer();
+            if (question.questionType < 6) {
+                for (int i = 0; i < details.options.size(); i++) {
+                    if (details.options.get(i).isPicked) {
+                        mAnswer.result = i + ",";
+                    }
+                }
+                mAnswer.result = mAnswer.result.substring(0, mAnswer.result.length() - 1);
+            }
+            answerList.add(mAnswer);
+        }
+        return answerList;
+    }
+
+    /**
+     * 通过下标显示对应的page
+     */
+    public void showPageByPosition(int position) {
+        getDataBinding().viewPager.setCurrentItem(position);
+    }
+
+    /**
+     * 显示下一页
+     */
+    public void showNextPage() {
+        if (getDataBinding().viewPager.getCurrentItem() + 1 < viewPagerAdapter.getCount()) {
+            getDataBinding().viewPager.setCurrentItem(getDataBinding().viewPager.getCurrentItem() + 1, true);
+        }
     }
 
     /**
@@ -179,11 +287,14 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
                     @Override
                     public void onSuccess(List<Question> data) {
-                        // 遍历赋值题目序号和题目总数
+                        // 遍历赋值题目序号、题目总数、题目选项
                         for (int i = 0; i < data.size(); i++) {
                             Question question = data.get(i);
-                            question.questionSort = i + 1;
+                            question.questionSort = currentLoadQuestionIdIndex + i + 1;
                             question.sum = currentLoadQuestionStemSum;
+                            for (Question.QuestionDetails details : question.details) {
+                                details.options = details.getChoiceList();
+                            }
                             questionList.add(question);
                         }
                         // 如果加载的数据最后一条id等于该题型最后一条数据的id，则该题型问题全部加载完毕
@@ -263,12 +374,84 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 显示答题卡
      */
     public void onShowAnswerCardClick(View view) {
+        // 刷新答题卡数据
+        refreshAnswerCardData();
         // 背景模糊
         Bitmap blurBitmap = BitmapUtil.blurBitmap(this, ScreenUtil.shotActivity(this), 15);
         getDataBinding().blurBgImage.setImageBitmap(blurBitmap);
         isAnswerCardShowed.set(true);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_from_bottom);
         getDataBinding().answerCardLayout.startAnimation(animation);
+    }
+
+    /**
+     * 检查是否作答
+     */
+    private boolean checkAnswer(Question question) {
+        if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
+            // 遍历子题
+            for (Question.QuestionDetails details : question.details) {
+                // 遍历子题选项
+                for (Question.QuestionDetails.Option option : details.options) {
+                    // 只要有一个小题做出选择，就可提交
+                    if (option.isPicked) {
+                        return true;
+                    }
+                }
+            }
+        } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
+            // 遍历子题
+            for (Question.QuestionDetails details : question.details) {
+                // 已作答
+                if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 刷新答题卡数据
+     */
+    private void refreshAnswerCardData() {
+        list.clear();
+        for (Question q : questionStem) {
+            List<Integer> child = new ArrayList<>();
+            for (Question question : questionList) {
+                if (question.questionType == q.type) {
+                    if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
+                        int answerCount = 0;
+                        // 遍历子题
+                        for (Question.QuestionDetails details : question.details) {
+                            // 遍历子题选项
+                            for (Question.QuestionDetails.Option option : details.options) {
+                                // 已选
+                                if (option.isPicked) {
+                                    answerCount++;
+                                    break;
+                                }
+                            }
+                        }
+                        //　全部小题均已作答，改题才视为已作答
+                        child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
+                    } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
+                        int answerCount = 0;
+                        // 遍历子题
+                        for (Question.QuestionDetails details : question.details) {
+                            // 已作答
+                            if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
+                                answerCount++;
+                            }
+                        }
+                        //　全部小题均已作答，改题才视为已作答
+                        child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
+                    }
+                }
+            }
+            list.add(child);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     /**

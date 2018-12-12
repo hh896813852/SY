@@ -77,6 +77,10 @@ public class SYConstants {
      */
     public static final String QUESTION_QUERY = HTTP_URL + "app/examination/query/question/type";
     /**
+     * 题目提交
+     */
+    public static final String QUESTION_COMMIT = HTTP_URL + "app/homework/save";
+    /**
      * 我的班级
      */
     public static final String MY_CLASS = HTTP_URL + "app/class/classList";
@@ -89,6 +93,10 @@ public class SYConstants {
      * GET
      */
     public static final String CLASS_DATE = HTTP_URL + "app/class/queryClassDayList?classId=%s";
+    /**
+     * 图片上传
+     */
+    public static final String PIC_UPLOAD = HTTP_URL + "app/oss/qiniu/upload";
 
     // ----------------------------------------   以上为上元教育接口  ------------------------------------- //
 

@@ -22,45 +22,45 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                tools:text="一、"
+                android:layout_marginLeft="10dp"
                 android:text="@{viewModel.questionTypeSort}"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="一、" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                tools:text="单项选择题"
                 android:text="@{viewModel.questionTypeName}"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="单项选择题" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
-                tools:text="（每题2分）"
                 android:text="@{viewModel.questionPointInfo}"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="（每题2分）" />
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="52dp"
+            android:layout_marginLeft="42dp"
             android:lineSpacingExtra="5dp"
-            tools:text="下列题目中A、B、C、D中只有一个选项为正确答案"
             android:text="@{viewModel.questionExplain}"
             android:textColor="@color/text_black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="下列题目中A、B、C、D中只有一个选项为正确答案" />
     </LinearLayout>
 </layout>

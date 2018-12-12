@@ -7,10 +7,16 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.adapter.ChildQuestionViewPagerAdapter;
 import com.edusoho.yunketang.adapter.QuestionViewPagerAdapter;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
@@ -21,6 +27,7 @@ import com.edusoho.yunketang.utils.DateUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Layout(value = R.layout.fragment_read_select)
@@ -34,11 +41,11 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     public ObservableField<String> audioCurrentTime = new ObservableField<>("00:00");// 音频播放了的时间
     public ObservableField<String> audioDuration = new ObservableField<>();         // 音频时长
 
-    public List<String> picList = new ArrayList<>();
-    public SYBaseAdapter picAdapter = new SYBaseAdapter();
+    public ObservableField<String> questionTopic = new ObservableField<>(); // 题目
 
-    private List<Question> childQuestionList = new ArrayList<>(); // 题目子题集合
-    private QuestionViewPagerAdapter viewPagerAdapter;            // 试卷adapter
+    public List<String> picList = new ArrayList<>();// 题目图片集合
+    private List<Question.QuestionDetails> childQuestionList = new ArrayList<>(); // 题目子题集合
+    private ChildQuestionViewPagerAdapter viewPagerAdapter;            // 试卷子题adapter
 
     public static ReadSelectedFragment newInstance(Question question) {
         ReadSelectedFragment fragment = new ReadSelectedFragment();
@@ -57,11 +64,19 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     }
 
     private void initView() {
-        picList.add("");
-        picList.add("");
-        picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
+        questionTopic.set(question.questionSort + "、" + question.topic);
 
-        viewPagerAdapter = new QuestionViewPagerAdapter(getChildFragmentManager(), childQuestionList);
+        if (!TextUtils.isEmpty(question.topicPictureUrl)) {
+            picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
+        }
+        for (String url : picList) {
+            View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+            ImageView imageView = innerView.findViewById(R.id.imageView);
+            Glide.with(getSupportedActivity()).load(url).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
+            getDataBinding().containerLayout.addView(innerView);
+        }
+
+        viewPagerAdapter = new ChildQuestionViewPagerAdapter(getChildFragmentManager(), childQuestionList);
         getDataBinding().viewPager.setOffscreenPageLimit(3);
         getDataBinding().viewPager.setAdapter(viewPagerAdapter);
         getDataBinding().viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -83,19 +98,33 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     }
 
     private void initData() {
-        for (int i = 0; i < 4; i++) {
-            Question question = new Question();
-            question.questionType = 1;
-            question.questionTypeName = "单选题";
-            childQuestionList.add(question);
+        for (int i = 0; i < question.details.size(); i++) {
+            question.details.get(i).childQuestionType = 1; // 单选题
+            question.details.get(i).childQuestionSort = i + 1;
         }
+        childQuestionList.addAll(question.details);
         viewPagerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 显示下一页
+     */
+    public void showNextPage() {
+        if (getDataBinding().viewPager.getCurrentItem() + 1 < viewPagerAdapter.getCount()) {
+            getDataBinding().viewPager.setCurrentItem(getDataBinding().viewPager.getCurrentItem() + 1, true);
+        } else {
+            // 如果是子题最后一题，则显示下一题
+            if (getActivity() != null) {
+                // 第一次选择，显示下一页
+                ((ExerciseActivity) getActivity()).showNextPage();
+            }
+        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(hasAudio.get()) {
+        if (hasAudio.get()) {
             if (isVisibleToUser) { // 界面可见，则创建播放器
                 if (mediaPlayer == null) {
                     initMediaPlayer();

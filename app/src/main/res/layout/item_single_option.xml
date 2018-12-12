@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <!--<variable-->
-        <!--name="viewModel"-->
-        <!--type="" />-->
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.bean.Question.QuestionDetails.Option" />
     </data>
 
     <LinearLayout
@@ -17,16 +19,18 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/optionView"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_white_stroke_gray_corner_16"
+            android:background="@{viewModel.isPicked ? @drawable/shape_oval_bg_orange : @drawable/bg_white_stroke_gray_corner_16}"
             android:gravity="center"
-            android:text="A"
-            android:textColor="@color/text_black"
-            android:textSize="15sp" />
+            android:text="@{viewModel.optionType}"
+            android:textColor="@{viewModel.isPicked ? @color/text_white : @color/text_black}"
+            android:textSize="15sp"
+            tools:background="@drawable/bg_white_stroke_gray_corner_16"
+            tools:text="A"
+            tools:textColor="@color/text_black" />
 
         <TextView
             android:layout_width="match_parent"
@@ -35,8 +39,10 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="我是选项A"
-            android:textColor="@color/text_black" />
+            android:text="@{viewModel.optionContent}"
+            android:textColor="@color/text_black"
+            android:visibility="@{viewModel.choiceType == 0 ? View.VISIBLE : View.GONE}"
+            tools:text="我是选项A" />
 
         <ImageView
             android:layout_width="match_parent"
@@ -46,6 +52,8 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/bg_load_default_4x3"
             android:scaleType="fitXY"
-            android:visibility="gone" />
+            android:visibility="@{viewModel.choiceType == 1 ? View.VISIBLE : View.GONE}"
+            bind:url="@{viewModel.optionPicUrl}"
+            tools:visibility="gone" />
     </LinearLayout>
 </layout>

@@ -76,9 +76,6 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
             @Override
             public void onNavigatorClickListener(int index) {
                 MainTabActivity.this.getDataBinding().vpMain.setCurrentItem(index, false);
-                if(index == 3) {
-                    SYApplication.getInstance().setUser(null);
-                }
             }
         });
         getDataBinding().mainTabIndicator.setNavigator(commonNavigator);

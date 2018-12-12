@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
 import com.edusoho.yunketang.bean.Question;
-import com.edusoho.yunketang.ui.exercise.IntegratedChildFragment;
 import com.edusoho.yunketang.ui.exercise.IntegratedExercisesFragment;
 import com.edusoho.yunketang.ui.exercise.JudgeSelectFragment;
 import com.edusoho.yunketang.ui.exercise.ListenSelectFragment;
@@ -47,8 +46,6 @@ public class QuestionViewPagerAdapter extends FragmentStatePagerAdapter {
                 return IntegratedExercisesFragment.newInstance(question);
             case 7: // 综合题： 一段文字（含图片），多个题目（含图片），每个题目一个答案（可上传图片）
                 return IntegratedExercisesFragment.newInstance(question);
-            case 67: // 综合题/简答题：小题
-                return IntegratedChildFragment.newInstance(question);
         }
         // 题干
         return QuestionTypeFragment.newInstance(question);

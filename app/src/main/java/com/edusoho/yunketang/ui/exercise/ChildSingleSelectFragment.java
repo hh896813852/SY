@@ -1,7 +1,6 @@
 package com.edusoho.yunketang.ui.exercise;
 
 import android.databinding.ObservableField;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -21,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Layout(value = R.layout.fragment_multiple_select)
-public class MultipleSelectFragment extends BaseFragment {
-    private Question question;
+@Layout(value = R.layout.fragment_child_single_select)
+public class ChildSingleSelectFragment extends BaseFragment {
+    private Question.QuestionDetails childQuestion;
 
     public ObservableField<String> questionTopic = new ObservableField<>();
 
@@ -41,14 +40,26 @@ public class MultipleSelectFragment extends BaseFragment {
     public List<Question.QuestionDetails.Option> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
-        list.get(position).isPicked = !list.get(position).isPicked;
+        // 是否是第一次选择
+        boolean isFirstPick = true;
+        for (int i = 0; i < list.size(); i++) {
+            // 有选项选过，则不是第一次选择
+            if (list.get(i).isPicked) {
+                isFirstPick = false;
+            }
+            list.get(i).isPicked = position == i;
+        }
         adapter.notifyDataSetChanged();
+        if (isFirstPick && getParentFragment() != null) {
+            // 第一次选择，显示下一页
+            ((ReadSelectedFragment)getParentFragment()).showNextPage();
+        }
     };
 
-    public static MultipleSelectFragment newInstance(Question question) {
-        MultipleSelectFragment fragment = new MultipleSelectFragment();
+    public static ChildSingleSelectFragment newInstance(Question.QuestionDetails childQuestion) {
+        ChildSingleSelectFragment fragment = new ChildSingleSelectFragment();
         Bundle args = new Bundle();
-        args.putSerializable("question", question);
+        args.putSerializable("childQuestion", childQuestion);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,19 +67,19 @@ public class MultipleSelectFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        question = (Question) getArguments().getSerializable("question");
+        childQuestion = (Question.QuestionDetails) getArguments().getSerializable("childQuestion");
         initView();
     }
 
     private void initView() {
-        questionTopic.set(question.questionSort + "、" + question.topic);
+        questionTopic.set(childQuestion.childQuestionSort + "、" + childQuestion.topicSubsidiary);
 
-        if(!TextUtils.isEmpty(question.topicPictureUrl)) {
-            picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
+        if(!TextUtils.isEmpty(childQuestion.topicSubsidiaryUrl)) {
+            picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
         }
         picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
 
-        list.addAll(question.details.get(0).options);
-        adapter.init(getSupportedActivity(), R.layout.item_multiple_option, list);
+        list.addAll(childQuestion.options);
+        adapter.init(getSupportedActivity(), R.layout.item_single_option, list);
     }
 }

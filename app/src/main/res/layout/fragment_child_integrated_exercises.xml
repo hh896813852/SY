@@ -8,9 +8,11 @@
 
         <import type="android.view.View" />
 
+        <import type="android.text.TextUtils" />
+
         <variable
             name="viewModel"
-            type="com.edusoho.yunketang.ui.exercise.IntegratedChildFragment" />
+            type="com.edusoho.yunketang.ui.exercise.ChildIntegratedExercisesFragment" />
     </data>
 
     <ScrollView
@@ -33,9 +35,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:lineSpacingExtra="4dp"
-                android:text="2、题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目"
+                android:text="@{viewModel.questionTopic}"
                 android:textColor="@color/text_black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="@{TextUtils.isEmpty(viewModel.questionTopic) ? View.GONE : View.VISIBLE}"
+                tools:text="2、题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目" />
 
             <com.edusoho.yunketang.widget.NoScrollListView
                 android:layout_width="match_parent"
@@ -49,6 +53,7 @@
                 bind:adapter="@{viewModel.picAdapter}" />
 
             <EditText
+                android:id="@+id/answerContentView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"

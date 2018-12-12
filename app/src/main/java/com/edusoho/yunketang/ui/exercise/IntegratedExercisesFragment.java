@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
+import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.adapter.ChildQuestionViewPagerAdapter;
 import com.edusoho.yunketang.adapter.QuestionViewPagerAdapter;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
@@ -21,6 +26,7 @@ import com.edusoho.yunketang.utils.DateUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Layout(value = R.layout.fragment_integrated_exercises)
@@ -34,11 +40,12 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     public ObservableField<String> audioCurrentTime = new ObservableField<>("00:00");// 音频播放了的时间
     public ObservableField<String> audioDuration = new ObservableField<>();         // 音频时长
 
-    public List<String> picList = new ArrayList<>();
-    public SYBaseAdapter picAdapter = new SYBaseAdapter();
+    public ObservableField<String> questionTopic = new ObservableField<>(); // 题目
 
-    private List<Question> childQuestionList = new ArrayList<>(); // 题目子题集合
-    private QuestionViewPagerAdapter viewPagerAdapter;            // 试卷adapter
+    public List<String> picList = new ArrayList<>();
+
+    private List<Question.QuestionDetails> childQuestionList = new ArrayList<>(); // 题目子题集合
+    private ChildQuestionViewPagerAdapter viewPagerAdapter;            // 试卷adapter
 
     public static IntegratedExercisesFragment newInstance(Question question) {
         IntegratedExercisesFragment fragment = new IntegratedExercisesFragment();
@@ -57,11 +64,19 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     }
 
     private void initView() {
-        picList.add("");
-        picList.add("");
-        picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
+        questionTopic.set(question.questionSort + "、" + question.topic);
 
-        viewPagerAdapter = new QuestionViewPagerAdapter(getChildFragmentManager(), childQuestionList);
+        if (!TextUtils.isEmpty(question.topicPictureUrl)) {
+            picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
+        }
+        for (String url : picList) {
+            View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+            ImageView imageView = innerView.findViewById(R.id.imageView);
+            Glide.with(getSupportedActivity()).load(url).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
+            getDataBinding().containerLayout.addView(innerView);
+        }
+
+        viewPagerAdapter = new ChildQuestionViewPagerAdapter(getChildFragmentManager(), childQuestionList);
         getDataBinding().viewPager.setOffscreenPageLimit(3);
         getDataBinding().viewPager.setAdapter(viewPagerAdapter);
         getDataBinding().viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -83,12 +98,11 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     }
 
     private void initData() {
-        for (int i = 0; i < 2; i++) {
-            Question question = new Question();
-            question.questionType = 67;
-            question.questionTypeName = "综合题";
-            childQuestionList.add(question);
+        for (int i = 0; i < question.details.size(); i++) {
+            question.details.get(i).childQuestionType = 2; // 简答题
+            question.details.get(i).childQuestionSort = i + 1;
         }
+        childQuestionList.addAll(question.details);
         viewPagerAdapter.notifyDataSetChanged();
     }
 

@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.edusoho.yunketang.ui.exercise.SingleSelectFragment" />
+            type="com.edusoho.yunketang.ui.exercise.ChildSingleSelectFragment" />
     </data>
 
     <ScrollView

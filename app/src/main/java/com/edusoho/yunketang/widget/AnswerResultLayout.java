@@ -21,6 +21,10 @@ import static android.view.View.MeasureSpec.EXACTLY;
  * @author huhao on 2018/11/29.
  */
 public class AnswerResultLayout extends ViewGroup {
+    public static final int NOT_ANSWER = 0;  // 未答
+    public static final int ANSWERED = 1;    // 已答
+    public static final int ANSWER_TRUE = 3; // 答对
+    public static final int ANSWER_FALSE = 4;// 答错
     private Context mContext;
     private int colNum;
     private int mRealWidth;
@@ -59,7 +63,7 @@ public class AnswerResultLayout extends ViewGroup {
         ta.recycle();
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Integer> tags) {
         removeAllViewsInLayout();
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < tags.size(); i++) {
@@ -68,15 +72,35 @@ public class AnswerResultLayout extends ViewGroup {
         requestLayout();
     }
 
-    private TextView createTextView(final String tag, int position) {
+    private TextView createTextView(Integer tag, int position) {
+        int drawableId = R.drawable.shape_oval_stroke_gray_bg_white;
+        int colorId = R.color.text_white;
+        switch (tag) {
+            case ANSWERED:
+                drawableId = R.drawable.shape_oval_bg_orange;
+                colorId = R.color.text_white;
+                break;
+            case NOT_ANSWER:
+                drawableId = R.drawable.shape_oval_stroke_gray_bg_white;
+                colorId = R.color.text_black;
+                break;
+            case ANSWER_TRUE:
+                drawableId = R.drawable.shape_oval_bg_theme_color;
+                colorId = R.color.text_white;
+                break;
+            case ANSWER_FALSE:
+                drawableId = R.drawable.shape_oval_bg_red;
+                colorId = R.color.text_white;
+                break;
+        }
         TextView tv = new TextView(mContext);
         tv.setText(String.valueOf(position + 1));
         tv.setTextSize(13);
-        tv.setTextColor(ContextCompat.getColor(mContext, R.color.text_white));
+        tv.setTextColor(ContextCompat.getColor(mContext, colorId));
         tv.setGravity(Gravity.CENTER);
         tv.setSingleLine(true);
         tv.setEllipsize(TextUtils.TruncateAt.END);
-        tv.setBackground(ContextCompat.getDrawable(mContext, R.drawable.shape_oval_bg_orange));
+        tv.setBackground(ContextCompat.getDrawable(mContext, drawableId));
         return tv;
     }
 

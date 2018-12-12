@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="1、题目题目题目"
+            tools:text="1、题目题目题目"
+            android:text="@{viewModel.questionTopic}"
             android:textColor="@color/text_black"
             android:textSize="16sp" />
 
@@ -98,6 +99,7 @@
             android:divider="@null"
             android:dividerHeight="0dp"
             android:scrollbars="none"
-            bind:adapter="@{viewModel.adapter}" />
+            bind:adapter="@{viewModel.adapter}"
+            bind:onItemClick="@{viewModel.onItemClick}"/>
     </LinearLayout>
 </layout>

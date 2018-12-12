@@ -6,8 +6,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <!--<variable-->
         <!--name="viewModel"-->
         <!--type="" />-->
@@ -18,52 +16,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/questionTypeView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                android:text="单选题"
-                android:textColor="@color/text_black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="对"
-                android:textColor="@color/text_dark_gray"
-                android:textSize="13sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="17"
-                android:textColor="@color/text_dark_gray"
-                android:textSize="13sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="错"
-                android:textColor="@color/text_dark_gray"
-                android:textSize="13sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="10"
-                android:textColor="@color/text_dark_gray"
-                android:textSize="13sp" />
-        </LinearLayout>
+            tools:text="单选题"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
 
         <com.edusoho.yunketang.widget.AnswerResultLayout
             android:id="@+id/answerResultLayout"
