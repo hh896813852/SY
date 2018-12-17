@@ -71,6 +71,14 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     BaseDialog dialog = DialogUtil.showAnimationDialog(PracticeActivity.this, R.layout.dialog_not_login);
                     dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
                     dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
+                } else {
+                    Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
+                    intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
+                    intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
+                    intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
+                    intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                    intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
+                    startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
             //　开始
@@ -84,7 +92,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
                     intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
                     intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
-                    startActivity(intent);
+                    startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
             return view;
@@ -103,6 +111,14 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
             loadData();
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+            onRefreshListener.onRefresh();
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,6 +192,11 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     public void onSearchTypeClick(View view) {
         int type = Integer.valueOf(view.getTag().toString());
         searchType.set(type);
+        isShowMenu.set(false);
+    }
+
+
+    public void onBgClick(View view) {
         isShowMenu.set(false);
     }
 }

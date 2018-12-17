@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
 import com.edusoho.yunketang.R;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,8 +16,11 @@ public class Examination implements Serializable {
     public String homeworkId;     // 作业id
     public String examinationName;// 试卷名称
     public int finishState;       // 0：未开始，1：已开始未完成，2：已完成
+    @SerializedName("sum")
     public String questionSums;   // 题目总数
+    @SerializedName("finishCountSum")
     public String finishedSum;    // 完成题目数量
+    public int lastPageIndex;     // 最后停留页面
     public String trueSum;        // 正确数量
     public String falseSum;       // 错误数量
     public String completeSum;    // 试卷已完成人数

@@ -111,8 +111,10 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
     public void onResume() {
         super.onResume();
         isLogin.set(SYApplication.getInstance().isLogin());
-        // 加载数据
-        loadData();
+        if (isLogin.get()) {
+            // 加载数据
+            loadData();
+        }
     }
 
     @Override

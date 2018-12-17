@@ -87,7 +87,10 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
 
             @Override
             public void onPageSelected(int position) {
-
+                // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
+                if (getActivity() != null) {
+                    ((ExerciseActivity) getActivity()).currentChildQuestionIndex = position;
+                }
             }
 
             @Override
@@ -124,6 +127,10 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
+        if (isVisibleToUser && getActivity() != null) {
+            ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
+        }
         if (hasAudio.get()) {
             if (isVisibleToUser) { // 界面可见，则创建播放器
                 if (mediaPlayer == null) {

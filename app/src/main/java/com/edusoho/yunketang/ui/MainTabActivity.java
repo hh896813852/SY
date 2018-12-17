@@ -103,6 +103,19 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
                 });
     }
 
+    private long pressBackButtonTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        // 两秒内点击两次返回键
+        if ((System.currentTimeMillis() - pressBackButtonTime) > 2000) {
+            showToast("再按一次退出程序");
+            pressBackButtonTime = System.currentTimeMillis();
+        } else {
+            finish();
+        }
+    }
+
     /**
      * 某种原因系统回收MianActivity
      * ——FragmentA被保存状态未被回收

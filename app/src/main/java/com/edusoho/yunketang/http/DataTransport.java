@@ -137,6 +137,10 @@ public class DataTransport {
         return this;
     }
 
+    public void execute() {
+        execute(null);
+    }
+
     public void execute(DataListener dataListener) {
         needJsonParse = false;
         execute(dataListener, String.class);
@@ -230,15 +234,24 @@ public class DataTransport {
                                     message.msg = jsonObject2.getString("msg");
                                     if (message.status == 1) {
                                         if (dataType.getClass().equals(Class.class)) { // 返回的是一个实体(非List)
-                                            if (dataType.equals(String.class)) {
-                                                message.data = dataString;
+                                            if (jsonObject2.has("data")) {
+                                                if (dataType.equals(String.class)) {
+                                                    message.data = jsonObject2.getString("data");
+                                                } else {
+                                                    Class typeClass = (Class) dataType;
+                                                    message.data = JsonUtil.fromJson(jsonObject2.getString("data"), typeClass);
+                                                }
                                             } else {
-                                                Class typeClass = (Class) dataType;
-                                                message.data = JsonUtil.fromJson(dataString, typeClass);
+                                                if (dataType.equals(String.class)) {
+                                                    message.data = dataString;
+                                                } else {
+                                                    Class typeClass = (Class) dataType;
+                                                    message.data = JsonUtil.fromJson(dataString, typeClass);
+                                                }
                                             }
                                         } else {                                       // 返回的是一个List
                                             TypeToken typeToken = ((TypeToken) dataType);
-                                            message.data = JsonUtil.fromJson(new JSONObject(dataString).getString("data"), typeToken);
+                                            message.data = JsonUtil.fromJson(jsonObject2.getString("data"), typeToken);
                                         }
                                     } else {
                                         message.data = dataString;

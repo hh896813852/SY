@@ -124,11 +124,17 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
                 startActivity(intent1);
                 break;
             case "每周一测":
+                Intent intent2 = new Intent(getSupportedActivity(), PracticeActivity.class);
+                intent2.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent2.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
+                startActivity(intent2);
                 break;
             case "模拟考试":
                 break;
             case "历年真题":
                 Intent intent4 = new Intent(getSupportedActivity(), PastExamActivity.class);
+                intent4.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent4.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
                 startActivity(intent4);
                 break;
             case "章节练习":

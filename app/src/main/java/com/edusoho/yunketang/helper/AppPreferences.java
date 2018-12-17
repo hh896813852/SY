@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.edusoho.yunketang.BuildConfig;
 import com.edusoho.yunketang.bean.EducationCourse;
+import com.edusoho.yunketang.bean.Setting;
 import com.edusoho.yunketang.utils.JsonUtil;
 
 
@@ -19,13 +20,13 @@ public class AppPreferences extends BasePreferences {
 
     public static final String USER_INFO = "sy.user_info";
 
-    public static final String CONFIG_INFO = "sy.config_info";
-
     public static final String APP_UPDATE_ID = "sy.app_update_id";//app更新下载id（DownloadManager）
 
     public static final String APP_FORCE_UPDATE = "sy.app_force_update";//是否强制更新app
 
     public static final String SELECTED_COURSE = "sy.selected_course";  // 选择的课程
+
+    public static final String SETTING_CONFIG = "sy.setting_config"; // 设置配置
 
     public static boolean isFirstOpenApp() {
         return getBoolean(IS_FIRST_OPEN_APP, true);
@@ -39,25 +40,9 @@ public class AppPreferences extends BasePreferences {
         return getString(USER_INFO, "");
     }
 
-    public static String getConfigInfo() {
-        return getString(CONFIG_INFO, "");
-    }
-
     public static void setUserInfo(String userInfo) {
         setString(USER_INFO, userInfo);
     }
-
-//    public static Setting getSettings(String userId) {
-//        String json = getString(userId, "");
-//        if (TextUtils.isEmpty(json)) {
-//            return null;
-//        }
-//        return JsonUtil.fromJson(json, Setting.class);
-//    }
-//
-//    public static void saveSettings(String userId, Setting setting) {
-//        setString(userId, JsonUtil.toJson(setting));
-//    }
 
     public static void clearGestures(String userId) {
         clear(userId);
@@ -67,8 +52,20 @@ public class AppPreferences extends BasePreferences {
         clear(USER_INFO);
     }
 
-    public static void setConfigInfo(String configInfo) {
-        setString(CONFIG_INFO, configInfo);
+    public static Setting getSettings() {
+        String json = getString(SETTING_CONFIG, "");
+        if (TextUtils.isEmpty(json)) {
+            Setting setting = new Setting();
+            setting.isAllow4GPlay = 0;
+            setting.soundSwitchState = 1;
+            setting.vibrationSwitchState = 1;
+            return setting;
+        }
+        return JsonUtil.fromJson(json, Setting.class);
+    }
+
+    public static void saveSettings(Setting setting) {
+        setString(SETTING_CONFIG, JsonUtil.toJson(setting));
     }
 
     public static void setAppUpdateId(long id) {

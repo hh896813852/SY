@@ -69,29 +69,31 @@ public class LogUtil {
 
     public static void i(String msg) {
         if (DEBUG) {
-            for (int index = 0; index < msg.length(); index += maxLength) {
-                String sub;
-                if (msg.length() <= index + maxLength) {
-                    sub = msg.substring(index);
-                } else {
-                    sub = msg.substring(index, index + maxLength);
-                }
-                Log.i(TAG, sub);
+            //因为String的length是字符数量不是字节数量所以为了防止中文字符过多，
+            //  把4*1024的MAX字节打印长度改为2001字符数
+            int max_str_length = 2001 - TAG.length();
+            //大于4000时
+            while (msg.length() > max_str_length) {
+                Log.i(TAG, msg.substring(0, max_str_length));
+                msg = msg.substring(max_str_length);
             }
+            //剩余部分
+            Log.i(TAG, msg);
         }
     }
 
     public static void i(String tag, String msg) {
         if (DEBUG) {
-            for (int index = 0; index < msg.length(); index += maxLength) {
-                String sub;
-                if (msg.length() <= index + maxLength) {
-                    sub = msg.substring(index);
-                } else {
-                    sub = msg.substring(index, index + maxLength);
-                }
-                Log.i(TAG + "." + tag, sub);
+            //因为String的length是字符数量不是字节数量所以为了防止中文字符过多，
+            //  把4*1024的MAX字节打印长度改为2001字符数
+            int max_str_length = 2001 - tag.length();
+            //大于4000时
+            while (msg.length() > max_str_length) {
+                Log.i(tag, msg.substring(0, max_str_length));
+                msg = msg.substring(max_str_length);
             }
+            //剩余部分
+            Log.i(tag, msg);
         }
     }
 

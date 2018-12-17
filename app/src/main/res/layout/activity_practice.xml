@@ -32,7 +32,8 @@
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                bind:onRefreshListener="@{viewModel.onRefreshListener}">
 
                 <com.edusoho.yunketang.widget.LoadMoreListView
                     android:id="@+id/listView"
@@ -47,94 +48,100 @@
                 </com.edusoho.yunketang.widget.LoadMoreListView>
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <LinearLayout
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/bg_chapter_practice_menu"
-                android:orientation="vertical"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="onBgClick"
                 android:visibility="@{viewModel.isShowMenu ? View.VISIBLE : View.GONE}">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
+                <LinearLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:layout_marginRight="5dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onSearchTypeClick"
-                    android:tag="0"
-                    android:text="全部"
-                    android:textColor="@{viewModel.searchType == 0 ? @color/theme_color : @color/text_dark_gray}"
-                    android:textSize="15sp"
-                    tools:textColor="@color/theme_color" />
+                    android:background="@drawable/bg_chapter_practice_menu"
+                    android:orientation="vertical">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/bg_light_gray1" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="5dp"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onSearchTypeClick"
+                        android:tag="0"
+                        android:text="全部"
+                        android:textColor="@{viewModel.searchType == 0 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textSize="15sp"
+                        tools:textColor="@color/theme_color" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onSearchTypeClick"
-                    android:tag="1"
-                    android:text="已完成"
-                    android:textColor="@{viewModel.searchType == 1 ? @color/theme_color : @color/text_dark_gray}"
-                    android:textSize="15sp"
-                    tools:textColor="@color/text_dark_gray" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/bg_light_gray1" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/bg_light_gray1" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onSearchTypeClick"
+                        android:tag="1"
+                        android:text="已完成"
+                        android:textColor="@{viewModel.searchType == 1 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textSize="15sp"
+                        tools:textColor="@color/text_dark_gray" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onSearchTypeClick"
-                    android:tag="2"
-                    android:text="未完成"
-                    android:textColor="@{viewModel.searchType == 2 ? @color/theme_color : @color/text_dark_gray}"
-                    android:textSize="15sp"
-                    tools:textColor="@color/text_dark_gray" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/bg_light_gray1" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/bg_light_gray1" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onSearchTypeClick"
+                        android:tag="2"
+                        android:text="未完成"
+                        android:textColor="@{viewModel.searchType == 2 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textSize="15sp"
+                        tools:textColor="@color/text_dark_gray" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onSearchTypeClick"
-                    android:tag="3"
-                    android:text="未开始"
-                    android:textColor="@{viewModel.searchType == 3 ? @color/theme_color : @color/text_dark_gray}"
-                    android:textSize="15sp"
-                    tools:textColor="@color/text_dark_gray" />
-            </LinearLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/bg_light_gray1" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:onClick="onSearchTypeClick"
+                        android:tag="3"
+                        android:text="未开始"
+                        android:textColor="@{viewModel.searchType == 3 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textSize="15sp"
+                        tools:textColor="@color/text_dark_gray" />
+                </LinearLayout>
+            </FrameLayout>
         </FrameLayout>
     </LinearLayout>
 </layout>

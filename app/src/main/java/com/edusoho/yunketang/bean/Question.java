@@ -11,6 +11,8 @@ public class Question implements Serializable {
     public String questionTypeName;// 题型类型名称
     public int questionSort;       // 题目在该题型中的顺序
     public String questionId;      // 题目id
+    public boolean isStar;         // 题目是否收藏
+    public String starId;          // 收藏id
     public String topic;           // 题目说明（文字）
     public String topicVoiceUrl;   // 题目说明（语音）
     public String topicPictureUrl; // 题目说明（图片）
@@ -19,10 +21,11 @@ public class Question implements Serializable {
     public class QuestionDetails implements Serializable {
         public int childQuestionType;  // 子题类型：1、单选题 2、简答题（自定义）
         public String correctResult;   // 正确答案
+        public String correctResultUrl;// 正确答案图片url
         public int choiceType;         // 选项类型（0:文字，1：图片，2：语音）
         public int choiceMode;         // 选项模式（0：ABCD模式，1:1234模式）
-        public String resultResolveUrl;// 答案url
         public String resultResolve;   // 答案解析
+        public String resultResolveUrl;// 答案图片url
         public int childQuestionSort;  // 子题题目序号
         public String topicSubsidiary; // 子题题目
         public String topicSubsidiaryUrl;// 子题题目图片
@@ -34,8 +37,8 @@ public class Question implements Serializable {
         public String choices_f; // 选项F
         public String choices_g; // 选项G
         public List<Option> options; // 选项集合（自定义）
-        public String myAnswerContent;// 我的作答文字内容
-        public String myAnswerPicUrl; // 我的作答图片url
+        public String myAnswerContent;// 我的作答文字内容（自定义）
+        public String myAnswerPicUrl; // 我的作答图片url（自定义）
 
         public class Option implements Serializable {
             public int choiceType;      // 选项类型（0:文字，1：图片，2：语音）
@@ -43,6 +46,23 @@ public class Question implements Serializable {
             public String optionContent;// 选项内容
             public String optionPicUrl; // 选项图片url
             public boolean isPicked;    // 是否被选中
+        }
+
+        /**
+         * 获取正确答案
+         */
+        public String getCorrectResult() {
+            String correctStr = correctResult;
+            if (choiceMode == 0) {
+                correctStr = correctStr.replace("1", "A")
+                        .replace("2", "B")
+                        .replace("3", "C")
+                        .replace("4", "D")
+                        .replace("5", "E")
+                        .replace("6", "F")
+                        .replace("7", "G");
+            }
+            return correctStr;
         }
 
         /**
@@ -54,10 +74,10 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "A" : "1";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_a;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_a;
                 }
                 list.add(option);
@@ -66,10 +86,10 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "B" : "2";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_b;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_b;
                 }
                 list.add(option);
@@ -78,10 +98,10 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "C" : "3";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_c;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_c;
                 }
                 list.add(option);
@@ -90,10 +110,10 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "D" : "4";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_d;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_d;
                 }
                 list.add(option);
@@ -102,10 +122,10 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "E" : "5";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_e;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_e;
                 }
                 list.add(option);
@@ -114,10 +134,10 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "F" : "6";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_f;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_f;
                 }
                 list.add(option);
@@ -126,17 +146,16 @@ public class Question implements Serializable {
                 Option option = new Option();
                 option.choiceType = choiceType;
                 option.optionType = choiceMode == 0 ? "G" : "7";
-                if(choiceType == 0) { // 文字
+                if (choiceType == 0) { // 文字
                     option.optionContent = choices_g;
                 }
-                if(choiceType == 1) { // 语音
+                if (choiceType == 1) { // 语音
                     option.optionPicUrl = choices_g;
                 }
                 list.add(option);
             }
             return list;
         }
-
     }
 
     //--------------------------  题干参数  ------------------------------------//

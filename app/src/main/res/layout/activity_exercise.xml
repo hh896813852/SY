@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="android.text.TextUtils" />
+
         <variable
             name="viewModel"
             type="com.edusoho.yunketang.ui.exercise.ExerciseActivity" />
@@ -60,9 +62,12 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
+                    android:onClick="onCollectClick"
                     android:scaleType="centerInside"
                     android:src="@{viewModel.isQuestionCollected ? @drawable/icon_question_collected : @drawable/icon_question_not_collect}"
-                    tools:src="@drawable/icon_question_not_collect" />
+                    android:visibility="@{viewModel.isQuestionStem ? View.GONE : View.VISIBLE}"
+                    tools:src="@drawable/icon_question_not_collect"
+                    tools:visibility="visible" />
 
                 <ImageView
                     android:layout_width="40dp"
@@ -81,7 +86,8 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,19 +100,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
-                        tools:text="单选题"
                         android:text="@{viewModel.questionTypeName}"
                         android:textColor="@color/theme_color"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        tools:text="单选题" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
-                        tools:text="2/26"
                         android:text="@{viewModel.questionTypeInfo}"
                         android:textColor="@color/text_black"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        tools:text="2/26" />
                 </LinearLayout>
 
                 <android.support.v4.view.ViewPager
@@ -126,7 +132,8 @@
                     android:onClick="onAnalysisClick"
                     android:text="解析"
                     android:textColor="@color/text_white"
-                    android:textSize="17sp" />
+                    android:textSize="17sp"
+                    android:visibility="@{viewModel.isAnswerAnalysisTagShowed ? View.VISIBLE : View.GONE}" />
 
                 <FrameLayout
                     android:id="@+id/bgLayout"
@@ -488,6 +495,19 @@
                     </LinearLayout>
                 </FrameLayout>
             </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_gravity="bottom"
+                android:background="@color/theme_color"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onCommitAnswerAndShowResultClick"
+                android:text="交卷并查看结果"
+                android:textColor="@color/text_white"
+                android:textSize="17sp"
+                android:visibility="@{viewModel.isLastPage ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
 
         <FrameLayout
@@ -538,7 +558,7 @@
                     android:clickable="true"
                     android:orientation="vertical"
                     android:visibility="@{viewModel.isAnswerCardShowed ? View.VISIBLE : View.GONE}"
-                    tools:visibility="visible">
+                    tools:visibility="gone">
 
                     <ListView
                         android:id="@+id/listView"
@@ -564,7 +584,7 @@
                         android:textSize="17sp" />
                 </LinearLayout>
 
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="140dp"
@@ -572,40 +592,54 @@
                     android:clickable="true"
                     android:orientation="vertical"
                     android:visibility="@{viewModel.isAnswerAnalysisShowed ? View.VISIBLE : View.GONE}"
-                    tools:visibility="gone">
+                    tools:visibility="visible">
 
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="20dp"
+                            android:text="正确答案："
+                            android:textColor="@color/theme_color"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="95dp"
+                            android:layout_marginTop="19dp"
+                            android:text="@{viewModel.correctAnswer}"
+                            android:textColor="@color/theme_color"
+                            android:textSize="17sp"
+                            tools:text="C" />
+                    </FrameLayout>
+
+                    <com.edusoho.yunketang.widget.NoScrollListView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        bind:adapter="@{viewModel.correctAnswerPicAdapter}" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="20dp"
-                        android:text="正确答案："
-                        android:textColor="@color/theme_color"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="95dp"
-                        android:layout_marginTop="19dp"
-                        android:text="C"
-                        android:textColor="@color/theme_color"
-                        android:textSize="19sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="70dp"
+                        android:layout_marginTop="5dp"
                         android:text="答案解析："
                         android:textColor="@color/theme_color"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        android:visibility="@{TextUtils.isEmpty(viewModel.answerAnalysis) &amp;&amp; viewModel.answerAnalysisPicList.size() == 0 ? View.GONE : View.VISIBLE}" />
 
                     <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="100dp"
+                        android:layout_marginTop="10dp"
                         android:fillViewport="true">
 
                         <LinearLayout
@@ -621,21 +655,21 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
                                 android:lineSpacingExtra="5dp"
-                                android:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析"
+                                android:text="@{viewModel.answerAnalysis}"
                                 android:textColor="@color/text_black"
-                                android:textSize="17sp" />
+                                android:textSize="17sp"
+                                tools:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析" />
 
                             <com.edusoho.yunketang.widget.NoScrollListView
-                                android:id="@+id/picListView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:divider="@null"
                                 android:dividerHeight="0dp"
-                                bind:adapter="@{viewModel.picAdapter}" />
+                                bind:adapter="@{viewModel.answerAnalysisPicAdapter}" />
                         </LinearLayout>
                     </ScrollView>
-                </FrameLayout>
+                </LinearLayout>
             </FrameLayout>
         </FrameLayout>
     </FrameLayout>

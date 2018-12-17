@@ -36,6 +36,8 @@ public class AnswerResultLayout extends ViewGroup {
     private List<Integer> childRight;
     private List<Integer> childBottom;
 
+    private TagClickListener tagClickListener;
+
     public AnswerResultLayout(Context context) {
         super(context);
     }
@@ -101,6 +103,11 @@ public class AnswerResultLayout extends ViewGroup {
         tv.setSingleLine(true);
         tv.setEllipsize(TextUtils.TruncateAt.END);
         tv.setBackground(ContextCompat.getDrawable(mContext, drawableId));
+        tv.setOnClickListener(v -> {
+            if (tagClickListener != null) {
+                tagClickListener.OnTagClick(position);
+            }
+        });
         return tv;
     }
 
@@ -137,9 +144,19 @@ public class AnswerResultLayout extends ViewGroup {
         }
     }
 
+    /**
+     * 设置tag点击监听
+     */
+    public void setOnTagClickListener(TagClickListener tagClickListener) {
+        this.tagClickListener = tagClickListener;
+    }
+
+    public interface TagClickListener {
+        void OnTagClick(int index);
+    }
+
     private int dip2px(int dip) {
         final float scale = mContext.getResources().getDisplayMetrics().density;
         return (int) (dip * scale + 0.5f);
     }
-
 }

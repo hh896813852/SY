@@ -22,6 +22,8 @@ import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding;
+import com.edusoho.yunketang.helper.ImageUploadHelper;
+import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -50,7 +52,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         }
     };
 
-    public List<Object> list = new ArrayList<>();
+    public List<String> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
 
         @Override
@@ -64,12 +66,14 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                 pickView.setOnClickListener(v -> onPicPickClick());
                 deleteView.setVisibility(View.GONE);
             } else { // 已添加并显示的照片
-                Glide.with(getSupportedActivity()).load((Uri) list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
+                Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
                 pickView.setVisibility(View.GONE);
                 deleteView.setVisibility(View.VISIBLE);
                 deleteView.setOnClickListener(v -> {
                     list.remove(position);
                     adapter.notifyDataSetChanged();
+                    // 子题答案图片修改
+                    childQuestion.myAnswerPicUrl = getQuestionPicUrl();
                 });
             }
             return view;
@@ -89,10 +93,17 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_IMAGE) { // 照片选择返回
-                list.remove(list.size() - 1);
-                list.addAll(Matisse.obtainResult(data));
-                list.add("");
-                adapter.notifyDataSetChanged();
+                List<Uri> uriList = Matisse.obtainResult(data);
+                ProgressDialogUtil.showProgress(getSupportedActivity(),"正在上传图片...");
+                ImageUploadHelper.uploadImage(getSupportedActivity(), uriList.get(0), uriList, (urls, urlList) -> {
+                    ProgressDialogUtil.hideProgress();
+                    list.remove(list.size() - 1);
+                    list.addAll(urlList);
+                    list.add("");
+                    adapter.notifyDataSetChanged();
+                    // 子题答案图片保存
+                    childQuestion.myAnswerPicUrl = getQuestionPicUrl();
+                });
             }
         }
     }
@@ -157,5 +168,21 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                 .theme(R.style.Matisse_Zhihu)   // 主题  暗色主题 R.style.Matisse_Dracula
                 .imageEngine(new GlideEngine()) // 加载方式
                 .forResult(REQUEST_IMAGE);      // 请求码
+    }
+
+    /**
+     * 获取题目答案图片urls
+     */
+    private String getQuestionPicUrl() {
+        StringBuilder builder = new StringBuilder();
+        for (String url : list) {
+            if(!TextUtils.isEmpty(url)) {
+                builder.append(url).append(",");
+            }
+        }
+        if(TextUtils.isEmpty(builder)) {
+            return "";
+        }
+        return builder.deleteCharAt(builder.length() - 1).toString();
     }
 }

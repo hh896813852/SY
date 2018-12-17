@@ -244,7 +244,8 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
         }
 
         Intent intent = new Intent(getSupportedActivity(), WebViewActivity.class);
-        intent.putExtra(SYConstants.WEB_URL, url + ("1".equals(showStudentNumEnabled) ? "&shouldShowStudentNum=1" : ""));
+//        intent.putExtra(SYConstants.WEB_URL, url + ("1".equals(showStudentNumEnabled) ? "&shouldShowStudentNum=1" : ""));
+        intent.putExtra(SYConstants.WEB_URL, url + "&shouldShowStudentNum=1");
         startActivity(intent);
     }
 }

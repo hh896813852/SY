@@ -87,7 +87,10 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
 
             @Override
             public void onPageSelected(int position) {
-
+                // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
+                if (getActivity() != null) {
+                    ((ExerciseActivity) getActivity()).currentChildQuestionIndex = position;
+                }
             }
 
             @Override
@@ -109,6 +112,10 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
+        if (isVisibleToUser && getActivity() != null) {
+            ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
+        }
         if (hasAudio.get()) { // 包含音频文件
             if (isVisibleToUser) { // 界面可见，则创建播放器
                 if (mediaPlayer == null) {

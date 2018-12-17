@@ -11,7 +11,8 @@ public class SYConstants {
     public static final int PAGE_SIZE = 10;
 //    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
 //    public static String HTTP_URL = "http://192.168.10.104:8081/shangyuan-app-web/"; // 刘健本地环境
-    public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/"; // 上元教育测试环境
+    public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环境
+//    public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/"; // 上元教育测试环境
     public static String HTTP_URL_ONLINE = "http://www.233863.com/";     // 上元在线
     public static String HTTP_URL_ACCOUNTANT = "http://www.sykjxy.com/"; // 上元会计
 
@@ -77,9 +78,29 @@ public class SYConstants {
      */
     public static final String QUESTION_QUERY = HTTP_URL + "app/examination/query/question/type";
     /**
+     * 告诉后台当前页面和已完成题目数量
+     */
+    public static final String HOMEWORK_REDIS = HTTP_URL + "app/homework/redis";
+    /**
+     * 题目 添加收藏
+     */
+    public static final String QUESTION_ADD_COLLECTION = HTTP_URL + "app/homework/star/save";
+    /**
+     * 题目 取消收藏
+     */
+    public static final String QUESTION_CANCEL_COLLECTION = HTTP_URL + "app/homework/star/cancel";
+    /**
      * 题目提交
      */
     public static final String QUESTION_COMMIT = HTTP_URL + "app/homework/save";
+    /**
+     * 试卷最终提交
+     */
+    public static final String EXAMINATION_COMMIT = HTTP_URL + "app/homework/examination/save";
+    /**
+     * 查看答题报告
+     */
+    public static final String CHECK_REPORT = HTTP_URL + "app/homework/examination/report";
     /**
      * 我的班级
      */

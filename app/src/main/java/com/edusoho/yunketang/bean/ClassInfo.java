@@ -37,7 +37,7 @@ public class ClassInfo implements Serializable {
     public String businessType;
     public String gradateMajor;
 
-    public String getTitleNmae() {
+    public String getTitleName() {
         if(!TextUtils.isEmpty(className)) {
             return className;
         }

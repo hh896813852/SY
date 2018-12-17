@@ -36,6 +36,7 @@
                     android:layout_height="200dp"
                     app:banner_default_image="@drawable/bg_load_default_4x3"
                     app:delay_time="3000"
+                    app:image_scale_type="fit_xy"
                     app:is_auto_play="true" />
 
                 <net.lucode.hackware.magicindicator.MagicIndicator

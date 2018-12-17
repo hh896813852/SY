@@ -136,6 +136,9 @@
         <activity
             android:name="com.edusoho.yunketang.ui.exercise.ExerciseActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.me.SettingActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

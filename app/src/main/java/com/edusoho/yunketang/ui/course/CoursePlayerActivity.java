@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edusoho.yunketang.helper.AppPreferences;
+import com.edusoho.yunketang.utils.NetworkUtils;
 import com.google.gson.reflect.TypeToken;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -231,9 +233,18 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
      * 播放
      */
     private void play(String lessonUrl) {
+        if(canPlay()) {}
+
         videoPlayer.setUp(lessonUrl, true, "");
         // 播放
         videoPlayer.startPlayLogic();
+    }
+
+    /**
+     * 能否播放
+     */
+    private boolean canPlay() {
+        return AppPreferences.getSettings().isAllow4GPlay == 1 || NetworkUtils.isWifiConnected(this);
     }
 
     @Override
