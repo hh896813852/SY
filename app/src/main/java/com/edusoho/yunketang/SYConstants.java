@@ -1,7 +1,7 @@
 package com.edusoho.yunketang;
 
 /**
- * Created by any on 17/6/14.
+ * Created by huhao on 18/11/8.
  */
 public class SYConstants {
     public static final int SYJY_LOGIN = 1;
@@ -9,7 +9,7 @@ public class SYConstants {
     public static final int SYKJ_LOGIN = 3;
 
     public static final int PAGE_SIZE = 10;
-//    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
+    //    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
 //    public static String HTTP_URL = "http://192.168.10.104:8081/shangyuan-app-web/"; // 刘健本地环境
     public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环境
 //    public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/"; // 上元教育测试环境
@@ -66,6 +66,14 @@ public class SYConstants {
      */
     public static final String MY_FAULTS = HTTP_URL + "app/homework/error/query/page";
     /**
+     * 一键查询所有我的错题
+     */
+    public static final String HOMEWORK_ALL_FAULTS = HTTP_URL + "app/homework/error/user/page/query";
+    /**
+     * 删除我的错题
+     */
+    public static final String DELETE_FAULT_QUESTION = HTTP_URL + "app/homework/error/delete";
+    /**
      * 模块练习分页查询
      */
     public static final String MODULE_EXERCISE = HTTP_URL + "app/homework/moudle/query/page";
@@ -118,6 +126,14 @@ public class SYConstants {
      * 图片上传
      */
     public static final String PIC_UPLOAD = HTTP_URL + "app/oss/qiniu/upload";
+    /**
+     * 我的收藏（题库）
+     */
+    public static final String MY_COLLECT_HOMEWORK = HTTP_URL + "app/homework/star/query/page";
+    /**
+     * 某套试卷全部收藏的题目
+     */
+    public static final String ALL_MY_EXAM_COLLECT = HTTP_URL + "app/homework/star/user/page/query";
 
     // ----------------------------------------   以上为上元教育接口  ------------------------------------- //
 
@@ -297,6 +313,16 @@ public class SYConstants {
      * POST
      */
     public static final String ACCOUNTANT_EVALUATE = HTTP_URL_ACCOUNTANT + "api/drag_captcha/%s";
+    /**
+     * 上元在线 我的收藏
+     * GET
+     */
+    public static final String ONLINE_VIDEO_COLLECTION = HTTP_URL_ONLINE + "api/me/favorite_course_sets?offset=0&limit=1000";
+    /**
+     * 上元会计 我的收藏
+     * GET
+     */
+    public static final String ACCOUNTANT_VIDEO_COLLECTION = HTTP_URL_ACCOUNTANT + "api/me/favorite_course_sets?offset=0&limit=1000";
 
     public static final String MOBILE_APP_VERSION = "mobile/%s/version?code=%s";
     public static final String MOBILE_APP_RESOURCE = "mobile/%s/resources";

@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -24,6 +26,8 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentReadSelectBinding;
 import com.edusoho.yunketang.utils.DateUtils;
+import com.edusoho.yunketang.utils.DensityUtil;
+import com.edusoho.yunketang.utils.LogUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +69,7 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
 
     private void initView() {
         questionTopic.set(question.questionSort + "、" + question.topic);
+        hasAudio.set(!TextUtils.isEmpty(question.topicVoiceUrl));
 
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
             picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
@@ -98,6 +103,29 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
 
             }
         });
+
+        if (hasAudio.get() && mediaPlayer == null) {
+            initMediaPlayer();
+        }
+
+        ViewTreeObserver vto = getDataBinding().containerLayout.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                getDataBinding().containerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int initHeight = Math.min(getDataBinding().containerLayout.getHeight(), DensityUtil.dip2px(getSupportedActivity(), 240));
+                setMargins(getDataBinding().dragView, 0, initHeight, 0, 0);
+                setMargins(getDataBinding().viewPager, 0, initHeight + DensityUtil.dip2px(getSupportedActivity(), 40), 0, 0);
+            }
+        });
+    }
+
+    public void setMargins(View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
     }
 
     private void initData() {
@@ -191,6 +219,9 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
      * 初始化MediaPlayer
      */
     private void initMediaPlayer() {
+        if (getDataBinding() == null) {
+            return;
+        }
         // 给进度条设置监听(以次来实现快进功能)
         getDataBinding().seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -211,8 +242,8 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
                 mediaPlayer.seekTo(progress);
             }
         });
-
-        String path = "http://other.web.ri01.sycdn.kuwo.cn/resource/n2/96/19/2142954236.mp3 ";
+        // 语音Url
+        String path = question.topicVoiceUrl;
         mediaPlayer = new MediaPlayer();
         // 设置音频流的类型
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);

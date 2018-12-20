@@ -1,7 +1,12 @@
 package com.edusoho.yunketang.helper;
 
 import android.content.Context;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
+
+import com.edusoho.yunketang.R;
 
 /**
  * Created by any on 17/3/31.
@@ -53,5 +58,14 @@ public class ToastHelper {
             }
         }
         oneTime = twoTime;
+    }
+
+    public static void showCustomToast(Context context) {
+        Toast toast = new Toast(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_custom, null);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }

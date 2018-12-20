@@ -15,6 +15,7 @@ import java.util.List;
 public class Course implements Serializable {
 
     public int             id;
+    public int             courseType;// 自定义 1、上元在线 2、上元会计
     public Boolean         isSelected;
     public String          title;
     public int             categoryId;

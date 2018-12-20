@@ -65,6 +65,18 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 containerLayout.addView(innerView);
             }
             containerLayout.setVisibility(list.get(position).isShowDetail ? View.VISIBLE : View.GONE);
+            // 已完成
+            view.findViewById(R.id.finishView).setOnClickListener(v -> {
+                if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) {
+                    BaseDialog dialog = DialogUtil.showAnimationDialog(PracticeActivity.this, R.layout.dialog_not_login);
+                    dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
+                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
+                } else {
+                    Intent intent = new Intent(PracticeActivity.this, AnswerReportActivity.class);
+                    intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                    startActivity(intent);
+                }
+            });
             // 继续
             view.findViewById(R.id.continueView).setOnClickListener(v -> {
                 if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) {
@@ -78,6 +90,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
                     intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
+                    intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
                     startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
@@ -92,6 +105,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
                     intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
                     intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
+                    intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
                     startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });

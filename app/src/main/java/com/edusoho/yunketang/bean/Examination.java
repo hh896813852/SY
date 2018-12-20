@@ -16,7 +16,8 @@ public class Examination implements Serializable {
     public String homeworkId;     // 作业id
     public String examinationName;// 试卷名称
     public int finishState;       // 0：未开始，1：已开始未完成，2：已完成
-    @SerializedName("sum")
+    public String sum;            // 题目总数
+    public String count;          // 题目总数
     public String questionSums;   // 题目总数
     @SerializedName("finishCountSum")
     public String finishedSum;    // 完成题目数量
@@ -74,10 +75,17 @@ public class Examination implements Serializable {
             case 0:
                 return "共" + questionSums + "题";
             case 1:
-                return finishedSum + "/" + questionSums;
+                return finishedSum + "/" + sum;
             case 2:
                 return "对:" + trueSum + "      错:" + falseSum;
         }
         return "";
+    }
+
+    /**
+     * 获取试卷状态信息
+     */
+    public String getTotalCount() {
+        return "共" + count + "题";
     }
 }

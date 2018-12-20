@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.bean.Examination" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bg_light_gray_corner_4"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/starView"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/icon_question_collected" />
+
+            <TextView
+                android:id="@+id/examNameView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/starView"
+                android:ellipsize="end"
+                android:singleLine="true"
+                tools:text="试题名称"
+                android:text="@{viewModel.examinationName}"
+                android:textColor="@color/text_black"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/examNameView"
+                android:layout_alignStart="@+id/examNameView"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                tools:text="共66题"
+                android:text="@{viewModel.getTotalCount}"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

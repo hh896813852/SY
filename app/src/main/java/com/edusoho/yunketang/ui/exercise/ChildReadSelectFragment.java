@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Layout(value = R.layout.fragment_child_single_select)
-public class ChildSingleSelectFragment extends BaseFragment {
+@Layout(value = R.layout.fragment_child_read_select)
+public class ChildReadSelectFragment extends BaseFragment {
     private Question.QuestionDetails childQuestion;
 
     public ObservableField<String> questionTopic = new ObservableField<>();
@@ -40,24 +40,25 @@ public class ChildSingleSelectFragment extends BaseFragment {
     public List<Question.QuestionDetails.Option> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
-        // 是否是第一次选择
-        boolean isFirstPick = true;
-        for (int i = 0; i < list.size(); i++) {
+        // 是否是第一次选择 TODO 注释掉是因为阅读选择可以为多选，所以取消自动下一题功能
+//        boolean isFirstPick = true;
+//        for (int i = 0; i < list.size(); i++) {
             // 有选项选过，则不是第一次选择
-            if (list.get(i).isPicked) {
-                isFirstPick = false;
-            }
-            list.get(i).isPicked = position == i;
-        }
+//            if (list.get(i).isPicked) {
+//                isFirstPick = false;
+//            }
+//            list.get(i).isPicked = position == i;
+//        }
+        list.get(position).isPicked = !list.get(position).isPicked;
         adapter.notifyDataSetChanged();
-        if (isFirstPick && getParentFragment() != null) {
-            // 第一次选择，显示下一页
-            ((ReadSelectedFragment)getParentFragment()).showNextPage();
-        }
+//        if (isFirstPick && getParentFragment() != null) {
+//            // 第一次选择，显示下一页
+//            ((ReadSelectedFragment)getParentFragment()).showNextPage();
+//        }
     };
 
-    public static ChildSingleSelectFragment newInstance(Question.QuestionDetails childQuestion) {
-        ChildSingleSelectFragment fragment = new ChildSingleSelectFragment();
+    public static ChildReadSelectFragment newInstance(Question.QuestionDetails childQuestion) {
+        ChildReadSelectFragment fragment = new ChildReadSelectFragment();
         Bundle args = new Bundle();
         args.putSerializable("childQuestion", childQuestion);
         fragment.setArguments(args);

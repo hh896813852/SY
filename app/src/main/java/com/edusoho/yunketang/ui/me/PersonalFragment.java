@@ -11,6 +11,7 @@ import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.databinding.FragmentPersonalBinding;
+import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
 
 /**
@@ -53,7 +54,7 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
      * 我的收藏
      */
     public View.OnClickListener onMyCollectionClicked = v -> {
-//        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
+        startActivity(new Intent(getSupportedActivity(), MyCollectionActivity.class));
     };
 
     /**

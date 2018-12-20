@@ -40,6 +40,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
     private Question.QuestionDetails childQuestion;
 
     public ObservableField<String> questionTopic = new ObservableField<>();
+    public ObservableField<String> answerContent = new ObservableField<>();
 
     public List<String> picList = new ArrayList<>();
     public SYBaseAdapter picAdapter = new SYBaseAdapter() {
@@ -124,8 +125,12 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
         }
         picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
-
-        // 添加图片初始化
+        // 用户作答内容（还原）
+        answerContent.set(childQuestion.myAnswerContent);
+        // 用户作答图片初始化（还原）
+        if(!TextUtils.isEmpty(childQuestion.myAnswerPicUrl)) {
+            list.addAll(Arrays.asList(childQuestion.myAnswerPicUrl.split(",")));
+        }
         list.add("");
         adapter.init(getSupportedActivity(), R.layout.item_pic_pick, list);
 

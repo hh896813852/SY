@@ -7,7 +7,7 @@ import android.support.v4.view.PagerAdapter;
 
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.ui.exercise.ChildIntegratedExercisesFragment;
-import com.edusoho.yunketang.ui.exercise.ChildSingleSelectFragment;
+import com.edusoho.yunketang.ui.exercise.ChildReadSelectFragment;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class ChildQuestionViewPagerAdapter extends FragmentStatePagerAdapter {
         Question.QuestionDetails childQuestion = childQuestionList.get(position);
         switch (childQuestion.childQuestionType) {
             case 1: // 单选题
-                return ChildSingleSelectFragment.newInstance(childQuestion);
+                return ChildReadSelectFragment.newInstance(childQuestion);
             case 2: // 简答题： 一段文字（含图片），一个题目（含图片），一个答案（可上传图片）
                 return ChildIntegratedExercisesFragment.newInstance(childQuestion);
         }

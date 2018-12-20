@@ -68,9 +68,10 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         question = (Question) getArguments().getSerializable("question");
-
+        if (mediaPlayer == null) {
+            initMediaPlayer();
+        }
         initView();
-
     }
 
     private void initView() {
@@ -141,6 +142,9 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
      * 初始化MediaPlayer
      */
     private void initMediaPlayer() {
+        if(getDataBinding() == null) {
+            return;
+        }
         // 给进度条设置监听(以次来实现快进功能)
         getDataBinding().seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -161,8 +165,8 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
                 mediaPlayer.seekTo(progress);
             }
         });
-
-        String path = "http://other.web.ri01.sycdn.kuwo.cn/resource/n2/96/19/2142954236.mp3 ";
+        // 语音Url
+        String path = question.topicVoiceUrl;
         mediaPlayer = new MediaPlayer();
         // 设置音频流的类型
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);

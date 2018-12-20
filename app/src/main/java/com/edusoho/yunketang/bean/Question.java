@@ -16,7 +16,11 @@ public class Question implements Serializable {
     public String topic;           // 题目说明（文字）
     public String topicVoiceUrl;   // 题目说明（语音）
     public String topicPictureUrl; // 题目说明（图片）
+    public String userResult;     // 用户答案
     public List<QuestionDetails> details; // 题目（可包含多个）
+
+    public String subclassificationName; // 题型子分类名称
+    public String errorId;               // 错误题目id（我的错题里面含有,用于删除错题）
 
     public class QuestionDetails implements Serializable {
         public int childQuestionType;  // 子题类型：1、单选题 2、简答题（自定义）

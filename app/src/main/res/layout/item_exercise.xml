@@ -97,6 +97,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/finishView"
                 android:layout_width="64dp"
                 android:layout_height="32dp"
                 android:layout_marginRight="10dp"

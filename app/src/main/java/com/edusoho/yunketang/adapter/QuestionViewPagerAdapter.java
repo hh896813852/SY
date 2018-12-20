@@ -36,7 +36,7 @@ public class QuestionViewPagerAdapter extends FragmentStatePagerAdapter {
                 return SingleSelectFragment.newInstance(question);
             case 2: // 多选题
                 return MultipleSelectFragment.newInstance(question);
-            case 3: // 阅读选择题： 一段文字（含图片），多个单选题（题目含图片,选项可能是图片）
+            case 3: // 阅读选择题：子题选项可能是多选
                 return ReadSelectedFragment.newInstance(question);
             case 4: // 听力选择题
                 return ListenSelectFragment.newInstance(question);

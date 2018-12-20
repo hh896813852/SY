@@ -260,11 +260,11 @@ public class HttpUtil {
             RequestBody requestBody = multipartBodyBuilder.build();
 
             User loginUser = SYApplication.getInstance().getUser();
-            Request.Builder RequestBuilder = new Request.Builder()
+            Request.Builder requestBuilder = new Request.Builder()
                     .header("token", loginUser.syjyToken)
                     .url(reqUrl)
                     .post(requestBody);
-            Request request = RequestBuilder.build();
+            Request request = requestBuilder.build();
 
             mOkHttpClient.newCall(request).enqueue(new Callback() {
                 @Override
@@ -301,6 +301,69 @@ public class HttpUtil {
                     subscriber.onCompleted();
                     call.cancel();
                     Log.e("111", "失败onFailure: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String str = response.body().string();
+                    subscriber.onNext(str);
+                    subscriber.onCompleted();
+                    call.cancel();
+                }
+            });
+        });
+    }
+
+    public static Observable<String> okJsonPost(String url, String json) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return Observable.create(subscriber -> {
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, json);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    subscriber.onError(e);
+                    subscriber.onCompleted();
+                    call.cancel();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String str = response.body().string();
+                    subscriber.onNext(str);
+                    subscriber.onCompleted();
+                    call.cancel();
+                }
+            });
+        });
+    }
+
+    public static Observable<String> okFormPost(String url, Map<String, String> params) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        return Observable.create(subscriber -> {
+            FormBody.Builder formBodyBuilder = new FormBody.Builder();
+            //遍历map中所有参数到builder
+            if (params != null) {
+                for (String key : params.keySet()) {
+                    formBodyBuilder.add(key, params.get(key));
+                }
+            }
+            Request request = new Request.Builder()
+                    .addHeader("X-Auth-Token", SYApplication.getInstance().token)
+                    .addHeader("Accept", "application/vnd.edusoho.v2+json")
+                    .url(url)
+                    .post(formBodyBuilder.build())
+                    .build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    subscriber.onError(e);
+                    subscriber.onCompleted();
+                    call.cancel();
                 }
 
                 @Override

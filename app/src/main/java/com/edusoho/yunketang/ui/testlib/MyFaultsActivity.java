@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.testlib;
 
+import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.edusoho.yunketang.bean.FaultRecord;
+import com.edusoho.yunketang.ui.exercise.ExerciseActivity;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -21,6 +24,7 @@ import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +36,18 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
     public ObservableField<Boolean> hasFaults = new ObservableField<>(false);
     public ObservableField<Boolean> isLogin = new ObservableField<>(false);
 
-    private List<Integer> list = new ArrayList<>();
+    private List<FaultRecord> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
+            view.findViewById(R.id.wipeView).setOnClickListener(v -> {
+                Intent intent = new Intent(MyFaultsActivity.this, ExerciseActivity.class);
+                intent.putExtra(ExerciseActivity.IS_MY_FAULTS, true);
+                intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                startActivity(intent);
+            });
             return view;
         }
     };
@@ -57,7 +67,7 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
         // 加载更多
         getDataBinding().listView.setOnLoadMoreListener(() -> {
             if (!isLoading && !getDataBinding().swipeView.isRefreshing()) {
-                pageNo ++;
+                pageNo++;
                 isLoading = true;
                 loadData();
             }
@@ -73,17 +83,15 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
                 .addParam("userId", loginUser.syjyUser.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
-                .execute(new SYDataListener<List<BusinessModule>>() {
+                .execute(new SYDataListener<List<FaultRecord>>() {
 
                     @Override
-                    public void onSuccess(List<BusinessModule> data) {
+                    public void onSuccess(List<FaultRecord> data) {
                         isLoading = false;
                         if (pageNo == 0) {
                             list.clear();
                         }
-                        for (int i = 0; i < 8; i++) {
-                            list.add(i);
-                        }
+                        list.addAll(data);
                         hasFaults.set(list.size() > 0);
                         adapter.notifyDataSetChanged();
                         // 防止界面已关闭，请求才回来导致getDataBinding == null
@@ -103,7 +111,7 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
                             getDataBinding().listView.setCanLoadMore(false);
                         }
                     }
-                }, new TypeToken<List<BusinessModule>>() {
+                }, new TypeToken<List<FaultRecord>>() {
                 });
     }
 

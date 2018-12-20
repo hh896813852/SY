@@ -2,6 +2,7 @@ package com.edusoho.yunketang.base;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.Li
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView;
 
+import java.time.format.TextStyle;
+
 /**
  * Created by any on 16/7/26.
  */
@@ -31,6 +34,7 @@ public class MagicIndicatorBuilder {
         public int labelTextSize = 14;
         public int titleNormalColor;
         public int titleSelectedColor;
+        public int textStyle = Typeface.NORMAL;
         /**
          * LinePagerIndicator.MODE_MATCH_EDGE 直线宽度 == 均分
          * LinePagerIndicator.MODE_WRAP_CONTENT  直线宽度 == title宽度
@@ -81,6 +85,7 @@ public class MagicIndicatorBuilder {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
                 colorTransitionPagerTitleView.setText(configuration.labels[index]);
                 colorTransitionPagerTitleView.setTextSize(configuration.labelTextSize);
+                colorTransitionPagerTitleView.setTypeface(colorTransitionPagerTitleView.getTypeface(), configuration.textStyle);
                 colorTransitionPagerTitleView.setNormalColor(ContextCompat.getColor(context, configuration.titleNormalColor));
                 colorTransitionPagerTitleView.setSelectedColor(ContextCompat.getColor(context, configuration.titleSelectedColor));
                 colorTransitionPagerTitleView.setOnClickListener(view -> {
