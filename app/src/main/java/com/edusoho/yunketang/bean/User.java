@@ -12,6 +12,10 @@ import java.io.Serializable;
 public class User implements Serializable {
     public String     mobile;
     public String     nickname;
+    public String     nickName;
+    public int     sex;
+    public String     headImg;
+    public String     personSign;
     public String     email;
     public String     password;
     public String     id;
@@ -38,6 +42,8 @@ public class User implements Serializable {
     public String sykj_user;
     public User syzxUser;
     public User sykjUser;
+    public boolean isRegisterSyzx; // 是否注册上元在线
+    public boolean isRegisterSykj; // 是否注册上元会计
 
     public User getOtherUser() {
         return syzxUser != null ? syzxUser : sykjUser;

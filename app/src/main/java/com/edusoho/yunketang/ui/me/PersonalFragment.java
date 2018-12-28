@@ -10,9 +10,14 @@ import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
+import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.databinding.FragmentPersonalBinding;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
+import com.edusoho.yunketang.wxapi.WXshare;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 
 /**
  * @author huhao on 2018/7/4
@@ -21,6 +26,8 @@ import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
 public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
 
     public ObservableField<String> avatar = new ObservableField<>();
+    public ObservableField<String> nickname = new ObservableField<>();
+    public ObservableField<String> personSign = new ObservableField<>();
     public ObservableField<Boolean> isLogin = new ObservableField<>(false);
 
     @Override
@@ -31,8 +38,13 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     @Override
     public void onResume() {
         super.onResume();
-//        avatar.set(SYApplication.getInstance().getUser().avatar);
-        isLogin.set(SYApplication.getInstance().isLogin());
+        User loginUser = SYApplication.getInstance().getUser();
+        isLogin.set(loginUser != null);
+        if (loginUser != null) {
+            avatar.set(loginUser.syjyUser.headImg);
+            nickname.set(loginUser.syjyUser.nickName);
+            personSign.set(loginUser.syjyUser.personSign);
+        }
     }
 
     @Override
@@ -47,7 +59,12 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
      * 头像点击
      */
     public View.OnClickListener onHeadImageClicked = v -> {
-//        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
+        if (SYApplication.getInstance().isLogin()) {
+            startActivity(new Intent(getSupportedActivity(), PersonalInfoActivity.class));
+        } else {
+            startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
+            showSingleToast("请先登录！");
+        }
     };
 
     /**
@@ -61,28 +78,32 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
      * 购买的视频
      */
     public View.OnClickListener onBuyVideoClicked = v -> {
-//        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
+        startActivity(new Intent(getSupportedActivity(), MyBoughtVideoActivity.class));
     };
 
     /**
      * 购买的试卷
      */
     public View.OnClickListener onBuyPaperClicked = v -> {
-//        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
+        startActivity(new Intent(getSupportedActivity(), MyBoughtExamActivity.class));
     };
 
     /**
      * 上元在线元宝
      */
     public View.OnClickListener onSYZXGoldClicked = v -> {
-//        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
+        Intent intent = new Intent(getSupportedActivity(), MyIngotActivity.class);
+        intent.putExtra(MyIngotActivity.INGOT_TYPE, 1);
+        startActivity(intent);
     };
 
     /**
      * 上元会计元宝
      */
     public View.OnClickListener onSYKJGoldClicked = v -> {
-//        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
+        Intent intent = new Intent(getSupportedActivity(), MyIngotActivity.class);
+        intent.putExtra(MyIngotActivity.INGOT_TYPE, 2);
+        startActivity(intent);
     };
 
     /**

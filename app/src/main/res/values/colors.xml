@@ -58,7 +58,17 @@
     <!-- 背景 红色-->
     <color name="bg_red">#F44848</color>
     <!-- 背景 红色-->
+    <color name="bg_dark_red">#E71D46</color>
+    <!-- 背景 青色-->
+    <color name="bg_cyan">#4674F4</color>
+    <!-- 背景 黄色-->
     <color name="bg_orange">#F5A623</color>
+    <!-- 字体 淡黄色 -->
+    <color name="bg_light_orange">#F4B946</color>
+    <!-- 字体 浅黄色 -->
+    <color name="bg_light_yellow">#FBC02C</color>
+    <!-- 字体 淡黄色 -->
+    <color name="bg_light_yellow2">#EFDEA9</color>
 
     <!-- 分隔线 -->
     <!-- 分隔线 -->

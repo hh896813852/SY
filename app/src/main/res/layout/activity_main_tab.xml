@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -30,10 +31,38 @@
             android:layout_height="1dp"
             android:background="@color/line_light_gray" />
 
-        <net.lucode.hackware.magicindicator.MagicIndicator
-            android:id="@+id/mainTabIndicator"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/bg_white" />
+            android:layout_height="48dp">
+
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/mainTabIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/bg_white" />
+
+            <FrameLayout
+                android:id="@+id/unreadCountView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{Integer.valueOf(viewModel.unReadCount) == 0 ? View.GONE : View.VISIBLE}">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_bottom_msg_count_more"
+                    android:visibility="@{Integer.valueOf(viewModel.unReadCount) > 99 ? View.VISIBLE : View.GONE}" />
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:gravity="center"
+                    android:background="@drawable/shape_oval_bg_dark_red"
+                    android:text="@{viewModel.unReadCount}"
+                    android:textColor="@color/text_white"
+                    android:textSize="8sp"
+                    android:visibility="@{Integer.valueOf(viewModel.unReadCount) > 99 ? View.GONE : View.VISIBLE}" />
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 </layout>

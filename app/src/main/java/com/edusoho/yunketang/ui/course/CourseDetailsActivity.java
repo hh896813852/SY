@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -184,7 +185,7 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
         if (loginUser == null) {
             return;
         }
-        if (!SYApplication.getInstance().isHelpRegister(courseType)) {
+        if (!SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) {
             SYDataTransport.create(String.format(courseType == 1 ? SYConstants.ONLINE_IS_COLLECT : SYConstants.ACCOUNTANT_IS_COLLECT, courseId))
                     .isGET()
                     .directReturn()
@@ -213,7 +214,7 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
         if (loginUser == null) {
             return;
         }
-        if (!SYApplication.getInstance().isHelpRegister(courseType)) {
+        if (!SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) {
             SYDataTransport.create(String.format(courseType == 1 ? SYConstants.ONLINE_COURSE_MEMBER : SYConstants.ACCOUNTANT_COURSE_MEMBER, courseProject.id))
                     .isGET()
                     .directReturn()
@@ -245,10 +246,15 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
     }
 
     /**
-     * 分享
+     * 微信分享
      */
     public void onShareClick(View view) {
-
+        Intent intent = new Intent(this, ShareActivity.class);
+        intent.putExtra(ShareActivity.SHARE_URL, SYApplication.getInstance().host + "course_set/" + courseProject.courseSet.id);
+        intent.putExtra(ShareActivity.SHARE_TITLE, courseProject.courseSet.title);
+        intent.putExtra(ShareActivity.SHARE_CONTENT, courseProject.courseSet.summary);
+        intent.putExtra(ShareActivity.SHARE_THUMB_URL, courseProject.courseSet.cover.small);
+        startActivity(intent);
     }
 
     /**
@@ -259,9 +265,16 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
         if (loginUser == null) { // 未登录
             startActivity(LoginActivity.class);
         } else { // 已登录
-            if (SYApplication.getInstance().isHelpRegister(courseType)) {
-                // 去验证注册
-                checkHelpRegister();
+            if (SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) { // 没有toke
+                if (SYApplication.getInstance().isRegisterInOtherPlatform(courseType)) { // 注册了
+                    // 去登录
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.putExtra(LoginActivity.LOGIN_PLATFORM, courseType + 1);
+                    startActivity(intent);
+                } else { // 未注册
+                    // 去验证注册
+                    checkHelpRegister();
+                }
             } else {
                 if (isJoined.get()) { // 去学习
                     Intent intent = new Intent(this, CoursePlayerActivity.class);
@@ -332,9 +345,16 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
         if (loginUser == null) { // 未登录
             startActivity(LoginActivity.class);
         } else { // 已登录
-            if (SYApplication.getInstance().isHelpRegister(courseType)) {
-                // 去验证注册
-                checkHelpRegister();
+            if (SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) {
+                if (SYApplication.getInstance().isRegisterInOtherPlatform(courseType)) { // 注册了
+                    // 去登录
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.putExtra(LoginActivity.LOGIN_PLATFORM, courseType + 1);
+                    startActivity(intent);
+                } else { // 未注册
+                    // 去验证注册
+                    checkHelpRegister();
+                }
             } else {
                 // 收藏与否
                 setCollectStatus(courseType == 1 ? loginUser.syzxToken : loginUser.sykjToken);

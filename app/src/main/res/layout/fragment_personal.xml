@@ -39,9 +39,10 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="上小元"
+                    android:text="@{viewModel.nickname}"
                     android:textColor="@color/text_white"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    tools:text="上小元" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,21 +50,22 @@
                     android:layout_marginTop="12dp"
                     android:ellipsize="end"
                     android:maxLines="3"
-                    android:text="态度决定一切，相信相信的力量。"
+                    android:text="@{viewModel.personSign}"
                     android:textColor="@color/text_white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:text="态度决定一切，相信相信的力量。" />
             </LinearLayout>
 
             <com.edusoho.yunketang.widget.CircleImageView
                 android:id="@+id/headImage"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:layout_toStartOf="@+id/rightArrow"
                 android:background="@drawable/icon_default_avatar"
                 app:border_color="@color/text_white"
-                app:border_width="2dp"
+                app:border_width="1dp"
                 bind:clickCommand="@{viewModel.onHeadImageClicked}"
                 bind:url="@{viewModel.avatar}" />
 
@@ -181,7 +183,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bg_white_corner_6"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"

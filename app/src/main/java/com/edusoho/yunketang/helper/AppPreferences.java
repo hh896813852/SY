@@ -4,6 +4,7 @@ package com.edusoho.yunketang.helper;
 import android.text.TextUtils;
 
 import com.edusoho.yunketang.BuildConfig;
+import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.Setting;
 import com.edusoho.yunketang.utils.JsonUtil;
@@ -95,4 +96,19 @@ public class AppPreferences extends BasePreferences {
     public static void setSelectedCourse(EducationCourse course) {
         setString(SELECTED_COURSE, JsonUtil.toJson(course));
     }
+
+    public static void setLatestMsgTime(long time) {
+        if (SYApplication.getInstance().getUser() != null) {
+            setLong(SYApplication.getInstance().getUser().syjyUser.id, time);
+        }
+    }
+
+    public static long getLatestMsgTime() {
+        if (SYApplication.getInstance().getUser() == null) {
+            return 0;
+        } else {
+            return getLong(SYApplication.getInstance().getUser().syjyUser.id, 0);
+        }
+    }
+
 }

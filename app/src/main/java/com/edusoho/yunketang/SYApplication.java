@@ -13,9 +13,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.shuyu.gsyvideoplayer.cache.CacheFactory;
-import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.edusoho.yunketang.base.core.ActivityManager;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.edu.bean.RequestUrl;
@@ -25,8 +22,10 @@ import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.RequestUtil;
 import com.edusoho.yunketang.utils.volley.StringVolleyRequest;
+import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.shuyu.gsyvideoplayer.cache.CacheFactory;
+import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.TbsDownloader;
 
 import java.net.UnknownHostException;
 
@@ -94,15 +93,23 @@ public class SYApplication extends MultiDexApplication {
      * 是否登录
      */
     public boolean isLogin() {
-        return getUser() != null;
+        return getUser() != null && getUser().syjyUser != null;
     }
 
     /**
-     * 是否帮其注册
+     * 是否存在对应平台的token
      */
-    public boolean isHelpRegister(int courseType) {
+    public boolean hasTokenInOtherPlatform(int courseType) {
         this.courseType = courseType;
         return !((courseType == 1 && !TextUtils.isEmpty(user.syzxToken)) || (courseType == 2 && !TextUtils.isEmpty(user.sykjToken)));
+    }
+
+    /**
+     * 是否在对应平台注册了
+     */
+    public boolean isRegisterInOtherPlatform(int courseType) {
+        this.courseType = courseType;
+        return (courseType == 1 && user.isRegisterSyzx) || (courseType == 2 && user.isRegisterSykj);
     }
 
     /**
@@ -114,6 +121,7 @@ public class SYApplication extends MultiDexApplication {
             if (user != null) {
                 this.token = user.syzxToken;
             }
+            this.courseType = 1;
             this.domain = "www.233863.com";
             this.schoolHost = "http://www.233863.com/mapi_v2/";
         }
@@ -121,6 +129,7 @@ public class SYApplication extends MultiDexApplication {
             if (user != null) {
                 this.token = user.sykjToken;
             }
+            this.courseType = 2;
             this.domain = "www.sykjxy.com";
             this.schoolHost = "http://www.sykjxy.com/mapi_v2/";
         }

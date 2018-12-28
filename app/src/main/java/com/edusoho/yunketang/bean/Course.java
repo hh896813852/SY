@@ -16,6 +16,7 @@ public class Course implements Serializable {
 
     public int             id;
     public int             courseType;// 自定义 1、上元在线 2、上元会计
+    public int             courseSort;// 自定义 课程序号，用于首页菜单导航,从0开始
     public Boolean         isSelected;
     public String          title;
     public int             categoryId;

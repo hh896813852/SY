@@ -14,20 +14,25 @@ import com.edusoho.yunketang.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static android.view.View.MeasureSpec.AT_MOST;
 import static android.view.View.MeasureSpec.EXACTLY;
 
 /**
  * @author huhao on 2018/11/29.
  */
 public class AnswerResultLayout extends ViewGroup {
+    public static final String TITLE_TAG = "title";  // 标题标记
     public static final int NOT_ANSWER = 0;  // 未答
     public static final int ANSWERED = 1;    // 已答
     public static final int ANSWER_TRUE = 3; // 答对
     public static final int ANSWER_FALSE = 4;// 答错
     private Context mContext;
+    private boolean withTitle; // 是否包含标题
     private int colNum;
     private int mRealWidth;
+    private int titleHeight;
     private int mVerticalSpacing;
     private int mHorizontalSpacing;
 
@@ -54,6 +59,7 @@ public class AnswerResultLayout extends ViewGroup {
 
     private void init(Context context, AttributeSet attrs) {
         this.mContext = context;
+        titleHeight = dip2px(20);
         mVerticalSpacing = dip2px(15);
         mHorizontalSpacing = dip2px(15);
         childLeft = new ArrayList<>();
@@ -66,6 +72,7 @@ public class AnswerResultLayout extends ViewGroup {
     }
 
     public void setTags(List<Integer> tags) {
+        withTitle = false;
         removeAllViewsInLayout();
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < tags.size(); i++) {
@@ -74,6 +81,41 @@ public class AnswerResultLayout extends ViewGroup {
         requestLayout();
     }
 
+    /**
+     * 带标题
+     */
+    public void setTags(Map<String, List<Integer>> mapTags) {
+        withTitle = true;
+        removeAllViewsInLayout();
+        LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        for (Map.Entry<String, List<Integer>> mapTag : mapTags.entrySet()) {
+            if (!TextUtils.isEmpty(mapTag.getKey())) {
+                addViewInLayout(createTitleView(mapTag.getKey()), -1, lp);
+            }
+            for (int i = 0; i < mapTag.getValue().size(); i++) {
+                addViewInLayout(createTextView(mapTag.getValue().get(i), i), -1, lp);
+            }
+        }
+        requestLayout();
+    }
+
+    /**
+     * 创建标题
+     */
+    private TextView createTitleView(String title) {
+        TextView titleView = new TextView(mContext);
+        titleView.setTag(TITLE_TAG);
+        titleView.setText(title);
+        titleView.setTextSize(14);
+        titleView.setTextColor(ContextCompat.getColor(mContext, R.color.text_black));
+        titleView.setSingleLine(true);
+        titleView.setEllipsize(TextUtils.TruncateAt.END);
+        return titleView;
+    }
+
+    /**
+     * 创建tagView
+     */
     private TextView createTextView(Integer tag, int position) {
         int drawableId = R.drawable.shape_oval_stroke_gray_bg_white;
         int colorId = R.color.text_white;
@@ -113,6 +155,10 @@ public class AnswerResultLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // 自身宽度
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        // 使用了的高度
+        int usedHeight = 0;
         // 一行已经使用了的宽度
         int usedWidth = 0;
         // 真实宽度
@@ -121,19 +167,50 @@ public class AnswerResultLayout extends ViewGroup {
         int perWidth = mRealWidth / colNum;
         // 每个子View自身实际宽度
         int childWidth = perWidth - mHorizontalSpacing;
-        for (int i = 0; i < getChildCount(); i++) {
-            View childView = getChildAt(i);
-            childView.measure(MeasureSpec.makeMeasureSpec(childWidth, EXACTLY), MeasureSpec.makeMeasureSpec(childWidth, EXACTLY));
-            if (i % colNum == 0) { // 一行的第一个
-                usedWidth = 0;
+        if (withTitle) {
+            int tagIndex = 0;
+            for (int i = 0; i < getChildCount(); i++) {
+                View childView = getChildAt(i);
+                // 如果是标题
+                if (childView.getTag() != null && childView.getTag().equals(TITLE_TAG)) {
+                    tagIndex = 0;
+                    childView.measure(MeasureSpec.makeMeasureSpec(width, AT_MOST), MeasureSpec.makeMeasureSpec(titleHeight, EXACTLY));
+                    childLeft.add(mHorizontalSpacing / 2);
+                    childRight.add(width - mHorizontalSpacing / 2);
+                    childTop.add(usedHeight);
+                    childBottom.add(usedHeight + titleHeight);
+                    usedHeight = usedHeight + titleHeight;
+                } else {
+                    childView.measure(MeasureSpec.makeMeasureSpec(childWidth, EXACTLY), MeasureSpec.makeMeasureSpec(childWidth, EXACTLY));
+                    if (tagIndex % colNum == 0) { // 一行的第一个
+                        usedWidth = 0;
+                        usedHeight += childWidth + mVerticalSpacing;
+                    }
+                    childLeft.add(usedWidth + mHorizontalSpacing / 2);
+                    childRight.add(usedWidth + mHorizontalSpacing / 2 + childWidth);
+                    childTop.add(usedHeight - childWidth - mVerticalSpacing / 2);
+                    childBottom.add(usedHeight - mVerticalSpacing / 2);
+                    usedWidth += perWidth;
+                    tagIndex++;
+                }
             }
-            childLeft.add(usedWidth + mHorizontalSpacing / 2);
-            childRight.add(usedWidth + mHorizontalSpacing / 2 + childWidth);
-            childTop.add((i / colNum) * childWidth + (i / colNum) * mVerticalSpacing + mVerticalSpacing / 2);
-            childBottom.add((i / colNum + 1) * childWidth + (i / colNum + 1) * mVerticalSpacing - mVerticalSpacing / 2);
-            usedWidth += perWidth;
+            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), usedHeight);
+        } else {
+            for (int i = 0; i < getChildCount(); i++) {
+                View childView = getChildAt(i);
+                childView.measure(MeasureSpec.makeMeasureSpec(childWidth, EXACTLY), MeasureSpec.makeMeasureSpec(childWidth, EXACTLY));
+                if (i % colNum == 0) { // 一行的第一个
+                    usedWidth = 0;
+                }
+                childLeft.add(usedWidth + mHorizontalSpacing / 2);
+                childRight.add(usedWidth + mHorizontalSpacing / 2 + childWidth);
+                childTop.add((i / colNum) * (childWidth + mVerticalSpacing) + mVerticalSpacing / 2);
+                childBottom.add((i / colNum + 1) * (childWidth + mVerticalSpacing) - mVerticalSpacing / 2);
+                usedWidth += perWidth;
+                setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), perWidth * ((getChildCount() - 1) / colNum + 1));
+            }
+            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), perWidth * ((getChildCount() - 1) / colNum + 1));
         }
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), perWidth * ((getChildCount() - 1) / colNum + 1));
     }
 
     @Override

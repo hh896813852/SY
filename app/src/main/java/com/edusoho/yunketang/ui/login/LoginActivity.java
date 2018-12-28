@@ -37,8 +37,10 @@ import org.json.JSONObject;
 @Layout(value = R.layout.activity_login)
 public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
     public static final int LOGIN_REQUEST_CODE = RequestCodeUtil.next();
+    public static final String LOGIN_PLATFORM = "login_platform"; // 2、上元在线  3、上元会计
 
     private String LOGIN_URL = SYConstants.USER_SYJY_LOGIN;
+    private int loginPlatform; // 登录平台
 
     public ObservableField<String> phoneNo = new ObservableField<>();
     public ObservableField<String> password = new ObservableField<>();
@@ -49,6 +51,10 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loginPlatform = getIntent().getIntExtra(LOGIN_PLATFORM, 0);
+        if (loginPlatform != 0) {
+            setLoginType(loginPlatform);
+        }
         initView();
     }
 
@@ -145,14 +151,27 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
 
                     @Override
                     public void onSuccess(User data) {
-                        showSingleToast("登陆成功！");
-                        // 关闭软键盘
-                        AppUtil.closeSoftInputKeyBoard(LoginActivity.this);
-                        data.mobile = phoneNo.get();
-                        data.syzxUser = JsonUtil.fromJson(data.syzx_user,User.class);
-                        SYApplication.getInstance().setUser(data);
-                        setResult(Activity.RESULT_OK);
-                        finish();
+                        if (loginPlatform == 2) { // 已登录，现在要登录上元在线获取其token
+                            SYApplication.getInstance().getUser().syzxToken = data.syzxToken;
+                            SYApplication.getInstance().getUser().syjyToken = data.syjyToken;
+                            SYApplication.getInstance().reSaveUser();
+                            showSuccess();
+                        }
+                        if (loginPlatform == 3) { // 已登录，现在要登录上元会计获取其token
+                            SYApplication.getInstance().getUser().sykjToken = data.sykjToken;
+                            SYApplication.getInstance().getUser().syjyToken = data.syjyToken;
+                            SYApplication.getInstance().reSaveUser();
+                            showSuccess();
+                        }
+                        if (loginPlatform == 0) { // 未登录
+                            data.mobile = phoneNo.get();
+                            data.syzxUser = JsonUtil.fromJson(data.syzx_user, User.class);
+                            data.sykjUser = JsonUtil.fromJson(data.sykj_user, User.class);
+                            SYApplication.getInstance().setUser(data);
+                            setResult(Activity.RESULT_OK);
+                            //　获取账号在其他平台的注册信息（是否注册）
+                            getAccountInOtherPlatformRegisterInfo();
+                        }
                     }
 
                     @Override
@@ -168,6 +187,56 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
     }
 
     /**
+     * 获取账号在其他平台的信息（是否注册）
+     */
+    private void getAccountInOtherPlatformRegisterInfo() {
+        SYDataTransport.create(SYConstants.VALIDATE_MOBILE)
+                .addParam("mobile", phoneNo.get())
+                .execute(new SYDataListener() {
+
+                    @Override
+                    public void onMessage(Message message) {
+                        if (message.status != 1) {
+                            try {
+                                User loginUser = SYApplication.getInstance().getUser();
+                                JSONObject jsonObject = new JSONObject(String.valueOf(message.data));
+                                int type = jsonObject.getInt("type");
+                                switch (type) {
+                                    case 1: // 已注册上元在线
+                                        loginUser.isRegisterSyzx = true;
+                                        break;
+                                    case 2: // 已注册上元会计
+                                        loginUser.isRegisterSykj = true;
+                                        break;
+                                    case 3: // 已注册上元在线和上元会计
+                                        loginUser.isRegisterSyzx = true;
+                                        loginUser.isRegisterSykj = true;
+                                        break;
+                                }
+                                SYApplication.getInstance().reSaveUser();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } finally {
+                                showSuccess();
+                            }
+                        } else {
+                            showSuccess();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 显示成功
+     */
+    private void showSuccess() {
+        showSingleToast("登陆成功！");
+        // 关闭软键盘
+        AppUtil.closeSoftInputKeyBoard(LoginActivity.this);
+        finish();
+    }
+
+    /**
      * 去注册
      */
     public void onToRegisterClick(View view) {
@@ -178,7 +247,16 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
      * 登录方式
      */
     public void onLoginTypeClick(View view) {
-        int type = Integer.valueOf(view.getTag().toString());
+        if (loginPlatform != 0) {
+            return;
+        }
+        setLoginType(Integer.valueOf(view.getTag().toString()));
+    }
+
+    /**
+     * 设置登录方式
+     */
+    private void setLoginType(int type) {
         loginType.set(type);
         switch (type) {
             case SYConstants.SYJY_LOGIN: // 上元教育

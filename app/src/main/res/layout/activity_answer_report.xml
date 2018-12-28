@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="java.lang.Integer" />
+
         <variable
             name="viewModel"
             type="com.edusoho.yunketang.ui.testlib.AnswerReportActivity" />
@@ -286,7 +288,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@color/bg_light_green_color" />
+                android:background="@color/bg_light_green_color"
+                android:visibility="@{Integer.valueOf(viewModel.falseNum) > 0 ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 android:layout_width="0dp"
@@ -297,7 +300,8 @@
                 android:onClick="onFaultsAnalysisClick"
                 android:text="错题解析"
                 android:textColor="@color/text_white"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:visibility="@{Integer.valueOf(viewModel.falseNum) > 0 ? View.VISIBLE : View.GONE}" />
         </LinearLayout>
     </LinearLayout>
 </layout>

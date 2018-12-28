@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -101,7 +102,7 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
                 containerLayout.addView(innerView);
             }
             view.findViewById(R.id.lookMoreView).setOnClickListener(v -> {
-
+                setMoreClickListener(courseList.get(position).orderType == null ? "recommend" : courseList.get(position).orderType, courseList.get(position).type, courseList.get(position).categoryId);
             });
             return view;
         }
@@ -164,6 +165,12 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
                                 }
                             }
                         }
+                        // 重新赋值类型和顺序，用于item菜单导航
+                        for (int i = 0; i < courseList.size(); i++) {
+                            Course course = courseList.get(i);
+                            course.courseType = status;
+                            course.courseSort = i;
+                        }
                         ((MainTabActivity) getActivity()).courseFragment.list.addAll(courseList);
                         ((MainTabActivity) getActivity()).courseFragment.adapter.notifyDataSetChanged();
                         // 刷新界面
@@ -187,6 +194,16 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
         LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getLayoutParams();
         linearParams.height = listViewHeight + DensityUtil.dip2px(getSupportedActivity(), 230); // 230 = recyclerView + 一个头部 + 一个底部
         ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.setLayoutParams(linearParams);
+    }
+
+    /**
+     * 获得当前位置item到listView顶部距离
+     *
+     * @param index item下标
+     * @return 距离
+     */
+    public int getItemHeight(int index) {
+        return ListViewHelper.getHeightFromItemTopToListViewTop(getDataBinding().listView, index);
     }
 
     /**

@@ -24,19 +24,18 @@ public class PayParams implements Serializable {
     private String price;
     private int payType;
 
-    public String orderStr; // 支付宝参数
-    public WeChatPayInfo data;// 微信支付参数
+    // 支付宝参数
+    public String orderStr;
 
-    public class WeChatPayInfo {
-        public String appid;
-        public String sign;
-        public String timestamp;
-        public String noncestr;
-        public String partnerid;
-        public String prepayid;
-        @SerializedName("package")
-        public String packageValue;
-    }
+    // 微信支付参数
+    public String appid;
+    public String sign;
+    public String timestamp;
+    public String noncestr;
+    public String partnerid;
+    public String prepayid;
+    @SerializedName("package")
+    public String packageValue;
 
 
     public String getPrice() {

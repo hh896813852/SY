@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -26,6 +27,7 @@ import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentIntegratedExercisesBinding;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
+import com.edusoho.yunketang.utils.ViewUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.util.List;
 
 @Layout(value = R.layout.fragment_integrated_exercises)
 public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegratedExercisesBinding> {
-    private Question question;
+    public Question question;
     private MediaPlayer mediaPlayer; // 音频播放器
     private boolean isPrepared;      // 音频播放器是否准备好了
     private TimeThread timeThread;   // 时间进度线程
@@ -69,7 +71,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     private void initView() {
         questionTopic.set(question.questionSort + "、" + question.topic);
         hasAudio.set(!TextUtils.isEmpty(question.topicVoiceUrl));
-
+        // 初始化题目图片
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
             picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
         }
@@ -79,7 +81,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
             Glide.with(getSupportedActivity()).load(url).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
             getDataBinding().containerLayout.addView(innerView);
         }
-
+        // 初始化viewPager
         viewPagerAdapter = new ChildQuestionViewPagerAdapter(getChildFragmentManager(), childQuestionList);
         getDataBinding().viewPager.setOffscreenPageLimit(3);
         getDataBinding().viewPager.setAdapter(viewPagerAdapter);
@@ -102,29 +104,12 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
 
             }
         });
-
+        // 初始化音频播放器
         if (hasAudio.get() && mediaPlayer == null) {
             initMediaPlayer();
         }
-
-        ViewTreeObserver vto = getDataBinding().containerLayout.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                getDataBinding().containerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int initHeight = Math.min(getDataBinding().containerLayout.getHeight(), DensityUtil.dip2px(getSupportedActivity(), 240));
-                setMargins(getDataBinding().dragView, 0, initHeight, 0, 0);
-                setMargins(getDataBinding().viewPager, 0, initHeight + DensityUtil.dip2px(getSupportedActivity(), 40), 0, 0);
-            }
-        });
-    }
-
-    public void setMargins(View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
+        // 初始化containerLayout、dragView、viewPager高度
+        initLayoutHeight();
     }
 
     private void initData() {
@@ -139,9 +124,11 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
         if (isVisibleToUser && getActivity() != null) {
+            // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
             ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
+            // 初始化containerLayout、dragView、viewPager高度
+            initLayoutHeight();
         }
         if (hasAudio.get()) { // 包含音频文件
             if (isVisibleToUser) { // 界面可见，则创建播放器
@@ -298,5 +285,23 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
                 }
             }
         }
+    }
+
+    /**
+     * 初始化containerLayout、dragView、viewPager高度
+     */
+    private void initLayoutHeight() {
+        getDataBinding().containerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                getDataBinding().containerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int initHeight = Math.min(getDataBinding().containerLayout.getHeight(), DensityUtil.dip2px(getSupportedActivity(), 240));
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDataBinding().scrollView.getLayoutParams();
+                params.height = initHeight;
+                getDataBinding().scrollView.setLayoutParams(params);
+                ViewUtils.setMargins(getDataBinding().dragView, 0, initHeight, 0, 0);
+                ViewUtils.setMargins(getDataBinding().viewPager, 0, initHeight + DensityUtil.dip2px(getSupportedActivity(), 40), 0, 0);
+            }
+        });
     }
 }

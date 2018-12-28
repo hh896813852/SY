@@ -35,6 +35,7 @@ import java.util.List;
 @Layout(value = R.layout.activity_practice, title = "章节练习", rightButtonRes = R.drawable.icon_menu)
 public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     public static final String MODULE_ID = "module_id";
+    public static final String TITLE_NAME = "title_name";
     public static final String SELECTED_COURSE = "selected_course";
     private int moduleId;
     private EducationCourse selectedCourse;
@@ -74,6 +75,9 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 } else {
                     Intent intent = new Intent(PracticeActivity.this, AnswerReportActivity.class);
                     intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                    intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
+                    intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                     startActivity(intent);
                 }
             });
@@ -91,10 +95,10 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
                     intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
-                    startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
+                    startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
-            //　开始
+            // 开始
             view.findViewById(R.id.startView).setOnClickListener(v -> {
                 if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) {
                     BaseDialog dialog = DialogUtil.showAnimationDialog(PracticeActivity.this, R.layout.dialog_not_login);
@@ -106,7 +110,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
                     intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
                     intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
-                    startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
+                    startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
             return view;
@@ -121,7 +125,6 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
         if (getDataBinding() != null) {
             pageNo = 1;
             getDataBinding().swipeView.setRefreshing(true);
-            getDataBinding().listView.setCanLoadMore(true);
             loadData();
         }
     };
@@ -129,7 +132,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+        if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
         }
     }
@@ -137,11 +140,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moduleId = getIntent().getIntExtra(MODULE_ID, 0);
-        selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
-        adapter.init(this, R.layout.item_exercise, list);
-        layoutInflater = LayoutInflater.from(this);
-
+        initView();
         // 加载更多
         getDataBinding().listView.setOnLoadMoreListener(() -> {
             if (!isLoading && !getDataBinding().swipeView.isRefreshing()) {
@@ -151,6 +150,14 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
             }
         });
         loadData();
+    }
+
+    private void initView() {
+        setTitleView(getIntent().getStringExtra(TITLE_NAME));
+        moduleId = getIntent().getIntExtra(MODULE_ID, 0);
+        selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
+        adapter.init(this, R.layout.item_exercise, list);
+        layoutInflater = LayoutInflater.from(this);
     }
 
     /**

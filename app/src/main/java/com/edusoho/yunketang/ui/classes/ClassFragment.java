@@ -3,8 +3,12 @@ package com.edusoho.yunketang.ui.classes;
 import android.Manifest;
 import android.content.Intent;
 import android.databinding.ObservableField;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -12,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.edusoho.yunketang.bean.MsgInfo;
+import com.edusoho.yunketang.helper.AppPreferences;
+import com.edusoho.yunketang.ui.MainTabActivity;
+import com.edusoho.yunketang.utils.DateUtils;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -34,6 +42,8 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
 /**
  * @author huhao on 2018/7/4
  */
@@ -41,6 +51,7 @@ import java.util.List;
 public class ClassFragment extends BaseFragment<FragmentClassBinding> {
     public ObservableField<Boolean> isLogin = new ObservableField<>(false);
     public ObservableField<Boolean> hasClass = new ObservableField<>(false);
+    public ObservableField<String> unReadCount = new ObservableField<>("0");
 
     private List<ClassInfo> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
@@ -68,11 +79,13 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
             // 查看作业
             view.findViewById(R.id.taskView1).setOnClickListener(v -> {
                 Intent intent = new Intent(getSupportedActivity(), CourseworkActivity.class);
+                intent.putExtra(CourseworkActivity.CLASS_INFO, list.get(position));
                 getSupportedActivity().startActivity(intent);
             });
             // 查看作业
             view.findViewById(R.id.taskView2).setOnClickListener(v -> {
                 Intent intent = new Intent(getSupportedActivity(), CourseworkActivity.class);
+                intent.putExtra(CourseworkActivity.CLASS_INFO, list.get(position));
                 getSupportedActivity().startActivity(intent);
             });
             return view;
@@ -114,6 +127,10 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
         if (isLogin.get()) {
             // 加载数据
             loadData();
+            // 刷新消息
+            refreshMsg();
+        } else {
+            hasClass.set(false);
         }
     }
 
@@ -122,6 +139,10 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getSupportedActivity() != null) {
             StatusBarUtil.setTranslucentStatus(getSupportedActivity());
+            if (isLogin.get()) {
+                // 刷新消息
+                refreshMsg();
+            }
         }
     }
 
@@ -147,6 +168,68 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
     }
 
     /**
+     * 刷新消息
+     */
+    private void refreshMsg() {
+        SYDataTransport.create(SYConstants.UNREAD_MSG_COUNT)
+                .addParam("studentId", SYApplication.getInstance().getUser().syjyUser.id)
+                .execute(new SYDataListener<MsgInfo>() {
+
+                    @Override
+                    public void onSuccess(MsgInfo data) {
+                        if (SYApplication.getInstance().getUser() == null) {
+                            return;
+                        }
+                        unReadCount.set(data.unReadCount);
+                        if (getActivity() != null) {
+                            ((MainTabActivity) getActivity()).unReadCount.set(data.unReadCount);
+                        }
+                        // 有消息
+                        if (Integer.valueOf(data.unReadCount) > 0) {
+                            // 获取之前保存的最新消息时间
+                            long latestMsgTime = AppPreferences.getLatestMsgTime();
+                            // 获取最新消息时间
+                            long updateTime = data.time;
+                            // 未保存过未读消息  或者  最新消息时间 > 之前保存的最新消息时间
+                            if ((latestMsgTime == 0) || updateTime > latestMsgTime) {
+                                // 保存系统最新消息时间
+                                AppPreferences.setLatestMsgTime(updateTime);
+                                // 如果允许声音提示
+                                if (AppPreferences.getSettings().soundSwitchState == 1) {
+                                    // 播放新消息提示音
+                                    playTipTone();
+                                }
+                                // 如果允许震动提示
+                                if (AppPreferences.getSettings().vibrationSwitchState == 1) {
+                                    // 新消息震动提示
+                                    playTipVibrator();
+                                }
+                            }
+                        }
+                    }
+                }, MsgInfo.class);
+    }
+
+    /**
+     * 新消息提示音
+     */
+    private void playTipTone() {
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone ringtone = RingtoneManager.getRingtone(getSupportedActivity(), notification);
+        ringtone.play();
+    }
+
+    /**
+     * 新消息震动提示
+     */
+    private void playTipVibrator() {
+        Vibrator vibrator = (Vibrator) getSupportedActivity().getSystemService(VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            vibrator.vibrate(300);
+        }
+    }
+
+    /**
      * 计算各个item高度，数据数量或item高度发生改变需重新计算
      */
     private void calculateItemHeight() {
@@ -160,6 +243,13 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
      */
     public View.OnClickListener onLoginClicked = v -> {
         startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
+    };
+
+    /**
+     * 我的消息
+     */
+    public View.OnClickListener onMsgClicked = v -> {
+        startActivity(new Intent(getSupportedActivity(), MyMessageActivity.class));
     };
 
     /**

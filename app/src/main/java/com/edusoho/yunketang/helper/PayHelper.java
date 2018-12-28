@@ -76,26 +76,21 @@ public class PayHelper {
      * 微信
      */
     private void callWeChat() {
-        try {
-            JSONObject jsonObject = new JSONObject(JsonUtil.toJson(params.data));
-            appId = jsonObject.optString("appid");
-            IWXAPI api = WXAPIFactory.createWXAPI(context, appId);
-            api.registerApp(appId);
-            if (!api.isWXAppInstalled()) {
-                onFail("您尚未安装微信，请安装后再试！");
-            } else {
-                PayReq req = new PayReq();
-                req.appId = jsonObject.optString("appid");
-                req.partnerId = jsonObject.optString("partnerid");
-                req.prepayId = jsonObject.optString("prepayid");
-                req.nonceStr = jsonObject.optString("noncestr");
-                req.timeStamp = jsonObject.optString("timestamp");
-                req.packageValue = jsonObject.optString("package");
-                req.sign = jsonObject.optString("sign");
-                api.sendReq(req);
-            }
-        } catch (Exception e) {
-            onFail("未知错误");
+        appId = params.appid;
+        IWXAPI api = WXAPIFactory.createWXAPI(context, appId);
+        api.registerApp(appId);
+        if (!api.isWXAppInstalled()) {
+            onFail("您尚未安装微信，请安装后再试！");
+        } else {
+            PayReq req = new PayReq();
+            req.appId = params.appid;
+            req.partnerId = params.partnerid;
+            req.prepayId = params.prepayid;
+            req.nonceStr = params.noncestr;
+            req.timeStamp = params.timestamp;
+            req.packageValue = params.packageValue;
+            req.sign = params.sign;
+            api.sendReq(req);
         }
     }
 
@@ -103,21 +98,17 @@ public class PayHelper {
      * 支付宝
      */
     private void callAlipay() {
-        try {
-            new Thread() {
-                @Override
-                public void run() {
-                    PayTask task = new PayTask((Activity) context);
-                    Map<String, String> result = task.payV2(params.orderStr, true);
-                    Message msg = new Message();
-                    msg.what = 1;
-                    msg.obj = result;
-                    mHandler.sendMessage(msg);
-                }
-            }.start();
-        } catch (Exception e) {
-            onFail("未知错误");
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                PayTask task = new PayTask((Activity) context);
+                Map<String, String> result = task.payV2(params.orderStr, true);
+                Message msg = new Message();
+                msg.what = 1;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        }.start();
     }
 
     /**

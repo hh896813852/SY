@@ -36,13 +36,31 @@
                 android:resource="@xml/files_root" />
         </provider>
 
-        <!-- 微信 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="YOUR_APP_KEY" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Channel ID" />
+
+        <!-- 微信支付 -->
         <activity
-            android:name="com.edusoho.yunketang.wxapi.WXPayEntryActivity"
+            android:name=".wxapi.WXPayEntryActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 微信分享 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- UCrop -->
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <activity
             android:name="com.edusoho.yunketang.ui.MainTabActivity"
@@ -57,7 +75,7 @@
 
         <activity
             android:name="com.edusoho.yunketang.ui.login.LoginActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait" />
 
         <activity
@@ -79,6 +97,12 @@
             android:name="com.edusoho.yunketang.ui.common.ValidateActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentFullScreenTheme" />
+
+        <activity
+            android:name=".ui.common.ShareActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentFullScreenTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <activity
             android:name="com.edusoho.yunketang.ui.course.CourseEvaluateActivity"
@@ -141,6 +165,21 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.edusoho.yunketang.ui.me.MyCollectionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.me.PersonalInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.me.MyIngotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.me.MyBoughtExamActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.me.MyBoughtVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.classes.MyMessageActivity"
             android:screenOrientation="portrait" />
     </application>
 

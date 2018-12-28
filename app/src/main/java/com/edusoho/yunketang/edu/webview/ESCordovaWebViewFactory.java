@@ -3,6 +3,7 @@ package com.edusoho.yunketang.edu.webview;
 import android.app.Activity;
 
 import com.edusoho.yunketang.edu.plugin.JsNativeAppPlugin;
+import com.edusoho.yunketang.edu.plugin.MenuClickPlugin;
 import com.edusoho.yunketang.edu.webview.bridgeadapter.AbstractJsBridgeAdapterWebView;
 import com.edusoho.yunketang.edu.webview.bridgeadapter.JsBridgeAdapter;
 
@@ -20,7 +21,7 @@ public class ESCordovaWebViewFactory {
     public static void init() {
         JsBridgeAdapter jsBridgeAdapter = JsBridgeAdapter.getInstance();
         jsBridgeAdapter.init();
-//        jsBridgeAdapter.addPlugin(MenuClickPlugin.class);
+        jsBridgeAdapter.addPlugin(MenuClickPlugin.class);
         jsBridgeAdapter.addPlugin(JsNativeAppPlugin.class);
         factory = new ESCordovaWebViewFactory();
     }

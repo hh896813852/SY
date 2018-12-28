@@ -10,6 +10,9 @@
     <string name="answer_card">答题卡</string>
     <string name="answer_analysis">答案解析</string>
 
+    <string name="user_answer">您的答案：</string>
+    <string name="answer_right">回答正确</string>
+
     <string name="not_login">您还没有登录账号</string>
     <string name="no_class">您还没有报名班级课程</string>
 

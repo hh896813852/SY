@@ -152,8 +152,7 @@ public class ESWebViewRequestManager extends RequestManager {
             return promise;
         }
 
-        if (localAppMeta == null
-                || Const.LOW_VERSIO == CommonUtil.compareVersion(localAppMeta.version, appMeta.version)) {
+        if (localAppMeta == null || Const.LOW_VERSIO == CommonUtil.compareVersion(localAppMeta.version, appMeta.version)) {
             promise = updateAppResource(appMeta.resource);
         }
 

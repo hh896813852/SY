@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.helper.AppPreferences;
+import com.edusoho.yunketang.ui.common.ShareActivity;
+import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.NetworkUtils;
+import com.edusoho.yunketang.widget.SimpleDialog;
 import com.google.gson.reflect.TypeToken;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
@@ -165,7 +168,6 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                         super.onPrepared(url, objects);
                         //开始播放了才能旋转和全屏
                         orientationUtils.setEnable(true);
-                        isPlay = true;
                     }
 
                     @Override
@@ -216,7 +218,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                         LessonItem lessonItem = JsonUtil.fromJson(json, LessonItem.class);
                         if (lessonItem != null && !TextUtils.isEmpty(lessonItem.mediaUri)) {
                             String lessonUrl = lessonItem.type.equals("video") ? lessonItem.mediaUri : lessonItem.audioUri;
-                            play(filterUrl(lessonUrl));
+                            canPlay(filterUrl(lessonUrl));
                         } else {
                             showSingleToast("视频不存在！");
                         }
@@ -230,21 +232,35 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
     }
 
     /**
-     * 播放
+     * 能否播放
      */
-    private void play(String lessonUrl) {
-        if(canPlay()) {}
+    private void canPlay(String lessonUrl) {
+        if (AppPreferences.getSettings().isAllow4GPlay == 1 || NetworkUtils.isWifiConnected(this)) {
+            play(lessonUrl);
+        } else {
+            DialogUtil.showSimpleAnimDialog(this, "您正在使用移动网络，是否继续观看？", "暂时不看", "继续观看", new SimpleDialog.OnSimpleClickListener() {
+                @Override
+                public void OnLeftBtnClicked(SimpleDialog dialog) {
+                    dialog.dismiss();
+                }
 
-        videoPlayer.setUp(lessonUrl, true, "");
-        // 播放
-        videoPlayer.startPlayLogic();
+                @Override
+                public void OnRightBtnClicked(SimpleDialog dialog) {
+                    dialog.dismiss();
+                    play(lessonUrl);
+                }
+            });
+        }
     }
 
     /**
-     * 能否播放
+     * 播放
      */
-    private boolean canPlay() {
-        return AppPreferences.getSettings().isAllow4GPlay == 1 || NetworkUtils.isWifiConnected(this);
+    private void play(String lessonUrl) {
+        isPlay = true;
+        videoPlayer.setUp(lessonUrl, true, "");
+        // 播放
+        videoPlayer.startPlayLogic();
     }
 
     @Override
@@ -315,26 +331,46 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
             // 去登陆
             toLoginActivity();
         } else {
-            if (SYApplication.getInstance().isHelpRegister(courseType)) {
-                DialogHelper.showHelpRegisterDialog(this, courseType, new DialogHelper.OnRegisterOtherPlatformListener() {
-                    @Override
-                    public void registerSuccess() {
-                        // 去评价Activity
-                        toEvaluateActivity();
-                    }
+            if (SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) {
+                if (SYApplication.getInstance().isRegisterInOtherPlatform(courseType)) { // 注册了
+                    // 去登录
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.putExtra(LoginActivity.LOGIN_PLATFORM, courseType + 1);
+                    startActivity(intent);
+                } else { // 未注册
+                    // 去验证注册
+                    DialogHelper.showHelpRegisterDialog(this, courseType, new DialogHelper.OnRegisterOtherPlatformListener() {
+                        @Override
+                        public void registerSuccess() {
+                            // 去评价Activity
+                            toEvaluateActivity();
+                        }
 
-                    @Override
-                    public void onSMSError(TextView sendCodeView) {
-                        sendView = sendCodeView;
-                        // 去验证图片Activity
-                        toValidateActivity();
-                    }
-                });
+                        @Override
+                        public void onSMSError(TextView sendCodeView) {
+                            sendView = sendCodeView;
+                            // 去验证图片Activity
+                            toValidateActivity();
+                        }
+                    });
+                }
             } else {
                 // 去评价Activity
                 toEvaluateActivity();
             }
         }
+    }
+
+    /**
+     * 微信分享
+     */
+    public void onShareClick(View view) {
+        Intent intent = new Intent(this, ShareActivity.class);
+        intent.putExtra(ShareActivity.SHARE_URL, SYApplication.getInstance().host + "course_set/" + courseProject.courseSet.id);
+        intent.putExtra(ShareActivity.SHARE_TITLE, courseProject.courseSet.title);
+        intent.putExtra(ShareActivity.SHARE_CONTENT, courseProject.courseSet.summary);
+        intent.putExtra(ShareActivity.SHARE_THUMB_URL, courseProject.courseSet.cover.small);
+        startActivity(intent);
     }
 
     /**

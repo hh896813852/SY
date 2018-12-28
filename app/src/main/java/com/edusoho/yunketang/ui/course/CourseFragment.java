@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.edusoho.yunketang.utils.LogUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
@@ -61,7 +62,16 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
     public List<Course> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
-
+        int itemHeight; // 点击的item到listView顶部距离
+        if (list.get(position).courseType == 1) { // 上元在线
+            getDataBinding().vpMain.setCurrentItem(0);
+            itemHeight = onlineCourseFragment.getItemHeight(list.get(position).courseSort);
+        } else { // 上元会计
+            getDataBinding().vpMain.setCurrentItem(1);
+            itemHeight = accountantCourseFragment.getItemHeight(list.get(position).courseSort);
+        }
+        getDataBinding().scrollView.smoothScrollTo(0, itemHeight + DensityUtil.dip2px(getSupportedActivity(), 435));
+        SYApplication.getInstance().setHost(list.get(position).courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
     };
 
     @Override
@@ -136,6 +146,7 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
 
         // 设置scrollView滑动监听
         getDataBinding().scrollView.setOnScrollListener(scrollY -> {
+            LogUtil.i("scrollY", "scrollView滑动距离：" + scrollY);
             if (scrollY > DensityUtil.dip2px(getSupportedActivity(), 200)) {
                 getDataBinding().titleIndicator.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

@@ -2,7 +2,10 @@ package com.edusoho.yunketang.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.databinding.ObservableField;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -20,7 +23,9 @@ import com.edusoho.yunketang.ui.classes.ClassFragment;
 import com.edusoho.yunketang.ui.course.CourseFragment;
 import com.edusoho.yunketang.ui.me.PersonalFragment;
 import com.edusoho.yunketang.ui.testlib.TestLibFragment;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.LogUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -37,6 +42,8 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
     private ClassFragment classFragment = new ClassFragment();
     private TestLibFragment testLibFragment = new TestLibFragment();
     private PersonalFragment personalFragment = new PersonalFragment();
+
+    public ObservableField<String> unReadCount = new ObservableField<>("0");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,11 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
             }
         });
         getDataBinding().mainTabIndicator.setNavigator(commonNavigator);
+
+        int screenW = ScreenUtil.getScreenWidth(this);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(screenW * 25 / 64, DensityUtil.dip2px(this, 2), 0, 0);
+        getDataBinding().unreadCountView.setLayoutParams(params);
     }
 
     /**

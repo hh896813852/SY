@@ -54,7 +54,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="24"
+                            tools:text="24"
+                            android:text="@{viewModel.classRank}"
                             android:textColor="@color/theme_color"
                             android:textScaleX="0.8"
                             android:textSize="45dp"
@@ -99,7 +100,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="80"
+                            tools:text="80"
+                            android:text="@{viewModel.correctPercent}"
                             android:textColor="@color/theme_color"
                             android:textScaleX="0.8"
                             android:textSize="45dp"
@@ -129,7 +131,8 @@
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            bind:onRefreshListener="@{viewModel.onRefreshListener}">
 
             <com.edusoho.yunketang.widget.LoadMoreListView
                 android:id="@+id/listView"

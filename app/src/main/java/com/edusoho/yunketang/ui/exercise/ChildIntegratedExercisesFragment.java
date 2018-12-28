@@ -20,11 +20,14 @@ import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
+import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding;
 import com.edusoho.yunketang.helper.ImageUploadHelper;
+import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
+import com.google.gson.reflect.TypeToken;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -38,6 +41,19 @@ import java.util.List;
 public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChildIntegratedExercisesBinding> {
     private static final int REQUEST_IMAGE = RequestCodeUtil.next();
     private Question.QuestionDetails childQuestion;
+
+    // 答案解析部分
+    public ObservableField<Boolean> isShowAnswerAnalysis = new ObservableField<>(false);
+    public ObservableField<String> correctAnswer = new ObservableField<>();
+    public ObservableField<String> teacherNotes = new ObservableField<>();
+    public ObservableField<String> userAnswer = new ObservableField<>();
+    public ObservableField<String> answerAnalysis = new ObservableField<>();
+    public List<String> correctAnswerPicList = new ArrayList<>();
+    public SYBaseAdapter correctAnswerPicAdapter = new SYBaseAdapter();
+    public List<String> teacherNotePicList = new ArrayList<>();
+    public SYBaseAdapter teacherNotePicAdapter = new SYBaseAdapter();
+    public List<String> answerAnalysisPicList = new ArrayList<>();
+    public SYBaseAdapter answerAnalysisPicAdapter = new SYBaseAdapter();
 
     public ObservableField<String> questionTopic = new ObservableField<>();
     public ObservableField<String> answerContent = new ObservableField<>();
@@ -62,20 +78,27 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             ImageView answerImage = view.findViewById(R.id.answerImage);
             ImageView deleteView = view.findViewById(R.id.deleteView);
             FrameLayout pickView = view.findViewById(R.id.pickView);
-            if (position == list.size() - 1) { // 添加照片
-                pickView.setVisibility(View.VISIBLE);
-                pickView.setOnClickListener(v -> onPicPickClick());
+            // 答案解析不可更改作答，隐藏删除照片按钮
+            if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
                 deleteView.setVisibility(View.GONE);
-            } else { // 已添加并显示的照片
-                Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
                 pickView.setVisibility(View.GONE);
-                deleteView.setVisibility(View.VISIBLE);
-                deleteView.setOnClickListener(v -> {
-                    list.remove(position);
-                    adapter.notifyDataSetChanged();
-                    // 子题答案图片修改
-                    childQuestion.myAnswerPicUrl = getQuestionPicUrl();
-                });
+                Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
+            } else {
+                if (position == list.size() - 1) { // 添加照片
+                    pickView.setVisibility(View.VISIBLE);
+                    pickView.setOnClickListener(v -> onPicPickClick());
+                    deleteView.setVisibility(View.GONE);
+                } else { // 已添加并显示的照片
+                    Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
+                    pickView.setVisibility(View.GONE);
+                    deleteView.setVisibility(View.VISIBLE);
+                    deleteView.setOnClickListener(v -> {
+                        list.remove(position);
+                        adapter.notifyDataSetChanged();
+                        // 子题答案图片修改
+                        childQuestion.myAnswerPicUrl = getQuestionPicUrl();
+                    });
+                }
             }
             return view;
         }
@@ -95,7 +118,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_IMAGE) { // 照片选择返回
                 List<Uri> uriList = Matisse.obtainResult(data);
-                ProgressDialogUtil.showProgress(getSupportedActivity(),"正在上传图片...");
+                ProgressDialogUtil.showProgress(getSupportedActivity(), "正在上传图片...");
                 ImageUploadHelper.uploadImage(getSupportedActivity(), uriList.get(0), uriList, (urls, urlList) -> {
                     ProgressDialogUtil.hideProgress();
                     list.remove(list.size() - 1);
@@ -125,13 +148,59 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
         }
         picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
+
+        // 是否显示答案解析
+        isShowAnswerAnalysis.set(getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis);
+        // 如果显示答案解析
+        if (isShowAnswerAnalysis.get()) {
+            // 正确答案
+            correctAnswer.set(childQuestion.correctResult);
+            // 正确答案图片adapter
+            correctAnswerPicAdapter.init(getSupportedActivity(), R.layout.item_pic, correctAnswerPicList);
+            // 正确答案图片
+            String correctResultUrl = childQuestion.correctResultUrl;
+            if (!TextUtils.isEmpty(correctResultUrl)) {
+                correctAnswerPicList.addAll(Arrays.asList(correctResultUrl.split(",")));
+                correctAnswerPicAdapter.notifyDataSetChanged();
+            }
+
+            // 老师批注
+            teacherNotes.set(childQuestion.postil);
+            // 老师批注图片adapter
+            teacherNotePicAdapter.init(getSupportedActivity(), R.layout.item_pic, teacherNotePicList);
+            // 老师批注图片
+            String postilUrl = childQuestion.postilUrl;
+            if (!TextUtils.isEmpty(postilUrl)) {
+                teacherNotePicList.addAll(Arrays.asList(postilUrl.split(",")));
+                teacherNotePicAdapter.notifyDataSetChanged();
+            }
+
+            // 答案解析
+            answerAnalysis.set(childQuestion.resultResolve);
+            // 答案解析图片adapter
+            answerAnalysisPicAdapter.init(getSupportedActivity(), R.layout.item_pic, answerAnalysisPicList);
+            // 答案解析图片
+            String resultResolveUrl = childQuestion.resultResolveUrl;
+            if (!TextUtils.isEmpty(resultResolveUrl)) {
+                answerAnalysisPicList.addAll(Arrays.asList(resultResolveUrl.split(",")));
+                answerAnalysisPicAdapter.notifyDataSetChanged();
+            }
+        }
+
         // 用户作答内容（还原）
         answerContent.set(childQuestion.myAnswerContent);
         // 用户作答图片初始化（还原）
-        if(!TextUtils.isEmpty(childQuestion.myAnswerPicUrl)) {
+        if (!TextUtils.isEmpty(childQuestion.myAnswerPicUrl)) {
             list.addAll(Arrays.asList(childQuestion.myAnswerPicUrl.split(",")));
         }
-        list.add("");
+        // 答案解析禁止输入内容、不显示添加照片item
+        if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+            // 禁止输入内容
+            getDataBinding().answerContentView.setEnabled(false);
+        } else {
+            // 显示添加照片item
+            list.add("");
+        }
         adapter.init(getSupportedActivity(), R.layout.item_pic_pick, list);
 
         // 输入答案内容监听，实时更新
@@ -181,11 +250,11 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
     private String getQuestionPicUrl() {
         StringBuilder builder = new StringBuilder();
         for (String url : list) {
-            if(!TextUtils.isEmpty(url)) {
+            if (!TextUtils.isEmpty(url)) {
                 builder.append(url).append(",");
             }
         }
-        if(TextUtils.isEmpty(builder)) {
+        if (TextUtils.isEmpty(builder)) {
             return "";
         }
         return builder.deleteCharAt(builder.length() - 1).toString();

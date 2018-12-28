@@ -148,21 +148,28 @@ public class EvaluateFragment extends BaseFragment<FragmentEvaluateBinding> {
             // 去登陆
             toLoginActivity();
         } else {
-            if (SYApplication.getInstance().isHelpRegister(courseType)) {
-                DialogHelper.showHelpRegisterDialog(getSupportedActivity(), courseType, new DialogHelper.OnRegisterOtherPlatformListener() {
-                    @Override
-                    public void registerSuccess() {
-                        // 去评价Activity
-                        toEvaluateActivity();
-                    }
+            if (SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) {
+                if (SYApplication.getInstance().isRegisterInOtherPlatform(courseType)) { // 注册了
+                    // 去登录
+                    Intent intent = new Intent(getSupportedActivity(), LoginActivity.class);
+                    intent.putExtra(LoginActivity.LOGIN_PLATFORM, courseType + 1);
+                    startActivity(intent);
+                } else { // 未注册
+                    DialogHelper.showHelpRegisterDialog(getSupportedActivity(), courseType, new DialogHelper.OnRegisterOtherPlatformListener() {
+                        @Override
+                        public void registerSuccess() {
+                            // 去评价Activity
+                            toEvaluateActivity();
+                        }
 
-                    @Override
-                    public void onSMSError(TextView sendCodeView) {
-                        sendView = sendCodeView;
-                        // 去验证图片Activity
-                        toValidateActivity();
-                    }
-                });
+                        @Override
+                        public void onSMSError(TextView sendCodeView) {
+                            sendView = sendCodeView;
+                            // 去验证图片Activity
+                            toValidateActivity();
+                        }
+                    });
+                }
             } else {
                 // 去评价Activity
                 toEvaluateActivity();

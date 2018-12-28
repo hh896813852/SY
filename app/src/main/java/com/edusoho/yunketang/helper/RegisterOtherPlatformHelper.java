@@ -115,6 +115,7 @@ public class RegisterOtherPlatformHelper {
                                 User user = JsonUtil.fromJson(data, User.class);
                                 User currentUser = SYApplication.getInstance().getUser();
                                 currentUser.syzxToken = user.token;
+                                currentUser.isRegisterSyzx = true;
                                 SYApplication.getInstance().reSaveUser();
                                 registerListener.onRegisterSuccess();
                             }
@@ -157,6 +158,7 @@ public class RegisterOtherPlatformHelper {
                                 User user = JsonUtil.fromJson(data, User.class);
                                 User currentUser = SYApplication.getInstance().getUser();
                                 currentUser.sykjToken = user.token;
+                                currentUser.isRegisterSykj = true;
                                 SYApplication.getInstance().reSaveUser();
                                 registerListener.onRegisterSuccess();
                             }

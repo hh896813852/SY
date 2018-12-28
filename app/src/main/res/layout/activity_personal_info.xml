@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.me.PersonalInfoActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_light_gray0"
+        android:orientation="vertical">
+
+        <include layout="@layout/layout_title_black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/bg_light_gray1" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_white"
+            android:onClick="onAvatarClick">
+
+            <com.edusoho.yunketang.widget.CircleImageView
+                android:id="@+id/headImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/icon_default_avatar"
+                app:border_color="@color/text_white"
+                app:border_width="1dp"
+                bind:url="@{viewModel.avatar}" />
+
+            <ImageView
+                android:id="@+id/rightArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/icon_arrow_right_gray2" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/bg_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="用户名"
+                android:textColor="@color/text_black"
+                android:textSize="14dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="90dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/bg_white"
+                android:drawableRight="@drawable/icon_edit"
+                android:drawablePadding="5dp"
+                android:hint="请编辑用户名"
+                android:text="@={viewModel.nickname}"
+                android:textSize="14dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/bg_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="性别"
+                android:textColor="@color/text_black"
+                android:textSize="14dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="90dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/bg_white"
+                android:drawableRight="@drawable/icon_edit"
+                android:drawablePadding="5dp"
+                android:focusable="false"
+                android:hint="请选择性别"
+                android:onClick="onSexPickClick"
+                android:text="@{viewModel.sex}"
+                android:textSize="14dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:background="@color/bg_white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:text="个性签名"
+                android:textColor="@color/text_black"
+                android:textSize="14dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="90dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/bg_white"
+                android:drawableRight="@drawable/icon_edit"
+                android:drawablePadding="5dp"
+                android:hint="请编辑个性签名"
+                android:inputType="text"
+                android:maxLines="1"
+                android:text="@={viewModel.personSign}"
+                android:textSize="14dp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@color/theme_color"
+            android:onClick="onSaveClick"
+            android:text="保存"
+            android:textColor="@color/text_white"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</layout>

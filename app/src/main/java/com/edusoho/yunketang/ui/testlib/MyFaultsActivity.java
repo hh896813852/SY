@@ -55,7 +55,6 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
         if (getDataBinding() != null) {
             pageNo = 0;
             getDataBinding().swipeView.setRefreshing(true);
-            getDataBinding().listView.setCanLoadMore(true);
             loadData();
         }
     };
@@ -72,6 +71,15 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
                 loadData();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isLogin.set(SYApplication.getInstance().isLogin());
+        if (isLogin.get()) {
+            loadData();
+        }
     }
 
     /**
@@ -113,15 +121,6 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
                     }
                 }, new TypeToken<List<FaultRecord>>() {
                 });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isLogin.set(SYApplication.getInstance().isLogin());
-        if (isLogin.get()) {
-            loadData();
-        }
     }
 
     /**

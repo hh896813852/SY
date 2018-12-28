@@ -13,6 +13,8 @@ public class AnswerReport implements Serializable {
         public int questionType; // 该题型类型
         public int correctCount; // 该题型正确数量
         public int falseCount;   // 该题型错误数量
+        public int sort;         // 该题型序号
+        public String explain;   // 该题型说明
         public String alias;     // 题目别名
         public List<Mistake> homeworkMistakes;
 

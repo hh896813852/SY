@@ -1,5 +1,7 @@
 package com.edusoho.yunketang.ui.exercise;
 
+import android.app.Activity;
+import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -21,7 +24,7 @@ import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.EducationCourse;
-import com.edusoho.yunketang.bean.FaultRecord;
+import com.edusoho.yunketang.bean.ExamAnswer;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.bean.base.Message;
@@ -29,7 +32,6 @@ import com.edusoho.yunketang.databinding.ActivityExerciseBinding;
 import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
-import com.edusoho.yunketang.ui.login.RegisterActivity;
 import com.edusoho.yunketang.utils.BitmapUtil;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DialogUtil;
@@ -47,15 +49,23 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Layout(value = R.layout.activity_exercise)
 public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public static final int FROM_EXERCISE_CODE = RequestCodeUtil.next();
     public static final String EXAMINATION_ID = "examination_id";
+    public static final String MESSAGE_ID = "message_id";
+    public static final String TEACHER = "teacher";
+    public static final String EXAMINATION_MINUTE = "examination_minute";
     public static final String MODULE_ID = "module_id";
     public static final String SELECTED_COURSE = "selected_course";
     public static final String CLASS_ID = "class_id";
+    public static final String BUSINESS_ID = "business_id";
+    public static final String LEVEL_ID = "level_id";
+    public static final String COURSE_ID = "course_id";
     public static final String LAST_PAGE_INDEX = "last_page_index";
     public static final String HOMEWORK_ID = "homework_id";
     public static final String IS_MY_COLLECTION = "is_my_collection";
@@ -63,20 +73,36 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public static final String IS_EXAM_TEST = "is_exam_test";
     public static final String IS_MODULE_EXERCISE = "is_module_exercise";
     public static final String IS_CLASS_EXERCISE = "is_class_exercise";
+    public static final String IS_ANSWER_ANALYSIS = "is_answer_analysis";
+    public static final String IS_TEACHER_NOTATION = "is_teacher_notation";
+    public static final String ONLY_FAULT_ANALYSIS = "only_fault_analysis";
+    public static final String FAULT_QUESTION_STEM = "fault_question_stem";
+    public String messageId;
     public String examinationId;
+    public String examinationMinute;
     private int moduleId;
     private EducationCourse selectedCourse;
     private String classId;
+    private String businessId;
+    private String levelId;
+    private String courseId;
     private int lastPageIndex;
     private String homeworkId;
+    private String teacher;
     private boolean isMyCollection;   // 是否是我的收藏题目
     private boolean isMyFaults;       // 是否是我的错题记录
     private boolean isExamTest;       // 是否是真题测试（考试）
     private boolean isModuleExercise; // 是否是模块练习
     private boolean isClassExercise;  // 是否是班级练习
+    public boolean isAnswerAnalysis;  // 是否是答案解析
+    public boolean isTeacherNotation; // 是否是老师批注
+    private boolean onlyFaultAnalysis;// 是否是错题解析解析
+    public List<Question> faultQuestionStem; // 错题题干
 
     private int commitCount;         // 可提交问题次数
     private boolean isPreCommitExam; // 是否准备提交试卷
+    private boolean isPreExit;       // 是否准备退出
+    private int leftExamSecond;      // 考试剩余秒数
 
     private static final String ADD = "+";
     private static final String SUBTRACT = "-";
@@ -93,7 +119,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public ObservableField<Boolean> isShowDeleteIcon = new ObservableField<>(false);      // 是否显示问题删除图标
     public ObservableField<Boolean> isShowCommitIcon = new ObservableField<>(false);      // 是否显示试卷提交图标
     public ObservableField<Boolean> isShowAnswerCardIcon = new ObservableField<>(false);  // 是否显示答题卡图标
-    public ObservableField<String> leftTime = new ObservableField<>("");  // 测试/考试剩余时间
+    public ObservableField<String> leftTime = new ObservableField<>("");   // 测试/考试剩余时间
+    public ObservableField<String> teacherName = new ObservableField<>("");// 老师姓名（消息->批注）
     public ObservableField<String> correctAnswer = new ObservableField<>(); // 正确答案
     public ObservableField<String> answerAnalysis = new ObservableField<>();// 答案解析
 
@@ -102,11 +129,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
     private List<Question> questionStem = new ArrayList<>(); // 题干集合
     private Question currentLoadQuestionStem;     // 当前加载题目的题干
+
     private int currentLoadQuestionStemIndex = 0; // 当前加载题目的题干的下标
-    private String[] currentLoadQuestionIds;    // 当前加载题目的题干的题目id数组
-    private String currentLoadQuestionId;       // 当前加载题目的题干的题目id
-    private int currentLoadQuestionIdIndex = 0; // 当前加载题目的题干的题目id的下标
-    private String currentLoadQuestionStemSum;  // 当前加载题型的题目总数
+    private String currentLoadQuestionStemSum;    // 当前加载题型的题目总数
 
     private Question currentQuestion;           // 当前显示的题目
     public int currentChildQuestionIndex;       // 当前题目子题的下标，用于展示哪道子题的答案解析
@@ -128,11 +153,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
+//            View view = super.getView(position, convertView, parent);
+            View view = DataBindingUtil.inflate(LayoutInflater.from(ExerciseActivity.this), R.layout.item_answer_report, parent, false).getRoot();
             view.findViewById(R.id.correctView).setVisibility(View.GONE);
             view.findViewById(R.id.falseView).setVisibility(View.GONE);
             TextView questionTypeView = view.findViewById(R.id.questionTypeView);
-            questionTypeView.setText(questionStem.get(position).getQuestionTypeName());
+            questionTypeView.setText(questionStem.get(position).alias);
             AnswerResultLayout answerResultLayout = view.findViewById(R.id.answerResultLayout);
             answerResultLayout.setTags(list.get(position));
             answerResultLayout.setOnTagClickListener(index -> {
@@ -163,18 +189,49 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         } else if (isMyCollection) {
             // 加载收藏问题列表
             loadMyCollection();
+        } else if (isTeacherNotation) {
+            teacherName.set(TextUtils.isEmpty(teacher) ? " " : teacher);
+            // 加载老师批注
+            loadTeacherNotation();
         } else {
-            // 加载题干
-            loadQuestionStem();
+            // 错题解析
+            if (onlyFaultAnalysis) {
+                ProgressDialogUtil.showProgress(this, "正在加载错题解析，请稍后...", false);
+                // 添加错题题干
+                questionStem.addAll(faultQuestionStem);
+                if (questionStem.size() > 0) {
+                    // 获取当前题干（第一个题干）
+                    currentLoadQuestionStem = questionStem.get(currentLoadQuestionStemIndex);
+                    // 获取当前题型的题目总数
+                    currentLoadQuestionStemSum = currentLoadQuestionStem.questionSum;
+                    // 将题干添加到题目集合
+                    questionList.add(currentLoadQuestionStem);
+                    // 先刷新一下
+                    viewPagerAdapter.notifyDataSetChanged();
+                    // 加载当前题型的题目
+                    loadQuestion();
+                    // 刷新界面
+                    refreshView(questionList.get(0));
+                }
+            } else {
+                // 加载题干
+                loadQuestionStem();
+            }
         }
     }
 
     private void initView() {
         // 初始化接收参数
+        messageId = getIntent().getStringExtra(MESSAGE_ID);
+        teacher = getIntent().getStringExtra(TEACHER);
         examinationId = getIntent().getStringExtra(EXAMINATION_ID);
+        examinationMinute = getIntent().getStringExtra(EXAMINATION_MINUTE);
         moduleId = getIntent().getIntExtra(MODULE_ID, 0);
         selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
         classId = getIntent().getStringExtra(CLASS_ID);
+        businessId = getIntent().getStringExtra(BUSINESS_ID);
+        levelId = getIntent().getStringExtra(LEVEL_ID);
+        courseId = getIntent().getStringExtra(COURSE_ID);
         lastPageIndex = getIntent().getIntExtra(LAST_PAGE_INDEX, 0);
         homeworkId = getIntent().getStringExtra(HOMEWORK_ID);
         isMyCollection = getIntent().getBooleanExtra(IS_MY_COLLECTION, false);
@@ -182,6 +239,10 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         isExamTest = getIntent().getBooleanExtra(IS_EXAM_TEST, false);
         isModuleExercise = getIntent().getBooleanExtra(IS_MODULE_EXERCISE, false);
         isClassExercise = getIntent().getBooleanExtra(IS_CLASS_EXERCISE, false);
+        isAnswerAnalysis = getIntent().getBooleanExtra(IS_ANSWER_ANALYSIS, false);
+        onlyFaultAnalysis = getIntent().getBooleanExtra(ONLY_FAULT_ANALYSIS, false);
+        isTeacherNotation = getIntent().getBooleanExtra(IS_TEACHER_NOTATION, false);
+        faultQuestionStem = (List<Question>) getIntent().getSerializableExtra(FAULT_QUESTION_STEM);
         // 我的错题显示删除问题图标按钮
         isShowDeleteIcon.set(isMyFaults);
         // 班级练习 或 模块练习 或 真题测试 显示试卷提交按钮
@@ -250,7 +311,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                         for (int i = 0; i < data.size(); i++) {
                             Question question = data.get(i);
                             question.questionSort = i + 1;
-                            question.sum = String.valueOf(data.size());
+                            question.questionSum = String.valueOf(data.size());
                             question.alias = data.get(i).subclassificationName;
                             for (Question.QuestionDetails details : question.details) {
                                 details.options = details.getChoiceList();
@@ -292,7 +353,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                         for (int i = 0; i < data.size(); i++) {
                             Question question = data.get(i);
                             question.questionSort = i + 1;
-                            question.sum = String.valueOf(data.size());
+                            question.questionSum = String.valueOf(data.size());
                             question.alias = data.get(i).subclassificationName;
                             for (Question.QuestionDetails details : question.details) {
                                 details.options = details.getChoiceList();
@@ -312,7 +373,47 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     }
                 }, new TypeToken<List<Question>>() {
                 });
+    }
 
+    /**
+     * 加载老师批注题目
+     */
+    private void loadTeacherNotation() {
+        ProgressDialogUtil.showProgress(this, "正在加载批注信息，请稍后...", false);
+        SYDataTransport.create(SYConstants.TEACHER_POSLIL)
+                .addParam("id", messageId)
+                .execute(new SYDataListener<Question>() {
+
+                    @Override
+                    public void onSuccess(Question data) {
+                        setResult(Activity.RESULT_OK);
+                        if (data == null) {
+                            showSingleToast("未查询到老师批注的题目！");
+                            finish();
+                            return;
+                        }
+                        data.questionSort = 1;
+                        data.questionSum = "1";
+                        data.alias = data.subclassificationName;
+                        data.userResult = data.homeworkMistake.userResult;
+                        data.score = data.homeworkMistake.score;
+                        for (Question.QuestionDetails details : data.details) {
+                            details.postil = data.homeworkMistake.postil;
+                            details.postilUrl = data.homeworkMistake.postilUrl;
+                        }
+                        questionList.add(data);
+                        // 刷新界面
+                        refreshView(questionList.get(0));
+                        viewPagerAdapter.notifyDataSetChanged();
+                        ProgressDialogUtil.hideProgress();
+                    }
+
+                    @Override
+                    public void onFail(int status, String failMessage) {
+                        super.onFail(status, failMessage);
+                        ProgressDialogUtil.hideProgress();
+                    }
+                }, Question.class);
     }
 
     /**
@@ -331,20 +432,15 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             // 获取当前题干（第一个题干）
                             currentLoadQuestionStem = questionStem.get(currentLoadQuestionStemIndex);
                             // 获取当前题型的题目总数
-                            currentLoadQuestionStemSum = currentLoadQuestionStem.sum;
+                            currentLoadQuestionStemSum = currentLoadQuestionStem.questionSum;
                             // 将题干添加到题目集合
                             questionList.add(currentLoadQuestionStem);
-                            // 该题型下有题目
-                            if (currentLoadQuestionStem.sids.length() > 0) {
-                                // 获取当前题干下的题目id数组
-                                currentLoadQuestionIds = currentLoadQuestionStem.sids.split(",");
-                                // 获取第一道题目的id
-                                currentLoadQuestionId = currentLoadQuestionIds[0];
-                                // 加载当前题型的题目
-                                loadQuestion();
-                                // 刷新界面
-                                refreshView(questionList.get(0));
-                            }
+                            // 先刷新一下
+                            viewPagerAdapter.notifyDataSetChanged();
+                            // 加载当前题型的题目
+                            loadQuestion();
+                            // 刷新界面
+                            refreshView(questionList.get(0));
                         }
                     }
 
@@ -362,22 +458,37 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 加载题目
      */
     private void loadQuestion() {
-        SYDataTransport.create(SYConstants.QUESTION_QUERY)
-                .addParam("userId", getLoginUser().syjyUser.id)
+        SYDataTransport dataTransport = SYDataTransport.create(SYConstants.QUESTION_QUERY);
+        if (moduleId != 0) {
+            dataTransport.addParam("moduleId", moduleId);
+        }
+        if (!TextUtils.isEmpty(classId)) {
+            dataTransport.addParam("classId", classId);
+        }
+        dataTransport.addParam("userId", getLoginUser().syjyUser.id)
                 .addParam("examinationId", examinationId)
-                .addParam("moduleId", moduleId)
+                .addParam("sort", currentLoadQuestionStem.sort)
                 .addParam("questionType", currentLoadQuestionStem.type)
-                .addParam("questionId", currentLoadQuestionId)
-                .addParam("limit", SYConstants.PAGE_SIZE)
                 .execute(new SYDataListener<List<Question>>() {
 
                     @Override
                     public void onSuccess(List<Question> data) {
+                        int faultSort = 0;
                         // 遍历赋值题目序号、题目总数、题目选项
                         for (int i = 0; i < data.size(); i++) {
+                            // 如果是错题解析 并且 该题目不是错题，则跳过
+                            if (onlyFaultAnalysis && !Arrays.asList(currentLoadQuestionStem.faultSort.split(",")).contains(String.valueOf(i + 1))) {
+                                continue;
+                            }
                             Question question = data.get(i);
-                            question.questionSort = currentLoadQuestionIdIndex + i + 1;
-                            question.sum = currentLoadQuestionStemSum;
+                            if (onlyFaultAnalysis) {
+                                // 定义错题序号
+                                question.questionSort = ++faultSort;
+                            } else {
+                                question.questionSort = i + 1;
+                            }
+                            question.questionSum = currentLoadQuestionStemSum;
+                            question.classification = currentLoadQuestionStem.classification;
                             question.alias = currentLoadQuestionStem.alias;
                             for (Question.QuestionDetails details : question.details) {
                                 details.options = details.getChoiceList();
@@ -418,49 +529,32 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             }
                             questionList.add(question);
                         }
-                        // 如果加载的数据最后一条id等于该题型最后一条数据的id，则该题型问题全部加载完毕
-                        if (data.size() > 0 && data.get(data.size() - 1).questionId.equals(currentLoadQuestionIds[currentLoadQuestionIds.length - 1])) {
-                            // 重置题目id的下标
-                            currentLoadQuestionIdIndex = 0;
-                            // 如果还存在下一题型，则加载下一题型的问题
-                            if (currentLoadQuestionStemIndex < questionStem.size() - 1) {
-                                // 题干集合下标+1
-                                currentLoadQuestionStemIndex++;
-                                // 获取下一题型
-                                currentLoadQuestionStem = questionStem.get(currentLoadQuestionStemIndex);
-                                // 获取下一题型的题目总数
-                                currentLoadQuestionStemSum = currentLoadQuestionStem.sum;
-                                // 题目集合添加下一题题干
-                                questionList.add(currentLoadQuestionStem);
-                                // 获取下一题型的题目数组
-                                currentLoadQuestionIds = currentLoadQuestionStem.sids.split(",");
-                                // 获取下一题型的第一道题目id
-                                currentLoadQuestionId = currentLoadQuestionIds[0];
-                                // 加载下一题型的题目
-                                loadQuestion();
-                            } else { // 试卷全部加载完毕
-                                ProgressDialogUtil.hideProgress();
-                                // 刷新ViewPager
-                                viewPagerAdapter.notifyDataSetChanged();
-                                // 模块练习 或 班级练习 去上次停留页面
-                                if (isModuleExercise || isClassExercise) {
-                                    // 去上次停留页面
-                                    showPageByPosition(lastPageIndex);
-                                }
-                                // 如果是测试/考试，则开始倒计时
-                                if (isExamTest) {
-                                    // 开始倒计时
-                                    startTimer(3 * 60 * 1000 + 3);
-                                }
-                                startTimer(3 * 60 * 1000 + 5 * 1000);
-                            }
-                        } else { // 该题型问题并未全部加载完毕，则继续加载
-                            // 获取下次加载题目的第一个id下标
-                            currentLoadQuestionIdIndex = currentLoadQuestionIdIndex + SYConstants.PAGE_SIZE;
-                            // 获取下次加载题目的第一个id
-                            currentLoadQuestionId = currentLoadQuestionIds[currentLoadQuestionIdIndex];
-                            // 继续加载题目
+                        // 如果还存在下一题型，则加载下一题型的问题
+                        if (currentLoadQuestionStemIndex < questionStem.size() - 1) {
+                            // 题干集合下标+1
+                            currentLoadQuestionStemIndex++;
+                            // 获取下一题型
+                            currentLoadQuestionStem = questionStem.get(currentLoadQuestionStemIndex);
+                            // 获取下一题型的题目总数
+                            currentLoadQuestionStemSum = currentLoadQuestionStem.questionSum;
+                            // 题目集合添加下一题题干
+                            questionList.add(currentLoadQuestionStem);
+                            // 加载下一题型的题目
                             loadQuestion();
+                        } else { // 试卷全部加载完毕
+                            ProgressDialogUtil.hideProgress();
+                            // 刷新ViewPager
+                            viewPagerAdapter.notifyDataSetChanged();
+                            // 模块练习 或 班级练习 去上次停留页面
+                            if (isModuleExercise || isClassExercise) {
+                                // 去上次停留页面
+                                showPageByPosition(lastPageIndex);
+                            }
+                            // 如果是测试/考试，则开始倒计时
+                            if (isExamTest) {
+                                // 开始倒计时
+                                startTimer(Integer.valueOf(examinationMinute) * 60 * 1000);
+                            }
                         }
                     }
 
@@ -520,10 +614,11 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         SYDataTransport dataTransport = SYDataTransport.create(SYConstants.QUESTION_COMMIT);
         dataTransport.addParam("examinationId", examinationId)
                 .addParam("userId", getLoginUser().syjyUser.id)
-                .addParam("businessType", selectedCourse.businessId)
-                .addParam("levelId", selectedCourse.levelId)
-                .addParam("courseId", selectedCourse.courseId)
+                .addParam("businessType", selectedCourse == null ? businessId : selectedCourse.businessId)
+                .addParam("levelId", selectedCourse == null ? levelId : selectedCourse.levelId)
+                .addParam("courseId", selectedCourse == null ? courseId : selectedCourse.courseId)
                 .addParam("questionType", question.questionType)
+                .addParam("classification", question.subclassification)
                 .addParam("homeworkType", TextUtils.isEmpty(classId) ? 1 : 0) // 0：班级作业，1：模块练习
                 .addParam("questionIndex", question.questionSort)
                 .addParam("questionId", question.questionId);
@@ -541,10 +636,19 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     public void onMessage(Message message) {
                         super.onMessage(message);
                         commitCount--;
-                        // 如果是准备提交试卷 并且 可提交问题均已提交过（包含提交失败）
-                        if (isPreCommitExam && commitCount == 0) {
-                            // 因为可能包含提交失败，所以在此检查是否均已提交
-                            checkIsAnswerAllCommit();
+                        // 可提交问题均已提交过（包含提交失败）
+                        if (commitCount == 0) {
+                            // 准备提交试卷
+                            if (isPreCommitExam) {
+                                // 因为可能包含提交失败，所以在此检查是否均已提交
+                                checkIsAnswerAllCommit();
+                            }
+                            // 准备退出作答
+                            if (isPreExit) {
+                                isPreExit = false;
+                                ProgressDialogUtil.hideProgress();
+                                finish();
+                            }
                         }
                     }
 
@@ -677,9 +781,10 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             isQuestionCollected.set(question.isStar);
         }
         isQuestionStem.set(question.questionType == 0);
-        isAnswerAnalysisTagShowed.set(question.questionType != 0);
+        // 不是答案解析 并且 不是题干，则显示解析标签
+        isAnswerAnalysisTagShowed.set(!isAnswerAnalysis && question.questionType != 0);
         questionTypeName.set(question.getQuestionTypeName());
-        questionTypeInfo.set(question.questionType == 0 ? "共" + question.sum + "题" : question.questionSort + "/" + question.sum);
+        questionTypeInfo.set(question.questionType == 0 ? "共" + question.questionSum + "题" : question.questionSort + "/" + question.questionSum);
     }
 
     /**
@@ -716,7 +821,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     private int getQuestionFinishCount() {
         int finishCount = 0;
         for (Question question : questionList) {
-            if (checkQuestionIsDo(question)) {
+            if (question.questionType > 0 && checkQuestionIsDo(question)) {
                 finishCount++;
             }
         }
@@ -727,27 +832,30 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 检查是否作答
      */
     private boolean checkQuestionIsDo(Question question) {
-        if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
-            // 遍历子题
-            for (Question.QuestionDetails details : question.details) {
-                // 遍历子题选项
-                for (Question.QuestionDetails.Option option : details.options) {
-                    // 只要有一个小题做出选择，就认为已作答
-                    if (option.isPicked) {
+        if (question.details.size() > 0) { // 有题目的问题
+            if (question.questionType < 6) { // 单 多 阅读 听力 判断
+                // 遍历子题
+                for (Question.QuestionDetails details : question.details) {
+                    // 遍历子题选项
+                    for (Question.QuestionDetails.Option option : details.options) {
+                        // 只要有一个小题做出选择，就认为已作答
+                        if (option.isPicked) {
+                            return true;
+                        }
+                    }
+                }
+            } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
+                // 遍历子题
+                for (Question.QuestionDetails details : question.details) {
+                    // 已作答
+                    if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
                         return true;
                     }
                 }
             }
-        } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
-            // 遍历子题
-            for (Question.QuestionDetails details : question.details) {
-                // 已作答
-                if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
-                    return true;
-                }
-            }
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
@@ -773,12 +881,13 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     /**
      * 刷新答题卡数据
      */
-    private void refreshAnswerCardData() {
+    private void refreshAnswerCardData2() {
         list.clear();
-        for (Question q : questionStem) {
+        for (Question stem : questionStem) {
             List<Integer> child = new ArrayList<>();
             for (Question question : questionList) {
-                if (question.questionType == q.type) {
+                // 题目类型和题干一样 并且 题目属于该题干
+                if (question.questionType == stem.type && stem.sids.contains(question.questionId)) {
                     if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
                         int answerCount = 0;
                         // 遍历子题
@@ -809,6 +918,48 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                 }
             }
             list.add(child);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 刷新答题卡数据
+     */
+    private void refreshAnswerCardData() {
+        list.clear();
+        List<Integer> child = null;
+        for (Question question : questionList) {
+            if (child == null || question.questionType == 0) {
+                child = new ArrayList<>();
+                list.add(child);
+            }
+            if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
+                int answerCount = 0;
+                // 遍历子题
+                for (Question.QuestionDetails details : question.details) {
+                    // 遍历子题选项
+                    for (Question.QuestionDetails.Option option : details.options) {
+                        // 已选
+                        if (option.isPicked) {
+                            answerCount++;
+                            break;
+                        }
+                    }
+                }
+                //　全部小题均已作答，改题才视为已作答
+                child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
+            } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
+                int answerCount = 0;
+                // 遍历子题
+                for (Question.QuestionDetails details : question.details) {
+                    // 已作答
+                    if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
+                        answerCount++;
+                    }
+                }
+                //　全部小题均已作答，改题才视为已作答
+                child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
+            }
         }
         adapter.notifyDataSetChanged();
     }
@@ -1085,8 +1236,26 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 交卷并查看结果
      */
     public void onCommitAnswerAndShowResultClick(View view) {
-        // 交卷
-        commitExam();
+        if (isExamTest) { // 整体提交
+            oneKeyCommitAll();
+        } else {
+            // 交卷
+            commitExam();
+        }
+    }
+
+    /**
+     * 一键提交全部
+     */
+    private void oneKeyCommitAll() {
+        if (checkQuestionIsAllDo()) {
+            ProgressDialogUtil.showProgress(this, "正在提交试卷，请稍后...");
+            // 交卷（整体提交）
+            commitExamAll();
+        } else {
+            // 显示未答完交卷提示对话框
+            showNoFinishDialog();
+        }
     }
 
     /**
@@ -1105,6 +1274,75 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             // 显示未答完交卷提示对话框
             showNoFinishDialog();
         }
+    }
+
+    /**
+     * 交卷（整体提交）
+     */
+    private void commitExamAll() {
+        SYDataTransport dataTransport = SYDataTransport.create(SYConstants.EXAMINATION_COMMIT_ALL);
+        dataTransport.addParam("userId", getLoginUser().syjyUser.id)
+                .addParam("examinationId", examinationId)
+                .addParam("homeworkType", TextUtils.isEmpty(classId) ? 1 : 0) // 0：班级作业，1：模块练习
+                .addParam("businessType", selectedCourse.businessId)
+                .addParam("levelId", selectedCourse.levelId)
+                .addParam("courseId", selectedCourse.courseId)
+                .addParam("completeTime", Integer.valueOf(examinationMinute) * 60 - leftExamSecond) // 秒
+                .addParam("questionDetails", getAllQuestionAnswer());
+        if (!TextUtils.isEmpty(classId)) {
+            dataTransport.addParam("classId", classId);
+        }
+        if (moduleId != 0) {
+            dataTransport.addParam("moduleId", moduleId);
+        }
+        dataTransport.execute(new SYDataListener() {
+
+            @Override
+            public void onSuccess(Object data) {
+                ProgressDialogUtil.hideProgress();
+                finish();
+            }
+
+            @Override
+            public void onFail(int status, String failMessage) {
+                super.onFail(status, failMessage);
+                ProgressDialogUtil.hideProgress();
+            }
+        });
+    }
+
+    /**
+     * 获取用户全部作答
+     */
+    private Map<String, List<ExamAnswer>> getAllQuestionAnswer() {
+        Map<String, List<ExamAnswer>> map = new HashMap<>();
+        List<ExamAnswer> list = null;
+        int currentQuestionType; // 当前题目类型
+        int lastQuestionType = 0;// 上一道题目类型
+        // 遍历所有题目
+        for (Question question : questionList) {
+            // 如果是题目，不是题干
+            if (question.questionType > 0) {
+                // 当前题目类型
+                currentQuestionType = question.questionType;
+                // 不同于上一道题型，则重新添加道map
+                if (currentQuestionType != lastQuestionType) {
+                    list = new ArrayList<>();
+                    map.put(String.valueOf(currentQuestionType), list);
+                }
+                // 创建ExamAnswer对象
+                ExamAnswer examAnswer = new ExamAnswer();
+                examAnswer.questionId = question.questionId;
+                examAnswer.index = question.questionSort;
+                examAnswer.correctResults = getCorrectAnswer(question);
+                examAnswer.userResults = getAnswerList(question);
+                // 添加ExamAnswer对象
+                list.add(examAnswer);
+                // 将当前题目类型 置为 上一道题目的类型
+                lastQuestionType = currentQuestionType;
+            }
+        }
+        return map;
     }
 
     /**
@@ -1169,7 +1407,11 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         } else {
             // 不存在homeworkId，说明没有提交过一道题
             if (TextUtils.isEmpty(homeworkId) || isMyFaults || isMyCollection) {
-                finish();
+                if (isExamTest) { // 真题测试
+                    showExitTipDialog();
+                } else {
+                    finish();
+                }
             } else {
                 // 提交过作答，则显示退出提示对话框
                 showExitTipDialog();
@@ -1192,7 +1434,13 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             @Override
             public void OnRightBtnClicked(SimpleDialog dialog) {
                 dialog.superDismiss(); // 无动画退出
-                finish();
+                if (isModuleExercise || isClassExercise) {
+                    isPreExit = true;
+                    ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
+                    checkPreCommitQuestion();
+                } else {
+                    finish();
+                }
             }
         });
     }
@@ -1250,7 +1498,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      */
     public void onCommitAnswerClick(View view) {
         // 交卷
-        commitExam();
+        onCommitAnswerAndShowResultClick(null);
     }
 
     /**
@@ -1271,7 +1519,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            leftTime.set(DateUtils.second2Min((int) (millisUntilFinished / 1000)));
+            leftExamSecond = (int) (millisUntilFinished / 1000);
+            leftTime.set(DateUtils.second2Min2(leftExamSecond));
             if ((int) (millisUntilFinished / 1000) == 3 * 60) {
                 ToastHelper.showCustomToast(ExerciseActivity.this);
             }
@@ -1279,10 +1528,11 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
         @Override
         public void onFinish() {
+            leftExamSecond = 0;
             leftTime.set("00:00");
             ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在提交试卷，请稍后...", false);
-            // 检查问题是否均已提交
-            checkIsAnswerAllCommit();
+            // 一键提交
+            oneKeyCommitAll();
         }
     }
 }

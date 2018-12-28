@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.me.MyIngotActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@{viewModel.ingotType == 1 ? @color/bg_light_orange : @color/bg_cyan}"
+            android:orientation="vertical"
+            tools:background="@color/bg_light_orange">
+
+            <include layout="@layout/layout_title_white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"
+                android:text="@{viewModel.ingot}"
+                android:textColor="@color/text_white"
+                android:textSize="40dp"
+                android:textStyle="bold"
+                tools:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@{viewModel.ingotTypeName}"
+                android:textColor="@color/text_white"
+                android:textSize="15dp"
+                tools:text="上元在线余额" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="选择充值（1元=1元宝）"
+            android:textColor="@color/text_black"
+            android:textSize="15dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@{viewModel.rechargeIngot == 6 ? (viewModel.ingotType == 1 ? @drawable/bg_white_stroke_orange_corner_4 : @drawable/bg_white_stroke_cyan_corner_4) : @drawable/bg_white_stroke_gray_corner_4}"
+                    android:gravity="center"
+                    android:onClick="onRechargeIngotClick"
+                    android:orientation="vertical"
+                    android:tag="6"
+                    tools:background="@drawable/bg_white_stroke_orange_corner_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="6元宝"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="售价：¥6"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@{viewModel.ingotType == 1 ? @drawable/icon_syzx_ingot_picked : @drawable/icon_sykj_ingot_picked}"
+                    android:visibility="@{viewModel.rechargeIngot == 6 ? View.VISIBLE : View.INVISIBLE}"
+                    tools:src="@drawable/icon_syzx_ingot_picked" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@{viewModel.rechargeIngot == 18 ? (viewModel.ingotType == 1 ? @drawable/bg_white_stroke_orange_corner_4 : @drawable/bg_white_stroke_cyan_corner_4) : @drawable/bg_white_stroke_gray_corner_4}"
+                    android:gravity="center"
+                    android:onClick="onRechargeIngotClick"
+                    android:orientation="vertical"
+                    android:tag="18"
+                    tools:background="@drawable/bg_white_stroke_gray_corner_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="18元宝"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="售价：¥18"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@{viewModel.ingotType == 1 ? @drawable/icon_syzx_ingot_picked : @drawable/icon_sykj_ingot_picked}"
+                    android:visibility="@{viewModel.rechargeIngot == 18 ? View.VISIBLE : View.INVISIBLE}"
+                    tools:src="@drawable/icon_syzx_ingot_picked" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@{viewModel.rechargeIngot == 68 ? (viewModel.ingotType == 1 ? @drawable/bg_white_stroke_orange_corner_4 : @drawable/bg_white_stroke_cyan_corner_4) : @drawable/bg_white_stroke_gray_corner_4}"
+                    android:gravity="center"
+                    android:onClick="onRechargeIngotClick"
+                    android:orientation="vertical"
+                    android:tag="68"
+                    tools:background="@drawable/bg_white_stroke_gray_corner_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="68元宝"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="售价：¥68"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@{viewModel.ingotType == 1 ? @drawable/icon_syzx_ingot_picked : @drawable/icon_sykj_ingot_picked}"
+                    android:visibility="@{viewModel.rechargeIngot == 68 ? View.VISIBLE : View.INVISIBLE}"
+                    tools:src="@drawable/icon_syzx_ingot_picked" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@{viewModel.rechargeIngot == 128 ? (viewModel.ingotType == 1 ? @drawable/bg_white_stroke_orange_corner_4 : @drawable/bg_white_stroke_cyan_corner_4) : @drawable/bg_white_stroke_gray_corner_4}"
+                    android:gravity="center"
+                    android:onClick="onRechargeIngotClick"
+                    android:orientation="vertical"
+                    android:tag="128"
+                    tools:background="@drawable/bg_white_stroke_gray_corner_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="128元宝"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="售价：¥128"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@{viewModel.ingotType == 1 ? @drawable/icon_syzx_ingot_picked : @drawable/icon_sykj_ingot_picked}"
+                    android:visibility="@{viewModel.rechargeIngot == 128 ? View.VISIBLE : View.INVISIBLE}"
+                    tools:src="@drawable/icon_syzx_ingot_picked" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@{viewModel.rechargeIngot == 268 ? (viewModel.ingotType == 1 ? @drawable/bg_white_stroke_orange_corner_4 : @drawable/bg_white_stroke_cyan_corner_4) : @drawable/bg_white_stroke_gray_corner_4}"
+                    android:gravity="center"
+                    android:onClick="onRechargeIngotClick"
+                    android:orientation="vertical"
+                    android:tag="268"
+                    tools:background="@drawable/bg_white_stroke_gray_corner_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="268元宝"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="售价：¥268"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@{viewModel.ingotType == 1 ? @drawable/icon_syzx_ingot_picked : @drawable/icon_sykj_ingot_picked}"
+                    android:visibility="@{viewModel.rechargeIngot == 268 ? View.VISIBLE : View.INVISIBLE}"
+                    tools:src="@drawable/icon_syzx_ingot_picked" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@{viewModel.rechargeIngot == 618 ? (viewModel.ingotType == 1 ? @drawable/bg_white_stroke_orange_corner_4 : @drawable/bg_white_stroke_cyan_corner_4) : @drawable/bg_white_stroke_gray_corner_4}"
+                    android:gravity="center"
+                    android:onClick="onRechargeIngotClick"
+                    android:orientation="vertical"
+                    android:tag="618"
+                    tools:background="@drawable/bg_white_stroke_gray_corner_4">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="618元宝"
+                        android:textColor="@color/text_black"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="售价：¥618"
+                        android:textColor="@color/text_gray"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@{viewModel.ingotType == 1 ? @drawable/icon_syzx_ingot_picked : @drawable/icon_sykj_ingot_picked}"
+                    android:visibility="@{viewModel.rechargeIngot == 618 ? View.VISIBLE : View.INVISIBLE}"
+                    tools:src="@drawable/icon_syzx_ingot_picked" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="60dp"
+            android:background="@{viewModel.ingotType == 1 ? @drawable/bg_light_orange_corner_25 : @drawable/bg_cyan_corner_25}"
+            android:onClick="onRechargeClick"
+            android:text="确认充值"
+            android:textColor="@color/text_white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:background="@drawable/bg_light_orange_corner_25" />
+    </LinearLayout>
+</layout>

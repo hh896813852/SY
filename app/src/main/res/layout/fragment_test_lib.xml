@@ -107,16 +107,17 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="30"
+                            android:text="@{viewModel.moduleRank}"
                             android:textColor="@color/text_white"
                             android:textScaleX="0.8"
                             android:textSize="40dp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="30" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="班级排行"
+                            android:text="做题排行"
                             android:textColor="@color/text_white"
                             android:textSize="15dp" />
                     </LinearLayout>
@@ -136,11 +137,12 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="40"
+                                android:text="@{viewModel.beatPercent}"
                                 android:textColor="@color/text_white"
                                 android:textScaleX="0.8"
                                 android:textSize="40dp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="40" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -238,92 +240,172 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bg_light_gray1"
+            android:background="@color/bg_white"
             android:orientation="vertical"
+            android:paddingTop="30dp"
             android:visibility="@{viewModel.isFirstSelect ? View.VISIBLE : View.GONE}"
             tools:visibility="gone">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:background="@color/bg_white"
-                android:gravity="center_horizontal|bottom"
-                android:paddingBottom="10dp"
-                android:text="题库"
-                android:textColor="@color/text_black"
-                android:textSize="18sp" />
-
-            <ScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fillViewport="true">
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.edusoho.yunketang.widget.SquareFragment
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_weight="1"
+                    android:tag="1"
+                    bind:clickCommand="@{viewModel.onCategoryClicked}">
 
-                    <ImageView
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bg_category_kj"
-                        android:tag="1"
-                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+                        android:layout_gravity="center"
+                        android:drawableTop="@drawable/bg_category_kj"
+                        android:gravity="center"
+                        android:text="会计专业"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+                </com.edusoho.yunketang.widget.SquareFragment>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bg_category_jg"
-                        android:tag="2"
-                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_light_gray1" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bg_category_wy"
-                        android:tag="3"
-                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+                <com.edusoho.yunketang.widget.SquareFragment
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="4"
+                    bind:clickCommand="@{viewModel.onCategoryClicked}">
 
-                    <ImageView
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bg_category_jsjy"
-                        android:tag="4"
-                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+                        android:layout_gravity="center"
+                        android:drawableTop="@drawable/bg_category_jsjy"
+                        android:gravity="center"
+                        android:text="教师教育"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+                </com.edusoho.yunketang.widget.SquareFragment>
+            </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bg_category_rlzy"
-                        android:tag="5"
-                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/bg_light_gray1" />
 
-                    <ImageView
-                        android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <com.edusoho.yunketang.widget.SquareFragment
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="2"
+                    bind:clickCommand="@{viewModel.onCategoryClicked}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:clickable="true"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bg_category_xl"
-                        android:tag="6"
-                        bind:clickCommand="@{viewModel.onCategoryClicked}" />
-                </LinearLayout>
-            </ScrollView>
+                        android:layout_gravity="center"
+                        android:drawableTop="@drawable/bg_category_jg"
+                        android:gravity="center"
+                        android:text="建筑工程"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+                </com.edusoho.yunketang.widget.SquareFragment>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_light_gray1" />
+
+                <com.edusoho.yunketang.widget.SquareFragment
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="5"
+                    bind:clickCommand="@{viewModel.onCategoryClicked}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawableTop="@drawable/bg_category_rlzy"
+                        android:gravity="center"
+                        android:text="人力资源"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+                </com.edusoho.yunketang.widget.SquareFragment>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/bg_light_gray1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <com.edusoho.yunketang.widget.SquareFragment
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="6"
+                    bind:clickCommand="@{viewModel.onCategoryClicked}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawableTop="@drawable/bg_category_xl"
+                        android:gravity="center"
+                        android:text="学历考试"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+                </com.edusoho.yunketang.widget.SquareFragment>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_light_gray1" />
+
+                <com.edusoho.yunketang.widget.SquareFragment
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="3"
+                    bind:clickCommand="@{viewModel.onCategoryClicked}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:drawableTop="@drawable/bg_category_wy"
+                        android:gravity="center"
+                        android:text="外语专业"
+                        android:textColor="@color/text_black"
+                        android:textSize="16sp" />
+                </com.edusoho.yunketang.widget.SquareFragment>
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout

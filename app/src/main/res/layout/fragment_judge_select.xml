@@ -53,11 +53,107 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:scrollbars="none"
                 bind:adapter="@{viewModel.adapter}"
                 bind:onItemClick="@{viewModel.onItemClick}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.isShowAnswerAnalysis ? View.VISIBLE : View.GONE}">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@color/bg_light_gray1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="正确答案："
+                            android:textColor="@color/theme_color"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="90dp"
+                            android:text="@{viewModel.correctAnswer}"
+                            android:textColor="@color/theme_color"
+                            android:textSize="17sp"
+                            tools:text="C" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.isUserAnswerCorrect ? @string/answer_right : @string/user_answer}"
+                            android:textColor="@color/theme_color"
+                            android:textSize="17sp"
+                            tools:text="@string/user_answer" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="90dp"
+                            android:text="@{viewModel.userAnswer}"
+                            android:textColor="@color/bg_red"
+                            android:textSize="17sp"
+                            android:visibility="@{viewModel.isUserAnswerCorrect ? View.GONE : View.VISIBLE}"
+                            tools:text="A" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="答案解析："
+                    android:textColor="@color/theme_color"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:lineSpacingExtra="5dp"
+                    android:text="@{viewModel.answerAnalysis}"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp"
+                    tools:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析" />
+
+                <com.edusoho.yunketang.widget.NoScrollListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.answerAnalysisPicAdapter}" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </layout>

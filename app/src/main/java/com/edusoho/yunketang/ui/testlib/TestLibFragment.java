@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.testlib;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.graphics.Color;
@@ -14,7 +15,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 
-import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
@@ -26,6 +26,8 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Business;
 import com.edusoho.yunketang.bean.BusinessModule;
 import com.edusoho.yunketang.bean.EducationCourse;
+import com.edusoho.yunketang.bean.Rank;
+import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.databinding.FragmentTestLibBinding;
 import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.http.SYDataListener;
@@ -35,6 +37,7 @@ import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
 import com.edusoho.yunketang.widget.CircleBarView;
+import com.google.gson.reflect.TypeToken;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
@@ -63,6 +66,8 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
     private MagicIndicatorBuilder.MagicIndicatorConfiguration configuration;
     private CommonNavigator commonNavigator;
 
+    public ObservableField<String> moduleRank = new ObservableField<>("0");   // 做题排名
+    public ObservableField<String> beatPercent = new ObservableField<>("0");  // 击败率
     public ObservableField<String> businessName = new ObservableField<>(); // 选择的行业
     public ObservableField<String> levelName = new ObservableField<>();    // 选择的职业等级
 
@@ -105,6 +110,7 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
             return view;
         }
     };
+
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
         if (!SYApplication.getInstance().isLogin()) {
             BaseDialog dialog = DialogUtil.showAnimationDialog(getSupportedActivity(), R.layout.dialog_not_login);
@@ -120,34 +126,58 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
             case "每日一练":
                 Intent intent1 = new Intent(getSupportedActivity(), PracticeActivity.class);
                 intent1.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent1.putExtra(PracticeActivity.TITLE_NAME, "每日一练");
                 intent1.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
                 startActivity(intent1);
                 break;
             case "每周一测":
-                Intent intent2 = new Intent(getSupportedActivity(), PracticeActivity.class);
-                intent2.putExtra(PracticeActivity.MODULE_ID, modelId);
-                intent2.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
+                Intent intent2 = new Intent(getSupportedActivity(), PastExamActivity.class);
+                intent2.putExtra(PastExamActivity.MODULE_ID, modelId);
+                intent2.putExtra(PastExamActivity.TITLE_NAME, "每周一测");
+                intent2.putExtra(PastExamActivity.SELECTED_COURSE, selectedCourse);
                 startActivity(intent2);
                 break;
             case "模拟考试":
+                Intent intent3 = new Intent(getSupportedActivity(), PastExamActivity.class);
+                intent3.putExtra(PastExamActivity.MODULE_ID, modelId);
+                intent3.putExtra(PastExamActivity.TITLE_NAME, "模拟考试");
+                intent3.putExtra(PastExamActivity.SELECTED_COURSE, selectedCourse);
+                startActivity(intent3);
                 break;
             case "历年真题":
                 Intent intent4 = new Intent(getSupportedActivity(), PastExamActivity.class);
-                intent4.putExtra(PracticeActivity.MODULE_ID, modelId);
-                intent4.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
+                intent4.putExtra(PastExamActivity.MODULE_ID, modelId);
+                intent4.putExtra(PastExamActivity.TITLE_NAME, "历年真题");
+                intent4.putExtra(PastExamActivity.SELECTED_COURSE, selectedCourse);
                 startActivity(intent4);
                 break;
             case "章节练习":
                 Intent intent5 = new Intent(getSupportedActivity(), PracticeActivity.class);
                 intent5.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent5.putExtra(PracticeActivity.TITLE_NAME, "章节练习");
                 intent5.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
                 startActivity(intent5);
                 break;
             case "专项练习":
+                Intent intent6 = new Intent(getSupportedActivity(), PracticeActivity.class);
+                intent6.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent6.putExtra(PracticeActivity.TITLE_NAME, "专项练习");
+                intent6.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
+                startActivity(intent6);
                 break;
             case "听力训练":
+                Intent intent7 = new Intent(getSupportedActivity(), PracticeActivity.class);
+                intent7.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent7.putExtra(PracticeActivity.TITLE_NAME, "听力训练");
+                intent7.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
+                startActivity(intent7);
                 break;
             case "阅读练习":
+                Intent intent8 = new Intent(getSupportedActivity(), PracticeActivity.class);
+                intent8.putExtra(PracticeActivity.MODULE_ID, modelId);
+                intent8.putExtra(PracticeActivity.TITLE_NAME, "阅读练习");
+                intent8.putExtra(PracticeActivity.SELECTED_COURSE, selectedCourse);
+                startActivity(intent8);
                 break;
             case "我的错题":
                 Intent intent9 = new Intent(getSupportedActivity(), MyFaultsActivity.class);
@@ -165,6 +195,24 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
         loadBusinessType();
         // 加载所有行业、职业等级的课程
         loadAllCourse();
+    }
+
+    private int correctPercent; // 正确率
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshRank();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser && !SYApplication.getInstance().isLogin()) {
+            moduleRank.set("0");
+            beatPercent.set("0");
+            getDataBinding().circleView.setProgressNum(0, 100);
+        }
     }
 
     private void initView() {
@@ -195,6 +243,7 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
             selectedCourse.courseId = courseList.get(index).courseId;
             selectedCourse.courseName = courseList.get(index).courseName;
             AppPreferences.setSelectedCourse(selectedCourse);
+            refreshRank();
         });
         getDataBinding().mainTabIndicator.setNavigator(commonNavigator);
 
@@ -215,8 +264,6 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
         });
         // 设置最大值
         getDataBinding().circleView.setMaxNum(100);
-        // 设置进度和动画执行时间，并开始动画
-        getDataBinding().circleView.setProgressNum(80, 2000);
 
         // 行业选择
         getDataBinding().tagLayout1.setOnItemClickListener((View v, String tag, int position) -> {
@@ -257,6 +304,38 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
             selectedCourse.courseId = courseList.get(position).courseId;
             selectedCourse.courseName = courseList.get(position).courseName;
         });
+    }
+
+    /**
+     * 刷新模块排行
+     */
+    private void refreshRank() {
+        User loginUser = SYApplication.getInstance().getUser();
+        if (loginUser != null && loginUser.syjyUser != null) {
+            SYDataTransport.create(SYConstants.MODULE_RANK)
+                    .addParam("userId", loginUser.syjyUser.id)
+                    .addParam("businessType", selectedCourse.businessId)
+                    .addParam("levelId", selectedCourse.levelId)
+                    .addParam("courseId", selectedCourse.courseId)
+                    .execute(new SYDataListener<Rank>() {
+
+                        @Override
+                        public void onSuccess(Rank data) {
+                            moduleRank.set(TextUtils.isEmpty(data.moduleRank) ? "0" : data.moduleRank);
+                            beatPercent.set(TextUtils.isEmpty(data.beatPercent) ? "0" : data.beatPercent);
+                            // 正确率发生了改变
+                            if (correctPercent != data.percent) {
+                                // 设置进度和动画执行时间，并开始动画
+                                getDataBinding().circleView.setProgressNum(data.percent, 2000);
+                            }
+                            correctPercent = data.percent;
+                        }
+                    }, Rank.class);
+        } else {
+            moduleRank.set("0");
+            beatPercent.set("0");
+            getDataBinding().circleView.setProgressNum(0, 100);
+        }
     }
 
     /**
@@ -444,6 +523,9 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
      * 刷新界面
      */
     private void refreshView() {
+        // 刷新模块排行
+        refreshRank();
+
         businessName.set(selectedCourse.businessName);
         levelName.set(selectedCourse.levelName);
 

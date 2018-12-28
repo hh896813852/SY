@@ -79,15 +79,15 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
 
                     @Override
                     public void onSuccess(String data) {
-                        if (getDataBinding() == null) {
+                        if (getActivity() == null || getDataBinding() == null) {
                             return;
                         }
+                        isLoading = false;
+                        if (pageNo == 1) {
+                            list.clear();
+                        }
                         try {
-                            if (pageNo == 1) {
-                                list.clear();
-                            }
-                            JSONObject jsonObject = new JSONObject(new JSONObject(data).getString("data"));
-                            List<ClassCourse> dataList = JsonUtil.fromJson(jsonObject.getString("records"), new TypeToken<List<ClassCourse>>() {
+                            List<ClassCourse> dataList = JsonUtil.fromJson(new JSONObject(data).getString("records"), new TypeToken<List<ClassCourse>>() {
                             });
                             list.addAll(dataList);
                             adapter.notifyDataSetChanged();
@@ -103,7 +103,6 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        isLoading = false;
                         // stop loading
                         ((ClassScheduleActivity) getActivity()).getDataBinding().swipeView.setRefreshing(false);
                     }

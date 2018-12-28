@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
+import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Setting;

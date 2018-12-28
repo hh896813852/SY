@@ -32,7 +32,7 @@ public class QuestionTypeFragment extends BaseFragment<FragmentQuestionTypeBindi
         super.onActivityCreated(savedInstanceState);
         question = (Question) getArguments().getSerializable("question");
         questionTypeName.set(question.alias);
-        questionPointInfo.set("（每题" + question.point + "分）");
+//        questionPointInfo.set("（每题" + question.point + "分）");
         questionExplain.set(question.explain);
         questionTypeSort.set(getSort());
     }
