@@ -22,10 +22,8 @@ import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.RequestUtil;
 import com.edusoho.yunketang.utils.volley.StringVolleyRequest;
-import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
-import com.tencent.smtt.sdk.QbSdk;
 
 import java.net.UnknownHostException;
 
@@ -52,9 +50,8 @@ public class SYApplication extends MultiDexApplication {
         PlayerFactory.setPlayManager(Exo2PlayerManager.class);     // EXO模式
         CacheFactory.setCacheManager(ExoPlayerCacheManager.class); // exo缓存模式，支持m3u8，只支持exo
         // threetenabp初始化
-        AndroidThreeTen.init(this);
-
-        QbSdk.initX5Environment(getBaseContext(), null);
+//        AndroidThreeTen.init(this);
+//        QbSdk.initX5Environment(getBaseContext(), null);
     }
 
     public static SYApplication getInstance() {

@@ -17,6 +17,7 @@ public class AnswerReport implements Serializable {
         public String explain;   // 该题型说明
         public String alias;     // 题目别名
         public List<Mistake> homeworkMistakes;
+        public List<List<AnswerType>> userAnswerResult;
 
         public class Mistake {
             public String id;
@@ -28,6 +29,10 @@ public class AnswerReport implements Serializable {
             public String userResult;   // 用户答案(可以为空，因为用户可能未作答）
             public String score;
             public String homeworkDetailId;
+        }
+
+        public class AnswerType {
+            public int type; // 错误类型（0：错误，1：未答，2 : 已答，3：正确）
         }
     }
 }

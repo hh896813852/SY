@@ -36,13 +36,6 @@
                 android:resource="@xml/files_root" />
         </provider>
 
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="YOUR_APP_KEY" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="Channel ID" />
-
         <!-- 微信支付 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"

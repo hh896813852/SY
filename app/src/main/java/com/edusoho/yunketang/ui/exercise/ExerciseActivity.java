@@ -29,6 +29,7 @@ import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.bean.base.Message;
 import com.edusoho.yunketang.databinding.ActivityExerciseBinding;
+import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
@@ -50,6 +51,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -148,7 +150,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     private List<Question> preCommitQuestionList = new ArrayList<>(); // 预提交问题集合（包含未作答问题，不包含题干）
     private List<Question> canCommitQuestionList = new ArrayList<>(); // 可提交问题集合（不包含题干）
 
-    public List<List<Integer>> list = new ArrayList<>();
+    public List<Map<String, List<Integer>>> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
 
         @Override
@@ -881,62 +883,24 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     /**
      * 刷新答题卡数据
      */
-    private void refreshAnswerCardData2() {
-        list.clear();
-        for (Question stem : questionStem) {
-            List<Integer> child = new ArrayList<>();
-            for (Question question : questionList) {
-                // 题目类型和题干一样 并且 题目属于该题干
-                if (question.questionType == stem.type && stem.sids.contains(question.questionId)) {
-                    if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
-                        int answerCount = 0;
-                        // 遍历子题
-                        for (Question.QuestionDetails details : question.details) {
-                            // 遍历子题选项
-                            for (Question.QuestionDetails.Option option : details.options) {
-                                // 已选
-                                if (option.isPicked) {
-                                    answerCount++;
-                                    break;
-                                }
-                            }
-                        }
-                        //　全部小题均已作答，改题才视为已作答
-                        child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
-                    } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
-                        int answerCount = 0;
-                        // 遍历子题
-                        for (Question.QuestionDetails details : question.details) {
-                            // 已作答
-                            if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
-                                answerCount++;
-                            }
-                        }
-                        //　全部小题均已作答，改题才视为已作答
-                        child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
-                    }
-                }
-            }
-            list.add(child);
-        }
-        adapter.notifyDataSetChanged();
-    }
-
-    /**
-     * 刷新答题卡数据
-     */
     private void refreshAnswerCardData() {
         list.clear();
+        int readSelectCount = 0;
+        int integratedCount = 0;
+        Map<String, List<Integer>> map = null;
         List<Integer> child = null;
         for (Question question : questionList) {
+            // 题干，新建map
             if (child == null || question.questionType == 0) {
+                map = new LinkedHashMap<>();
                 child = new ArrayList<>();
-                list.add(child);
+                list.add(map);
             }
             if (question.questionType > 0 && question.questionType < 6) { // 单 多 阅读 听力 判断
-                int answerCount = 0;
                 // 遍历子题
                 for (Question.QuestionDetails details : question.details) {
+                    // 已选个数
+                    int answerCount = 0;
                     // 遍历子题选项
                     for (Question.QuestionDetails.Option option : details.options) {
                         // 已选
@@ -945,20 +909,20 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             break;
                         }
                     }
+                    child.add(answerCount > 0 ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
                 }
-                //　全部小题均已作答，改题才视为已作答
-                child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
-            } else if (question.questionType == 6 || question.questionType == 7) { // 简答题 综合题
-                int answerCount = 0;
+                map.put(question.questionType == 3 ? QuestionHelper.getSort(readSelectCount++) : "", child);
+            } else if (question.questionType >= 6) { // 简答、综合
                 // 遍历子题
                 for (Question.QuestionDetails details : question.details) {
+                    int answerCount = 0;
                     // 已作答
                     if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
                         answerCount++;
                     }
+                    child.add(answerCount > 1 ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
                 }
-                //　全部小题均已作答，改题才视为已作答
-                child.add(answerCount == question.details.size() ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
+                map.put(question.questionType == 7 ? QuestionHelper.getSort(integratedCount++) : "", child);
             }
         }
         adapter.notifyDataSetChanged();

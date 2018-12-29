@@ -20,6 +20,7 @@ import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.ActivityAnswerReportBinding;
+import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.exercise.ExerciseActivity;
@@ -47,7 +48,9 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     private int moduleId;
     private String classId;
 
-    public ObservableField<String> trueNum = new ObservableField<>();
+    public ObservableField<String> finishDate = new ObservableField<>(); // 日期
+    public ObservableField<String> usedTime = new ObservableField<>();   // 用时
+    public ObservableField<String> trueNum = new ObservableField<>("0");
     public ObservableField<String> falseNum = new ObservableField<>("0");
 
     private List<AnswerReport.AnswerDetails> answerDetailsList;
@@ -141,23 +144,38 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
      */
     private void getFaultStem() {
         for (AnswerReport.AnswerDetails details : answerDetailsList) {
-            // 该题型下有错题
-            if (details.falseCount > 0) {
-                Question questionStem = new Question();
-                questionStem.sort = details.sort;
-                questionStem.alias = details.alias;
-                questionStem.type = details.questionType;
-                questionStem.explain = details.explain;
-                questionStem.questionSum = String.valueOf(details.falseCount);
-                StringBuilder builder = new StringBuilder();
-                for (AnswerReport.AnswerDetails.Mistake mistake : details.homeworkMistakes) {
-                    builder.append(mistake.idex).append(",");
+            // 错题不展示简答题、综合题
+            if (details.questionType < 6) {
+                // 该题型下有错题
+                if (details.falseCount > 0) {
+                    Question questionStem = new Question();
+                    questionStem.sort = details.sort;
+                    questionStem.alias = details.alias;
+                    questionStem.type = details.questionType;
+                    questionStem.explain = details.explain;
+                    questionStem.questionSum = String.valueOf(details.falseCount);
+                    StringBuilder builder = new StringBuilder();
+                    if (details.questionType == 3) {
+                        for (int i = 0; i < details.userAnswerResult.size(); i++) {
+                            for (AnswerReport.AnswerDetails.AnswerType answerType : details.userAnswerResult.get(i)) {
+                                // type错误类型（0：错误，1：未答，2 : 已答，3：正确）
+                                if (answerType.type < 2) {
+                                    builder.append(i + 1).append(",");
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        for (AnswerReport.AnswerDetails.Mistake mistake : details.homeworkMistakes) {
+                            builder.append(mistake.idex).append(",");
+                        }
+                    }
+                    // 错题序号
+                    if (!TextUtils.isEmpty(builder)) {
+                        questionStem.faultSort = builder.deleteCharAt(builder.length() - 1).toString();
+                    }
+                    faultQuestionStemList.add(questionStem);
                 }
-                // 错题序号
-                if (!TextUtils.isEmpty(builder)) {
-                    questionStem.faultSort = builder.deleteCharAt(builder.length() - 1).toString();
-                }
-                faultQuestionStemList.add(questionStem);
             }
         }
     }
@@ -168,6 +186,8 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     private void refreshView(AnswerReport data) {
         trueNum.set(String.valueOf(data.correctSum));
         falseNum.set(String.valueOf(data.falseSum));
+//        usedTime.set(String.valueOf(data.falseSum));
+//        finishDate.set(String.valueOf(data.falseSum));
         // 设置进度和动画执行时间，并开始动画
         getDataBinding().circleView.setProgressNum(Float.valueOf(data.percent), 2000);
     }
@@ -178,19 +198,40 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     private void refreshAnswerReport() {
         list.clear();
         for (AnswerReport.AnswerDetails details : answerDetailsList) {
-            List<Integer> child = new ArrayList<>();
             Map<String, List<Integer>> map = new LinkedHashMap<>();
             if (details.questionType == 3) { // 阅读选择题
-
+                for (int i = 0; i < details.userAnswerResult.size(); i++) {
+                    List<Integer> child = new ArrayList<>();
+                    for (AnswerReport.AnswerDetails.AnswerType answerType : details.userAnswerResult.get(i)) {
+                        if (answerType.type == 0) {
+                            child.add(AnswerResultLayout.ANSWER_FALSE);
+                        }
+                        if (answerType.type == 1) {
+                            child.add(AnswerResultLayout.NOT_ANSWER);
+                        }
+                        if (answerType.type == 3) {
+                            child.add(AnswerResultLayout.ANSWER_TRUE);
+                        }
+                    }
+                    map.put(QuestionHelper.getSort(i), child);
+                }
             } else if (details.questionType == 6) { // 简答题
+                List<Integer> child = new ArrayList<>();
                 for (AnswerReport.AnswerDetails.Mistake mistake : details.homeworkMistakes) {
                     MyAnswer myAnswer = JsonUtil.fromJson(mistake.userResult, MyAnswer.class);
                     child.add(TextUtils.isEmpty(myAnswer.result) && TextUtils.isEmpty(myAnswer.userResultUrl) ? AnswerResultLayout.NOT_ANSWER : AnswerResultLayout.ANSWERED);
                 }
                 map.put("", child);
             } else if (details.questionType == 7) { // 综合题
-
+                for (int i = 0; i < details.userAnswerResult.size(); i++) {
+                    List<Integer> child = new ArrayList<>();
+                    for (AnswerReport.AnswerDetails.AnswerType answerType : details.userAnswerResult.get(i)) {
+                        child.add(answerType.type == 1 ? AnswerResultLayout.NOT_ANSWER : AnswerResultLayout.ANSWERED);
+                    }
+                    map.put(QuestionHelper.getSort(i), child);
+                }
             } else {
+                List<Integer> child = new ArrayList<>();
                 for (int i = 0; i < details.falseCount + details.correctCount; i++) {
                     child.add(AnswerResultLayout.ANSWER_TRUE);
                 }

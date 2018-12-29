@@ -52,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="12dp"
+                    android:text="@{viewModel.finishDate}"
                     android:textColor="@color/theme_color"
                     android:textSize="13dp"
                     tools:text="日期：10-09" />
@@ -143,6 +144,7 @@
                     android:layout_gravity="right"
                     android:layout_marginTop="12dp"
                     android:layout_marginRight="10dp"
+                    android:text="@{viewModel.usedTime}"
                     android:textColor="@color/theme_color"
                     android:textSize="13dp"
                     tools:text="用时：58分17秒" />
