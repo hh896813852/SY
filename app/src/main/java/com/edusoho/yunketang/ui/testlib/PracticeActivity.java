@@ -73,20 +73,12 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
                     dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
                 } else {
-//                    Intent intent = new Intent(PracticeActivity.this, AnswerReportActivity.class);
-//                    intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
-//                    intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
-//                    intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
-//                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
-//                    startActivity(intent);
-                    Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
-                    intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
-                    intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
-                    intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
-                    intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
-                    intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
-                    intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
-                    startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+                    Intent intent = new Intent(PracticeActivity.this, AnswerReportActivity.class);
+                    intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                    intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
+                    intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
+                    startActivity(intent);
                 }
             });
             // 继续

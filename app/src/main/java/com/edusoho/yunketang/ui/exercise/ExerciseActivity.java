@@ -28,6 +28,7 @@ import com.edusoho.yunketang.bean.ExamAnswer;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.bean.base.Message;
+import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.ActivityExerciseBinding;
 import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.helper.ToastHelper;
@@ -44,6 +45,7 @@ import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.SimpleDialog;
 import com.google.gson.reflect.TypeToken;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -79,6 +81,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public static final String IS_TEACHER_NOTATION = "is_teacher_notation";
     public static final String ONLY_FAULT_ANALYSIS = "only_fault_analysis";
     public static final String FAULT_QUESTION_STEM = "fault_question_stem";
+    public static final String IS_FROM_REPORT_CARD = "is_form_report_card";
+    public static final String REPORT_CARD_STEM_SORT = "report_card_stem_sort";
+    public static final String REPORT_CARD_QUESTION_TYPE = "report_card_question_type";
+    public static final String REPORT_CARD_FIRST_INDEX = "report_card_first_index";
+    public static final String REPORT_CARD_SECOND_INDEX = "report_card_second_index";
+
     public String messageId;
     public String examinationId;
     public String examinationMinute;
@@ -100,6 +108,11 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     public boolean isTeacherNotation; // 是否是老师批注
     private boolean onlyFaultAnalysis;// 是否是错题解析解析
     public List<Question> faultQuestionStem; // 错题题干
+    private boolean isFromReportCard; // 是否是答题报告点击而来
+    private int reportCardStemSort;   // 答题报告题干序号
+    private int reportCardQuestionType;// 答题报告点击的题目类型
+    private int reportCardFirstIndex;
+    private int reportCardSecondIndex;
 
     private int commitCount;         // 可提交问题次数
     private boolean isPreCommitExam; // 是否准备提交试卷
@@ -137,6 +150,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
     private Question currentQuestion;           // 当前显示的题目
     public int currentChildQuestionIndex;       // 当前题目子题的下标，用于展示哪道子题的答案解析
+    public int currentChildIndexFromAnswerCard; // 当前题目子题的下标，有答题卡选择
 
     public ObservableField<String> inputText = new ObservableField<>("0");
     private StringBuilder inputOne = new StringBuilder("0"); // 计算器输入的第一个数字
@@ -163,11 +177,16 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             questionTypeView.setText(questionStem.get(position).alias);
             AnswerResultLayout answerResultLayout = view.findViewById(R.id.answerResultLayout);
             answerResultLayout.setTags(list.get(position));
-            answerResultLayout.setOnTagClickListener(index -> {
+            answerResultLayout.setOnTagClickListener((firstIndex, secondIndex) -> {
                 // 获取该题的题干所在下标
                 int stemIndex = questionList.indexOf(questionStem.get(position));
-                // 显示该题的页面
-                showPageByPosition(stemIndex + index + 1);
+                if (questionStem.get(position).type == 3 || questionStem.get(position).type == 7) {
+                    // 显示该题子题的页面
+                    showChildPageByPosition(stemIndex + firstIndex + 1, secondIndex);
+                } else {
+                    // 显示该题的页面
+                    showPageByPosition(stemIndex + secondIndex + 1);
+                }
                 // 关闭答题卡
                 onBgClick(null);
             });
@@ -245,6 +264,11 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         onlyFaultAnalysis = getIntent().getBooleanExtra(ONLY_FAULT_ANALYSIS, false);
         isTeacherNotation = getIntent().getBooleanExtra(IS_TEACHER_NOTATION, false);
         faultQuestionStem = (List<Question>) getIntent().getSerializableExtra(FAULT_QUESTION_STEM);
+        isFromReportCard = getIntent().getBooleanExtra(IS_FROM_REPORT_CARD, false);
+        reportCardStemSort = getIntent().getIntExtra(REPORT_CARD_STEM_SORT, 0);
+        reportCardQuestionType = getIntent().getIntExtra(REPORT_CARD_QUESTION_TYPE, 0);
+        reportCardFirstIndex = getIntent().getIntExtra(REPORT_CARD_FIRST_INDEX, 0);
+        reportCardSecondIndex = getIntent().getIntExtra(REPORT_CARD_SECOND_INDEX, 0);
         // 我的错题显示删除问题图标按钮
         isShowDeleteIcon.set(isMyFaults);
         // 班级练习 或 模块练习 或 真题测试 显示试卷提交按钮
@@ -552,6 +576,17 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                                 // 去上次停留页面
                                 showPageByPosition(lastPageIndex);
                             }
+                            // 答题报告序号点击而来
+                            if(isFromReportCard) {
+                                int stemIndex = questionList.indexOf(questionStem.get(reportCardStemSort));
+                                if (reportCardQuestionType == 3 || reportCardQuestionType == 7) {
+                                    // 显示该题子题的页面
+                                    showChildPageByPosition(stemIndex + reportCardFirstIndex + 1, reportCardSecondIndex);
+                                } else {
+                                    // 显示该题的页面
+                                    showPageByPosition(stemIndex + reportCardSecondIndex + 1);
+                                }
+                            }
                             // 如果是测试/考试，则开始倒计时
                             if (isExamTest) {
                                 // 开始倒计时
@@ -729,6 +764,16 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     }
 
     /**
+     * 通过下标显示对应的page 并显示对应page的子page
+     */
+    private void showChildPageByPosition(int position, int childPosition) {
+        currentChildIndexFromAnswerCard = childPosition;
+        getDataBinding().viewPager.setCurrentItem(position);
+
+        EventBus.getDefault().post(new ChildPositionEvent(currentChildIndexFromAnswerCard));
+    }
+
+    /**
      * 显示下一页
      */
     public void showNextPage() {
@@ -884,6 +929,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 刷新答题卡数据
      */
     private void refreshAnswerCardData() {
+        currentChildIndexFromAnswerCard = 0;
         list.clear();
         int readSelectCount = 0;
         int integratedCount = 0;
@@ -892,6 +938,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         for (Question question : questionList) {
             // 题干，新建map
             if (child == null || question.questionType == 0) {
+                readSelectCount = 0;
+                integratedCount = 0;
                 map = new LinkedHashMap<>();
                 child = new ArrayList<>();
                 list.add(map);
@@ -911,7 +959,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     }
                     child.add(answerCount > 0 ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
                 }
-                map.put(question.questionType == 3 ? QuestionHelper.getSort(readSelectCount++) : "", child);
+                if (question.questionType == 3) {
+                    map.put(QuestionHelper.getSort(readSelectCount++), child);
+                    child = new ArrayList<>();
+                } else {
+                    map.put("", child);
+                }
             } else if (question.questionType >= 6) { // 简答、综合
                 // 遍历子题
                 for (Question.QuestionDetails details : question.details) {
@@ -922,7 +975,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     }
                     child.add(answerCount > 1 ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
                 }
-                map.put(question.questionType == 7 ? QuestionHelper.getSort(integratedCount++) : "", child);
+                if (question.questionType == 7) {
+                    map.put(QuestionHelper.getSort(integratedCount++), child);
+                    child = new ArrayList<>();
+                } else {
+                    map.put("", child);
+                }
             }
         }
         adapter.notifyDataSetChanged();
@@ -1399,9 +1457,13 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             public void OnRightBtnClicked(SimpleDialog dialog) {
                 dialog.superDismiss(); // 无动画退出
                 if (isModuleExercise || isClassExercise) {
-                    isPreExit = true;
-                    ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
-                    checkPreCommitQuestion();
+                    if(preCommitQuestionList.size() > 0) {
+                        isPreExit = true;
+                        ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
+                        checkPreCommitQuestion();
+                    } else {
+                        finish();
+                    }
                 } else {
                     finish();
                 }

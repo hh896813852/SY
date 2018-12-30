@@ -13,6 +13,7 @@ import com.edusoho.yunketang.edu.webview.bridgeadapter.AbstractJsBridgeAdapterWe
 import com.edusoho.yunketang.edu.webview.bridgeadapter.BridgeWebChromeClient;
 import com.edusoho.yunketang.edu.webview.bridgeadapter.bridge.BridgePluginContext;
 import com.edusoho.yunketang.edu.widget.PopupDialog;
+import com.tencent.smtt.export.external.interfaces.JsResult;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebView;
 

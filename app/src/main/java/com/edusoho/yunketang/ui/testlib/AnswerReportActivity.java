@@ -79,6 +79,23 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
             // 作答情况
             AnswerResultLayout answerResultLayout = view.findViewById(R.id.answerResultLayout);
             answerResultLayout.setTags(list.get(position));
+            answerResultLayout.setOnTagClickListener((firstIndex, secondIndex) -> {
+                AnswerReport.AnswerDetails details = answerDetailsList.get(position);
+                // 获取该题的题干顺序
+                int stemSort = details.sort;
+                Intent intent = new Intent(AnswerReportActivity.this, ExerciseActivity.class);
+                intent.putExtra(ExerciseActivity.IS_FROM_REPORT_CARD, true);
+                intent.putExtra(ExerciseActivity.REPORT_CARD_STEM_SORT, stemSort);
+                intent.putExtra(ExerciseActivity.REPORT_CARD_QUESTION_TYPE, details.questionType);
+                intent.putExtra(ExerciseActivity.REPORT_CARD_FIRST_INDEX, firstIndex);
+                intent.putExtra(ExerciseActivity.REPORT_CARD_SECOND_INDEX, secondIndex);
+                intent.putExtra(ExerciseActivity.EXAMINATION_ID, examinationId);
+                intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
+                intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
+                intent.putExtra(ExerciseActivity.CLASS_ID, classId);
+                intent.putExtra(ExerciseActivity.IS_ANSWER_ANALYSIS, true);
+                startActivity(intent);
+            });
             return view;
         }
     };
@@ -255,7 +272,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
         intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
         intent.putExtra(ExerciseActivity.CLASS_ID, classId);
         intent.putExtra(ExerciseActivity.IS_ANSWER_ANALYSIS, true);
-        startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+        startActivity(intent);
     }
 
     /**
@@ -270,6 +287,6 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
         intent.putExtra(ExerciseActivity.IS_ANSWER_ANALYSIS, true);
         intent.putExtra(ExerciseActivity.ONLY_FAULT_ANALYSIS, true);
         intent.putExtra(ExerciseActivity.FAULT_QUESTION_STEM, (Serializable) faultQuestionStemList);
-        startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+        startActivity(intent);
     }
 }

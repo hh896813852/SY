@@ -24,11 +24,16 @@ import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
+import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.FragmentReadSelectBinding;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.ViewUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,6 +56,7 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     public List<String> picList = new ArrayList<>();// 题目图片集合
     private List<Question.QuestionDetails> childQuestionList = new ArrayList<>(); // 题目子题集合
     private ChildQuestionViewPagerAdapter viewPagerAdapter;            // 试卷子题adapter
+    private boolean isVisibleToUser; // fragment界面是否可见
 
     public static ReadSelectedFragment newInstance(Question question) {
         ReadSelectedFragment fragment = new ReadSelectedFragment();
@@ -93,8 +99,8 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
 
             @Override
             public void onPageSelected(int position) {
-                // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
                 if (getActivity() != null) {
+                    // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
                     ((ExerciseActivity) getActivity()).currentChildQuestionIndex = position;
                 }
             }
@@ -136,9 +142,30 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChildPositionChangeEvent(ChildPositionEvent event) {
+        if (isVisibleToUser && getActivity() != null) {
+            getDataBinding().viewPager.setCurrentItem(event.getChildPosition());
+            ((ExerciseActivity) getActivity()).currentChildIndexFromAnswerCard = 0;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser && getActivity() != null) {
             // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
             ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();

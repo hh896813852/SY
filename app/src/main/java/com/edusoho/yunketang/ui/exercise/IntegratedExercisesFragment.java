@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,15 +18,18 @@ import android.widget.SeekBar;
 import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.ChildQuestionViewPagerAdapter;
-import com.edusoho.yunketang.adapter.QuestionViewPagerAdapter;
-import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
+import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.FragmentIntegratedExercisesBinding;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.ViewUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
 
     private List<Question.QuestionDetails> childQuestionList = new ArrayList<>(); // 题目子题集合
     private ChildQuestionViewPagerAdapter viewPagerAdapter;            // 试卷adapter
+    private boolean isVisibleToUser; // fragment界面是否可见
 
     public static IntegratedExercisesFragment newInstance(Question question) {
         IntegratedExercisesFragment fragment = new IntegratedExercisesFragment();
@@ -93,8 +96,8 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
 
             @Override
             public void onPageSelected(int position) {
-                // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
                 if (getActivity() != null) {
+                    // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
                     ((ExerciseActivity) getActivity()).currentChildQuestionIndex = position;
                 }
             }
@@ -121,9 +124,30 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
         viewPagerAdapter.notifyDataSetChanged();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChildPositionChangeEvent(ChildPositionEvent event) {
+        if (isVisibleToUser && getActivity() != null) {
+            getDataBinding().viewPager.setCurrentItem(event.getChildPosition());
+            ((ExerciseActivity) getActivity()).currentChildIndexFromAnswerCard = 0;
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser && getActivity() != null) {
             // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
             ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
@@ -190,7 +214,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
      * 初始化MediaPlayer
      */
     private void initMediaPlayer() {
-        if(getDataBinding() == null) {
+        if (getDataBinding() == null) {
             return;
         }
         // 给进度条设置监听(以次来实现快进功能)

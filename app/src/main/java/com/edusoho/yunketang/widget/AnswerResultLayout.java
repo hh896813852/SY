@@ -76,7 +76,7 @@ public class AnswerResultLayout extends ViewGroup {
         removeAllViewsInLayout();
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         for (int i = 0; i < tags.size(); i++) {
-            addViewInLayout(createTextView(tags.get(i), i), -1, lp);
+            addViewInLayout(createTextView(tags.get(i), 0, i), -1, lp);
         }
         requestLayout();
     }
@@ -85,6 +85,7 @@ public class AnswerResultLayout extends ViewGroup {
      * 带标题
      */
     public void setTags(Map<String, List<Integer>> mapTags) {
+        int keyIndex = 0;
         withTitle = true;
         removeAllViewsInLayout();
         LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -93,8 +94,9 @@ public class AnswerResultLayout extends ViewGroup {
                 addViewInLayout(createTitleView(mapTag.getKey()), -1, lp);
             }
             for (int i = 0; i < mapTag.getValue().size(); i++) {
-                addViewInLayout(createTextView(mapTag.getValue().get(i), i), -1, lp);
+                addViewInLayout(createTextView(mapTag.getValue().get(i), keyIndex, i), -1, lp);
             }
+            keyIndex++;
         }
         requestLayout();
     }
@@ -116,7 +118,7 @@ public class AnswerResultLayout extends ViewGroup {
     /**
      * 创建tagView
      */
-    private TextView createTextView(Integer tag, int position) {
+    private TextView createTextView(Integer tag, int firstIndex, int secondIndex) {
         int drawableId = R.drawable.shape_oval_stroke_gray_bg_white;
         int colorId = R.color.text_white;
         switch (tag) {
@@ -138,7 +140,7 @@ public class AnswerResultLayout extends ViewGroup {
                 break;
         }
         TextView tv = new TextView(mContext);
-        tv.setText(String.valueOf(position + 1));
+        tv.setText(String.valueOf(secondIndex + 1));
         tv.setTextSize(13);
         tv.setTextColor(ContextCompat.getColor(mContext, colorId));
         tv.setGravity(Gravity.CENTER);
@@ -147,7 +149,7 @@ public class AnswerResultLayout extends ViewGroup {
         tv.setBackground(ContextCompat.getDrawable(mContext, drawableId));
         tv.setOnClickListener(v -> {
             if (tagClickListener != null) {
-                tagClickListener.OnTagClick(position);
+                tagClickListener.OnTagClick(firstIndex, secondIndex);
             }
         });
         return tv;
@@ -229,7 +231,7 @@ public class AnswerResultLayout extends ViewGroup {
     }
 
     public interface TagClickListener {
-        void OnTagClick(int index);
+        void OnTagClick(int firstIndex, int secondIndex);
     }
 
     private int dip2px(int dip) {
