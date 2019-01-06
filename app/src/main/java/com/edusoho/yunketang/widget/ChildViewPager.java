@@ -50,7 +50,7 @@ public class ChildViewPager extends ViewPager {
                 diffY = currentY - movedY;
                 diffX = currentX - movedX;
                 // 如果横向滑动趋势大于纵向滑动趋势，则拦截
-                isIntercept = Math.abs(diffX) >= Math.abs(diffY);
+                isIntercept = Math.abs(diffX) > Math.abs(diffY);
                 movedY = currentY;
                 movedX = currentX;
                 return isIntercept;
