@@ -11,7 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.SYApplication;
@@ -21,6 +23,7 @@ import com.edusoho.yunketang.base.annotation.Translucent;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.utils.LogUtil;
+import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
 
 import java.lang.reflect.Field;
@@ -51,12 +54,20 @@ public class BaseActivity<DataBinding extends ViewDataBinding> extends AppCompat
                 rightButtonTextView.setText(layout.rightButton());
                 rightButtonTextView.setOnClickListener(v -> onRightButtonClick());
             }
+
             ImageView rightButtonImageView = findViewById(R.id.imageButton);
             if (rightButtonImageView != null) {
                 if (layout.rightButtonRes() != -1) {
                     rightButtonImageView.setImageDrawable(ContextCompat.getDrawable(this, layout.rightButtonRes()));
                 }
                 rightButtonImageView.setOnClickListener(v -> onRightButtonClick());
+            }
+
+            FrameLayout titleLayout = findViewById(R.id.titleLayout);
+            if (titleLayout != null) {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) titleLayout.getLayoutParams();
+                params.setMargins(0, NotchUtil.getNotchHeight(this), 0, 0);
+                titleLayout.setLayoutParams(params);
             }
         } else {
             LogUtil.w("DataBinding警告->需要使用数据绑定功能必须使用@Layout注解注入布局");
@@ -67,9 +78,11 @@ public class BaseActivity<DataBinding extends ViewDataBinding> extends AppCompat
 
         // 透明状态栏
         Translucent translucentAnnotation = getClass().getAnnotation(Translucent.class);
-        if (translucentAnnotation != null && translucentAnnotation.value()) {
-            // 设置状态栏透明，沉浸式
-            StatusBarUtil.setTranslucentStatus(this);
+        if (translucentAnnotation != null) {
+            if (translucentAnnotation.value()) {
+                // 设置状态栏透明，沉浸式
+                StatusBarUtil.setTranslucentStatus(this);
+            }
         } else {
             // 设置状态栏背景颜色为灰色
             StatusBarUtil.setImmersiveStatusBar(this, true);

@@ -1,6 +1,7 @@
 package com.edusoho.yunketang.ui.exercise;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.graphics.Bitmap;
@@ -15,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
@@ -34,10 +37,13 @@ import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.ui.testlib.AnswerReportActivity;
+import com.edusoho.yunketang.ui.testlib.PracticeActivity;
 import com.edusoho.yunketang.utils.BitmapUtil;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
@@ -94,8 +100,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     private EducationCourse selectedCourse;
     private String classId;
     private String businessId;
-    private String levelId;
-    private String courseId;
+    private int levelId;
+    private int courseId;
     private int lastPageIndex;
     private String homeworkId;
     private String teacher;
@@ -242,6 +248,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     }
 
     private void initView() {
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDataBinding().examTitleLayout.getLayoutParams();
+        params.setMargins(0, NotchUtil.getNotchHeight(this), 0, 0);
+        getDataBinding().examTitleLayout.setLayoutParams(params);
         // 初始化接收参数
         messageId = getIntent().getStringExtra(MESSAGE_ID);
         teacher = getIntent().getStringExtra(TEACHER);
@@ -251,8 +260,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
         classId = getIntent().getStringExtra(CLASS_ID);
         businessId = getIntent().getStringExtra(BUSINESS_ID);
-        levelId = getIntent().getStringExtra(LEVEL_ID);
-        courseId = getIntent().getStringExtra(COURSE_ID);
+        levelId = getIntent().getIntExtra(LEVEL_ID, 0);
+        courseId = getIntent().getIntExtra(COURSE_ID, 0);
         lastPageIndex = getIntent().getIntExtra(LAST_PAGE_INDEX, 0);
         homeworkId = getIntent().getStringExtra(HOMEWORK_ID);
         isMyCollection = getIntent().getBooleanExtra(IS_MY_COLLECTION, false);
@@ -344,8 +353,10 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             }
                             questionList.add(question);
                         }
+                        // 获得当前问题
+                        currentQuestion = questionList.get(0);
                         // 刷新界面
-                        refreshView(questionList.get(0));
+                        refreshView(currentQuestion);
                         viewPagerAdapter.notifyDataSetChanged();
                         ProgressDialogUtil.hideProgress();
                     }
@@ -386,8 +397,10 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             }
                             questionList.add(question);
                         }
+                        // 获得当前问题
+                        currentQuestion = questionList.get(0);
                         // 刷新界面
-                        refreshView(questionList.get(0));
+                        refreshView(currentQuestion);
                         viewPagerAdapter.notifyDataSetChanged();
                         ProgressDialogUtil.hideProgress();
                     }
@@ -427,9 +440,23 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             details.postil = data.homeworkMistake.postil;
                             details.postilUrl = data.homeworkMistake.postilUrl;
                         }
+                        List<MyAnswer> userResultList = JsonUtil.fromJson(data.userResult, new TypeToken<List<MyAnswer>>() {
+                        });
+                        // 遍历子题
+                        for (int i = 0; i < data.details.size(); i++) {
+                            // 存在用户作答
+                            if (!TextUtils.isEmpty(userResultList.get(i).result)) {
+                                data.details.get(i).myAnswerContent = userResultList.get(i).result;
+                            }
+                            // 存在用户作答图片
+                            if (!TextUtils.isEmpty(userResultList.get(i).userResultUrl)) {
+                                data.details.get(i).myAnswerPicUrl = userResultList.get(i).userResultUrl;
+                            }
+                        }
                         questionList.add(data);
+                        currentQuestion = questionList.get(0);
                         // 刷新界面
-                        refreshView(questionList.get(0));
+                        refreshView(currentQuestion);
                         viewPagerAdapter.notifyDataSetChanged();
                         ProgressDialogUtil.hideProgress();
                     }
@@ -567,7 +594,20 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             questionList.add(currentLoadQuestionStem);
                             // 加载下一题型的题目
                             loadQuestion();
+//                            // 加载到上次停留的页面，关闭加载提示，刷新viewPager，跳转至上次停留的页面
+//                            if (questionList.size() > lastPageIndex + 1) {
+//                                // 关闭加载提示
+//                                ProgressDialogUtil.hideProgress();
+//                                // 刷新ViewPager
+//                                viewPagerAdapter.notifyDataSetChanged();
+//                                // 模块练习 或 班级练习 去上次停留页面
+//                                if (isModuleExercise || isClassExercise) {
+//                                    // 去上次停留页面
+//                                    showPageByPosition(lastPageIndex);
+//                                }
+//                            }
                         } else { // 试卷全部加载完毕
+                            // 关闭加载提示
                             ProgressDialogUtil.hideProgress();
                             // 刷新ViewPager
                             viewPagerAdapter.notifyDataSetChanged();
@@ -577,7 +617,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                                 showPageByPosition(lastPageIndex);
                             }
                             // 答题报告序号点击而来
-                            if(isFromReportCard) {
+                            if (isFromReportCard) {
                                 int stemIndex = questionList.indexOf(questionStem.get(reportCardStemSort));
                                 if (reportCardQuestionType == 3 || reportCardQuestionType == 7) {
                                     // 显示该题子题的页面
@@ -973,7 +1013,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     if (!TextUtils.isEmpty(details.myAnswerContent) || !TextUtils.isEmpty(details.myAnswerPicUrl)) {
                         answerCount++;
                     }
-                    child.add(answerCount > 1 ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
+                    child.add(answerCount > 0 ? AnswerResultLayout.ANSWERED : AnswerResultLayout.NOT_ANSWER);
                 }
                 if (question.questionType == 7) {
                     map.put(QuestionHelper.getSort(integratedCount++), child);
@@ -1322,6 +1362,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             @Override
             public void onSuccess(Object data) {
                 ProgressDialogUtil.hideProgress();
+                Intent intent = new Intent(ExerciseActivity.this, AnswerReportActivity.class);
+                intent.putExtra(AnswerReportActivity.HOMEWORK_ID, homeworkId);
+                intent.putExtra(AnswerReportActivity.EXAMINATION_ID, examinationId);
+                intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
+                startActivity(intent);
                 finish();
             }
 
@@ -1355,6 +1401,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                 // 创建ExamAnswer对象
                 ExamAnswer examAnswer = new ExamAnswer();
                 examAnswer.questionId = question.questionId;
+                examAnswer.classification = question.subclassification;
                 examAnswer.index = question.questionSort;
                 examAnswer.correctResults = getCorrectAnswer(question);
                 examAnswer.userResults = getAnswerList(question);
@@ -1395,6 +1442,10 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 提交试卷
      */
     private void CommitExamination() {
+        if (isAllQuestionCommit()) {
+            showSingleToast("您还有题目未查看，不可提交试卷");
+            return;
+        }
         SYDataTransport.create(SYConstants.EXAMINATION_COMMIT)
                 .addParam("homeworkId", homeworkId)
                 .execute(new SYDataListener() {
@@ -1403,6 +1454,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     public void onSuccess(Object data) {
                         showSingleToast("试卷提交成功！");
                         ProgressDialogUtil.hideProgress();
+                        Intent intent = new Intent(ExerciseActivity.this, AnswerReportActivity.class);
+                        intent.putExtra(AnswerReportActivity.HOMEWORK_ID, homeworkId);
+                        intent.putExtra(AnswerReportActivity.EXAMINATION_ID, examinationId);
+                        intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                        intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
+                        startActivity(intent);
                         finish();
                     }
 
@@ -1412,6 +1469,13 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                         ProgressDialogUtil.hideProgress();
                     }
                 });
+    }
+
+    /**
+     * 问题是否均已提交
+     */
+    private boolean isAllQuestionCommit() {
+        return false;
     }
 
     /**
@@ -1457,7 +1521,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             public void OnRightBtnClicked(SimpleDialog dialog) {
                 dialog.superDismiss(); // 无动画退出
                 if (isModuleExercise || isClassExercise) {
-                    if(preCommitQuestionList.size() > 0) {
+                    if (preCommitQuestionList.size() > 0) {
                         isPreExit = true;
                         ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
                         checkPreCommitQuestion();
@@ -1527,11 +1591,14 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         onCommitAnswerAndShowResultClick(null);
     }
 
+    private MyCountDownTimer countDownTimer;
+
     /**
      * 开始倒计时
      */
     private void startTimer(long millisInFuture) {
-        new MyCountDownTimer(millisInFuture, 1000).start();
+        countDownTimer = new MyCountDownTimer(millisInFuture, 1000);
+        countDownTimer.start();
     }
 
     /**
@@ -1539,7 +1606,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      */
     class MyCountDownTimer extends CountDownTimer {
 
-        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+        MyCountDownTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
 
@@ -1559,6 +1626,14 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在提交试卷，请稍后...", false);
             // 一键提交
             oneKeyCommitAll();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
     }
 }

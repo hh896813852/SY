@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.ui.common.ShareActivity;
+import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -65,8 +66,9 @@ import rx.schedulers.Schedulers;
 /**
  * Created by zy on 2018/11/9 0009.
  */
-@Layout(value = R.layout.activity_course_details)
+@Layout(value = R.layout.activity_course_details, rightButtonRes = R.drawable.icon_share)
 public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseDetailsBinding> {
+    public static final int FROM_COURSE_CODE = RequestCodeUtil.next();
     public static final String COURSE_TYPE = "course_type";
     public static final String COURSE_ID = "course_id";
     private int courseType; // 1、上元在线  2、上元会计
@@ -128,6 +130,7 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
      * 初始化
      */
     private void initView() {
+        setTitleView("");
         MagicIndicatorBuilder.MagicIndicatorConfiguration configuration = new MagicIndicatorBuilder.MagicIndicatorConfiguration(this);
         configuration.labels = new String[]{"简介", "目录", "评价"};
         configuration.labelTextSize = 16;
@@ -248,7 +251,8 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
     /**
      * 微信分享
      */
-    public void onShareClick(View view) {
+    @Override
+    public void onRightButtonClick() {
         Intent intent = new Intent(this, ShareActivity.class);
         intent.putExtra(ShareActivity.SHARE_URL, SYApplication.getInstance().host + "course_set/" + courseProject.courseSet.id);
         intent.putExtra(ShareActivity.SHARE_TITLE, courseProject.courseSet.title);

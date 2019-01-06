@@ -7,6 +7,10 @@ public class AnswerReport implements Serializable {
     public int correctSum; // 总正确数量
     public int falseSum;   // 总错误数量
     public String percent; // 正确率
+    public String sumPoint;// 总得分（考试答题报告使用）
+    public int totalScore; // 试卷总分（考试答题报告使用）
+    public long updateDate; // 作答日期（毫秒）（考试答题报告使用）
+    public int completeTime;// 作答用时（秒）（考试答题报告使用）
     public List<AnswerDetails> returnList; // 各题型作答情况
 
     public class AnswerDetails implements Serializable {

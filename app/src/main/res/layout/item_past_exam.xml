@@ -26,24 +26,25 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="5dp"
             android:ellipsize="end"
             android:gravity="center"
+            android:lineSpacingExtra="2dp"
             android:maxLines="2"
             android:text="@{viewModel.examinationName}"
             android:textColor="@color/text_black"
             android:textSize="15sp"
-            tools:text="2018《中级会计职称》真题一" />
+            tools:text="2018《中级会计职称》\n真题一" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:text="@{viewModel.getExaminationTime}"
             android:textColor="@color/text_gray"
             android:textSize="13sp"
@@ -53,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="8dp"
             android:text="@{viewModel.getCompletePerson}"
             android:textColor="@color/text_gray"
             android:textSize="12sp"
@@ -60,17 +62,19 @@
 
         <TextView
             android:id="@+id/statusView"
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:layout_marginBottom="20dp"
             android:background="@{viewModel.chargeMode == 0 ? @drawable/bg_theme_color_corner_25 : (viewModel.finishState == 2 ? @drawable/bg_light_yellow_corner_25 : @drawable/bg_light_yellow2_corner_25)}"
             android:gravity="center"
             android:text="@{viewModel.getStartText}"
             android:textColor="@color/text_white"
-            android:textSize="16sp"
-            android:visibility="@{viewModel.finishState == 0 ? View.VISIBLE : View.GONE}"
+            android:textSize="17sp"
+            android:textStyle="bold"
             tools:background="@drawable/bg_theme_color_corner_25"
             tools:text="开始" />
     </LinearLayout>

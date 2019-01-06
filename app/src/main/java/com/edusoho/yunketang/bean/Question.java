@@ -116,7 +116,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_a;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_a;
                 }
                 list.add(option);
@@ -128,7 +128,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_b;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_b;
                 }
                 list.add(option);
@@ -140,7 +140,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_c;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_c;
                 }
                 list.add(option);
@@ -152,7 +152,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_d;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_d;
                 }
                 list.add(option);
@@ -164,7 +164,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_e;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_e;
                 }
                 list.add(option);
@@ -176,7 +176,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_f;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_f;
                 }
                 list.add(option);
@@ -188,7 +188,7 @@ public class Question implements Serializable {
                 if (choiceType == 0) { // 文字
                     option.optionContent = choices_g;
                 }
-                if (choiceType == 1) { // 语音
+                if (choiceType == 1) { // 图片
                     option.optionPicUrl = choices_g;
                 }
                 list.add(option);

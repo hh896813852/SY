@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <FrameLayout
+    <com.edusoho.yunketang.widget.RectangleFrameLayout
         android:layout_width="120dp"
-        android:layout_height="70dp"
-        android:layout_margin="10dp">
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layoutAspectRatio="0.5625">
 
         <ImageView
             android:id="@+id/courseImage"
@@ -26,7 +28,7 @@
             android:text="折"
             android:textColor="@color/text_white"
             android:textSize="10dp" />
-    </FrameLayout>
+    </com.edusoho.yunketang.widget.RectangleFrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -14,12 +14,15 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.bean.MsgInfo;
 import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.ui.MainTabActivity;
 import com.edusoho.yunketang.utils.DateUtils;
+import com.edusoho.yunketang.utils.NotchUtil;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -103,6 +106,13 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
     private int lastChangeColorPosition;
 
     private void initView() {
+        FrameLayout.LayoutParams params1 = (FrameLayout.LayoutParams) getDataBinding().titleLayout.getLayoutParams();
+        params1.setMargins(0, NotchUtil.getNotchHeight(getSupportedActivity()), 0, 0);
+        getDataBinding().titleLayout.setLayoutParams(params1);
+        LinearLayout.LayoutParams params2 = (LinearLayout.LayoutParams) getDataBinding().titleLayout2.getLayoutParams();
+        params2.setMargins(0, NotchUtil.getNotchHeight(getSupportedActivity()), 0, 0);
+        getDataBinding().titleLayout2.setLayoutParams(params2);
+
         getDataBinding().scrollView.setOnScrollListener(scrollY -> {
             // 遍历list找出需要改变颜色的item的临界position
             for (int i = 0; i < list.size(); i++) {
@@ -131,6 +141,10 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
             refreshMsg();
         } else {
             hasClass.set(false);
+            unReadCount.set("0");
+            if (getActivity() != null) {
+                ((MainTabActivity) getActivity()).unReadCount.set("0");
+            }
         }
     }
 
@@ -138,7 +152,11 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getSupportedActivity() != null) {
-            StatusBarUtil.setTranslucentStatus(getSupportedActivity());
+            if(hasClass.get()) {
+                StatusBarUtil.setTranslucentStatus(getSupportedActivity());
+            } else {
+                StatusBarUtil.setImmersiveStatusBar(getSupportedActivity(), true);
+            }
             if (isLogin.get()) {
                 // 刷新消息
                 refreshMsg();

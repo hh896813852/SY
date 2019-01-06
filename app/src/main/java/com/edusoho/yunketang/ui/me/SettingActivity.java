@@ -2,9 +2,15 @@ package com.edusoho.yunketang.ui.me;
 
 import android.content.Intent;
 import android.databinding.ObservableField;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -16,6 +22,8 @@ import com.edusoho.yunketang.databinding.ActivitySettingBinding;
 import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.AppUtil;
+import com.edusoho.yunketang.utils.BitmapUtil;
+import com.edusoho.yunketang.utils.html.MyHtmlTagHandler;
 
 @Layout(value = R.layout.activity_setting, title = "设置")
 public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
@@ -34,7 +42,25 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
         initView();
     }
 
+    private void showHtml(TextView textView, String content) {
+        CharSequence html = Html.fromHtml(content, source -> {
+            Drawable drawable = new BitmapDrawable(getResources(), BitmapUtil.base64ToBitmap(source));
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            return drawable;
+        }, new MyHtmlTagHandler("myfont"));
+        SpannableStringBuilder spanBuilder = new SpannableStringBuilder(html);
+        textView.setText(spanBuilder);
+        //设置可以点击超连接
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
     private void initView() {
+        // 如果不在HTML标签最前面加入其他HTML元素，此函数可能不会生效，原因未知。
+        String htmlStr = "<br/><font size=\"15px\" color=\"red\">This is some text!</font><br/><font size=\"18px\" color=\"blue\">This is some text!</font>";
+        htmlStr = htmlStr.replace("font","myfont");
+        showHtml(getDataBinding().aboutUsView, htmlStr);
+
+
         version.set("版本" + AppUtil.getAppVersionName(this));
         setting = AppPreferences.getSettings();
         isAllow4GPlay.set(setting.isAllow4GPlay == 1);

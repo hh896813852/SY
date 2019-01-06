@@ -3,20 +3,26 @@ package com.edusoho.yunketang.ui.course;
 import android.app.Activity;
 import android.content.Context;
 import android.databinding.ObservableField;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.utils.LogUtil;
+import com.edusoho.yunketang.utils.NotchUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
@@ -41,6 +47,8 @@ import com.youth.banner.loader.ImageLoader;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +78,7 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
             getDataBinding().vpMain.setCurrentItem(1);
             itemHeight = accountantCourseFragment.getItemHeight(list.get(position).courseSort);
         }
-        getDataBinding().scrollView.smoothScrollTo(0, itemHeight + DensityUtil.dip2px(getSupportedActivity(), 435));
+        getDataBinding().scrollView.smoothScrollTo(0, itemHeight + ScreenUtil.getScreenWidth(getSupportedActivity()) * 9 / 16 + DensityUtil.dip2px(getSupportedActivity(), 268) - NotchUtil.getNotchHeight(getSupportedActivity()));
         SYApplication.getInstance().setHost(list.get(position).courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
     };
 
@@ -94,8 +102,14 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
      * 初始化
      */
     private void initView() {
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDataBinding().titleIndicator.getLayoutParams();
+        params.setMargins(0, NotchUtil.getNotchHeight(getSupportedActivity()), 0, 0);
+        getDataBinding().titleIndicator.setLayoutParams(params);
+
         MagicIndicatorBuilder.MagicIndicatorConfiguration configuration = new MagicIndicatorBuilder.MagicIndicatorConfiguration(getSupportedActivity());
         configuration.labels = new String[]{"上元在线", "上元会计"};
+        configuration.labelTextSize = 15;
+        configuration.titleNormalColor = R.color.text_black;
         configuration.lineMode = LinePagerIndicator.MODE_EXACTLY;
         configuration.lineHeight = DensityUtil.dip2px(getSupportedActivity(), 4f);
         configuration.lineWidth = DensityUtil.dip2px(getSupportedActivity(), 20f);
@@ -104,9 +118,18 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
         getDataBinding().vpMain.setAdapter(new CommonViewPagerAdapter(getChildFragmentManager(), onlineCourseFragment, accountantCourseFragment));
         getDataBinding().vpMain.addOnPageChangeListener(new MagicIndicatorPageListener(getDataBinding().mainTabIndicator));
         // set MagicIndicator
-        CommonNavigator commonNavigator = MagicIndicatorBuilder.buildCommonNavigator(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener() {
+        CommonNavigator commonNavigator = MagicIndicatorBuilder.buildCommonNavigator2(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
             @Override
-            public void onNavigatorClickListener(int index) {
+            public void onNavigatorClickListener2(int index, List<TextView> textViews) {
+                for (int i = 0; i < textViews.size(); i++) {
+                    if (index == i) {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    } else {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                }
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 // 设置网络请求baseUrl，用于其他平台网络请求框架使用。
                 SYApplication.getInstance().setHost(index == 0 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
@@ -125,9 +148,18 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
 
         getDataBinding().vpMain.addOnPageChangeListener(new MagicIndicatorPageListener(getDataBinding().tabIndicator));
         // set MagicIndicator
-        CommonNavigator commonNavigator2 = MagicIndicatorBuilder.buildCommonNavigator(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener() {
+        CommonNavigator commonNavigator2 = MagicIndicatorBuilder.buildCommonNavigator2(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
             @Override
-            public void onNavigatorClickListener(int index) {
+            public void onNavigatorClickListener2(int index, List<TextView> textViews) {
+                for (int i = 0; i < textViews.size(); i++) {
+                    if (index == i) {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    } else {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                }
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 // 设置网络请求baseUrl，用于其他平台网络请求框架使用。
                 SYApplication.getInstance().setHost(index == 0 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
@@ -147,14 +179,15 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
         // 设置scrollView滑动监听
         getDataBinding().scrollView.setOnScrollListener(scrollY -> {
             LogUtil.i("scrollY", "scrollView滑动距离：" + scrollY);
-            if (scrollY > DensityUtil.dip2px(getSupportedActivity(), 200)) {
+            if (scrollY > DensityUtil.dip2px(getSupportedActivity(), 210) - NotchUtil.getNotchHeight(getSupportedActivity())) {
                 getDataBinding().titleIndicator.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Window window = getSupportedActivity().getWindow();
                     // 有些情况下需要先清除透明flag
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setStatusBarColor(getResources().getColor(R.color.theme_color));
+                    window.setStatusBarColor(getResources().getColor(R.color.bg_white));
+                    StatusBarUtil.setCommonUI(getSupportedActivity());
                 }
             } else {
                 getDataBinding().titleIndicator.setVisibility(View.GONE);
@@ -234,13 +267,13 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
     /**
      * 显示导航菜单
      */
-    public void onMenuShowClicked(View view) {
+    public View.OnClickListener onMenuShowClicked = v -> {
         isMenuShowed.set(true);
         getDataBinding().layout.setVisibility(View.VISIBLE);
         getDataBinding().bgLayout.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(getSupportedActivity(), R.anim.slide_out_from_right);
         getDataBinding().layout.startAnimation(animation);
-    }
+    };
 
     /**
      * 背景点击关闭菜单

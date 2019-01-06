@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYConstants;
@@ -15,6 +16,8 @@ import com.edusoho.yunketang.databinding.ActivityCourseEvaluateBinding;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.utils.AppUtil;
+import com.edusoho.yunketang.utils.DensityUtil;
+import com.edusoho.yunketang.utils.NotchUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +37,10 @@ public class CourseEvaluateActivity extends BaseActivity<ActivityCourseEvaluateB
         super.onCreate(savedInstanceState);
         courseType = getIntent().getIntExtra(COURSE_TYPE, 0);
         courseProjectId = getIntent().getIntExtra(COURSE_PROJECT_ID, 0);
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getDataBinding().evaluateTitleLayout.getLayoutParams();
+        params.setMargins(0, NotchUtil.getNotchHeight(this), 0, 0);
+        getDataBinding().evaluateTitleLayout.setLayoutParams(params);
     }
 
     /**
@@ -66,7 +73,7 @@ public class CourseEvaluateActivity extends BaseActivity<ActivityCourseEvaluateB
                     public void onSuccess(String data) {
                         try {
                             JSONObject jsonObject = new JSONObject(data);
-                            if(jsonObject.has("id")) {
+                            if (jsonObject.has("id")) {
                                 showToast("评价成功！");
                                 finish();
                             } else {

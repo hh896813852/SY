@@ -10,10 +10,11 @@ import java.io.Serializable;
 
 public class StudyCourse implements Serializable {
     public int id;
+    public int courseType; // 1、上元在线 2、上元会计
     public String title;
+    public String courseSetTitle;
     public int publishedTaskNum;
     public int learnedNum;
     public Study courseSet;
     public int studentNum;
-
 }

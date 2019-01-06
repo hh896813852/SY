@@ -18,6 +18,7 @@ import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.BaseDialog;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.ClassInfo;
+import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.Examination;
 import com.edusoho.yunketang.bean.Rank;
 import com.edusoho.yunketang.bean.User;
@@ -62,6 +63,13 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                 } else {
                     Intent intent = new Intent(CourseworkActivity.this, AnswerReportActivity.class);
                     intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                    intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
+                    intent.putExtra(AnswerReportActivity.MODULE_ID, list.get(position).moduleId);
+                    EducationCourse selectedCourse = new EducationCourse();
+                    selectedCourse.businessId = list.get(position).businessType;
+                    selectedCourse.levelId = list.get(position).levelId;
+                    selectedCourse.courseId = list.get(position).courseId;
+                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                     startActivity(intent);
                 }
             });

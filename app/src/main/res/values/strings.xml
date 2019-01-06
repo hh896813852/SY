@@ -16,6 +16,10 @@
     <string name="not_login">您还没有登录账号</string>
     <string name="no_class">您还没有报名班级课程</string>
 
+    <string name="welcome_back_to_syjy">欢迎回来上元教育</string>
+    <string name="welcome_back_to_syzx">欢迎回来上元在线</string>
+    <string name="welcome_back_to_sykj">欢迎回来上元会计</string>
+
     <string name="previous">Go to previous</string>
     <string name="next">Go to next</string>
     <string name="calendar">Calendar</string>

@@ -5,28 +5,35 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
+import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.google.gson.reflect.TypeToken;
+import com.edusoho.yunketang.databinding.FragmentChildReadSelectBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Layout(value = R.layout.fragment_child_read_select)
-public class ChildReadSelectFragment extends BaseFragment {
+public class ChildReadSelectFragment extends BaseFragment<FragmentChildReadSelectBinding> {
     private Question.QuestionDetails childQuestion;
 
     public ObservableField<String> questionTopic = new ObservableField<>();
@@ -38,25 +45,37 @@ public class ChildReadSelectFragment extends BaseFragment {
     public ObservableField<String> userAnswer = new ObservableField<>();
     public ObservableField<String> answerAnalysis = new ObservableField<>();
     public List<String> answerAnalysisPicList = new ArrayList<>();
-    public SYBaseAdapter answerAnalysisPicAdapter = new SYBaseAdapter();
 
     public List<String> picList = new ArrayList<>();
-    public SYBaseAdapter picAdapter = new SYBaseAdapter() {
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            ImageView imageView = view.findViewById(R.id.imageView);
-            Glide.with(getSupportedActivity()).load(picList.get(position)).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
-            return view;
-        }
-    };
 
     public List<Question.QuestionDetails.Option> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
-            view.findViewById(R.id.optionImage).setVisibility(list.get(position).choiceType == 1 ? View.VISIBLE : View.GONE);
+            // 手动添加选项内容和图片，防止ScrollView下ListView内容高度不确定的情况下被限制
+            LinearLayout optionContainer = view.findViewById(R.id.optionContainer);
+            optionContainer.removeAllViews();
+            if (list.get(position).choiceType == 0) {
+                TextView optionContent = new TextView(getSupportedActivity());
+                optionContent.setText(list.get(position).optionContent);
+                optionContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                optionContent.setGravity(Gravity.CENTER_VERTICAL); // 垂直居中
+                optionContent.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_light_black));
+                optionContainer.addView(optionContent);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionContent.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                optionContent.setLayoutParams(params);
+            } else {
+                ImageView optionImage = new ImageView(getSupportedActivity());
+                optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
+                optionContainer.addView(optionImage);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionImage.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                optionImage.setLayoutParams(params);
+            }
+            // 选项背景
             TextView optionView = view.findViewById(R.id.optionView);
             if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
                 if (list.get(position).isPicked) {
@@ -72,23 +91,24 @@ public class ChildReadSelectFragment extends BaseFragment {
     };
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
         // 答案解析不可更改选项
-        if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+        if (getActivity() == null || ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
             return;
         }
-        // 是否是第一次选择
-        boolean isFirstPick = true;
-        for (int i = 0; i < list.size(); i++) {
-            // 有选项选过，则不是第一次选择
-            if (list.get(i).isPicked) {
-                isFirstPick = false;
-            }
-            list.get(i).isPicked = position == i;
-        }
+//        // 是否是第一次选择
+//        boolean isFirstPick = true;
+//        for (int i = 0; i < list.size(); i++) {
+//            // 有选项选过，则不是第一次选择
+//            if (list.get(i).isPicked) {
+//                isFirstPick = false;
+//            }
+//            list.get(i).isPicked = position == i;
+//        }
+        list.get(position).isPicked = !list.get(position).isPicked;
         adapter.notifyDataSetChanged();
-        if (isFirstPick && getParentFragment() != null) {
-            // 第一次选择，显示下一页
-            ((ReadSelectedFragment) getParentFragment()).showNextPage();
-        }
+//        if (isFirstPick && getParentFragment() != null) {
+//            // 第一次选择，显示下一页
+//            ((ReadSelectedFragment) getParentFragment()).showNextPage();
+//        }
     };
 
     public static ChildReadSelectFragment newInstance(Question.QuestionDetails childQuestion) {
@@ -111,9 +131,17 @@ public class ChildReadSelectFragment extends BaseFragment {
         questionTopic.set(childQuestion.childQuestionSort + "、" + childQuestion.topicSubsidiary);
         // 题目图片adapter
         if (!TextUtils.isEmpty(childQuestion.topicSubsidiaryUrl)) {
+            getDataBinding().topicPicContainer.setVisibility(View.VISIBLE);
             picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
+            for (String url : picList) {
+                View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                ImageView imageView = innerView.findViewById(R.id.imageView);
+                PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                getDataBinding().topicPicContainer.addView(innerView);
+            }
+        } else {
+            getDataBinding().topicPicContainer.setVisibility(View.GONE);
         }
-        picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
 
         // 是否显示答案解析
         isShowAnswerAnalysis.set(getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis);
@@ -139,13 +167,16 @@ public class ChildReadSelectFragment extends BaseFragment {
             isUserAnswerCorrect.set(TextUtils.equals(userAnswer.get(), correctAnswer.get()));
             // 答案解析
             answerAnalysis.set(childQuestion.resultResolve);
-            // 答案解析图片adapter
-            answerAnalysisPicAdapter.init(getSupportedActivity(), R.layout.item_pic, answerAnalysisPicList);
             // 答案解析图片
             String resultResolveUrl = childQuestion.resultResolveUrl;
             if (!TextUtils.isEmpty(resultResolveUrl)) {
                 answerAnalysisPicList.addAll(Arrays.asList(resultResolveUrl.split(",")));
-                answerAnalysisPicAdapter.notifyDataSetChanged();
+                for (String url : answerAnalysisPicList) {
+                    View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    getDataBinding().answerAnalysisPicContainer.addView(innerView);
+                }
             }
         }
         // 选项adapter

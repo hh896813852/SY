@@ -12,6 +12,8 @@
     <color name="text_white">#ffffffff</color>
     <!-- 字体 黑色 -->
     <color name="text_black">#ff333333</color>
+    <!-- 背景 黑色 -->
+    <color name="text_light_black">#4A4A4A</color>
     <!-- 字体 灰色 -->
     <color name="text_gray">#999999</color>
     <!-- 字体 深灰色 -->
@@ -26,17 +28,23 @@
     <!-- 背景 -->
     <!-- 背景 -->
     <!-- 背景 -->
-    <!-- 背景 白色 -->
+    <!-- 背景 主题色 -->
     <color name="theme_color">#17A884</color>
+    <!-- 背景 绿色 -->
+    <color name="bg_green_color">#30BFA2</color>
     <color name="bg_transparent">#00ffffff</color>
     <!-- 背景 深绿色 -->
     <color name="bg_dark_green_color">#129977</color>
     <!-- 背景 淡绿色 -->
     <color name="bg_light_green_color">#B8E0D6</color>
+    <!-- 背景 淡绿色 -->
+    <color name="bg_light_green_color2">#ffd3f1e9</color>
     <!-- 背景 白色 -->
     <color name="bg_white">#ffffffff</color>
     <!-- 背景 黑色 -->
     <color name="bg_black">#ff333333</color>
+    <!-- 背景 黑色 -->
+    <color name="bg_light_black">#4A4A4A</color>
     <!-- 背景 灰色 -->
     <color name="bg_gray">#C6C6C6</color>
     <!-- 背景 淡灰色 -->
@@ -51,8 +59,10 @@
     <color name="bg_dark_gray">#949494</color>
     <!-- 背景 半透明黑 -->
     <color name="alpha_bg_black">#99000000</color>
+    <!-- 背景 30%透明白 -->
+    <color name="alpha_bg_white">#c9ffffff</color>
     <!-- 背景 半透明白 -->
-    <color name="alpha_bg_white">#e6ffffff</color>
+    <color name="alpha_bg_half_white">#90ffffff</color>
     <!-- 背景 折-->
     <color name="bg_discount">#FD4852</color>
     <!-- 背景 红色-->

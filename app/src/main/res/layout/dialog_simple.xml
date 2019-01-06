@@ -39,12 +39,18 @@
                 android:gravity="center"
                 android:text="左侧按钮"
                 android:textColor="@color/text_white"
-                android:textSize="14dp" />
-            
-            <View
+                android:textSize="15dp" />
+
+            <FrameLayout
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:background="@color/bg_light_gray0"/>
+                android:background="@color/theme_color">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/alpha_bg_half_white" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/rightView"
@@ -55,7 +61,7 @@
                 android:gravity="center"
                 android:text="右侧按钮"
                 android:textColor="@color/text_white"
-                android:textSize="14dp" />
+                android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

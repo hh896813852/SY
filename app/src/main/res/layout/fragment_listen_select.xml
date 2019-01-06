@@ -23,8 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
             android:text="@{viewModel.questionTopic}"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_light_black"
             android:textSize="16sp"
             tools:text="1、题目题目题目" />
 
@@ -68,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.audioCurrentTime}"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="14sp"
                 tools:text="00:00" />
 
@@ -76,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="14sp" />
 
             <TextView
@@ -84,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="@{viewModel.audioDuration}"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="14sp"
                 tools:text="02:13" />
         </LinearLayout>
@@ -182,20 +183,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:lineSpacingExtra="5dp"
+                android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
                 android:text="@{viewModel.answerAnalysis}"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="16sp"
                 tools:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析" />
 
-            <com.edusoho.yunketang.widget.NoScrollListView
+            <LinearLayout
+                android:id="@+id/answerAnalysisPicContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:scrollbars="none"
-                bind:adapter="@{viewModel.answerAnalysisPicAdapter}" />
+                android:orientation="vertical" />
         </LinearLayout>
     </LinearLayout>
 </layout>

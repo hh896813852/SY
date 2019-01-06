@@ -346,7 +346,7 @@
             android:onClick="onRechargeClick"
             android:text="确认充值"
             android:textColor="@color/text_white"
-            android:textSize="17sp"
+            android:textSize="18dp"
             android:textStyle="bold"
             tools:background="@drawable/bg_light_orange_corner_25" />
     </LinearLayout>

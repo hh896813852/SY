@@ -23,6 +23,7 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.FragmentIntegratedExercisesBinding;
+import com.edusoho.yunketang.helper.PicLoadHelper;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.ViewUtils;
@@ -81,7 +82,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
         for (String url : picList) {
             View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
             ImageView imageView = innerView.findViewById(R.id.imageView);
-            Glide.with(getSupportedActivity()).load(url).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
+            PicLoadHelper.load(getSupportedActivity(), url, imageView);
             getDataBinding().containerLayout.addView(innerView);
         }
         // 初始化viewPager

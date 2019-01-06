@@ -69,6 +69,14 @@ public class MyBoughtExamActivity extends BaseActivity<ActivityMyBoughtExamBindi
                 if (list.get(position).finishState == 2) { // 已完成，去答题报告
                     Intent intent = new Intent(MyBoughtExamActivity.this, AnswerReportActivity.class);
                     intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                    intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
+                    intent.putExtra(AnswerReportActivity.MODULE_ID, list.get(position).moduleId);
+                    intent.putExtra(AnswerReportActivity.IS_EXAM, true);
+                    EducationCourse selectedCourse = new EducationCourse();
+                    selectedCourse.businessId = list.get(position).businessType;
+                    selectedCourse.levelId = list.get(position).levelId;
+                    selectedCourse.courseId = list.get(position).courseId;
+                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                     startActivity(intent);
                 } else { // 开始（此处无继续状态）
                     Intent intent = new Intent(MyBoughtExamActivity.this, ExerciseActivity.class);

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edusoho.yunketang.base.annotation.Translucent;
 import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.edusoho.yunketang.utils.DialogUtil;
@@ -46,7 +47,8 @@ import com.edusoho.yunketang.widget.SYVideoPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-@Layout(value = R.layout.activity_course_player)
+@Translucent(value = false)
+@Layout(value = R.layout.activity_course_player, rightButtonRes = R.drawable.icon_share_white)
 public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBinding> {
     public static final String COURSE_PROJECT_ID = "course_project_id";
     public static final String COURSE_ID = "course_id";
@@ -96,6 +98,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         courseProject = (CourseProject) getIntent().getSerializableExtra(COURSE_PROJECT);
         currentTask = (CourseTask) getIntent().getSerializableExtra(COURSE_TASK);
         courseCatalogueJson = getIntent().getStringExtra(COURSE_CATALOGUE);
+        setTitleView("");
         // 初始化ExpandListView
         initExpand();
         // 初始化目录
@@ -236,7 +239,9 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
      */
     private void canPlay(String lessonUrl) {
         if (AppPreferences.getSettings().isAllow4GPlay == 1 || NetworkUtils.isWifiConnected(this)) {
-            play(lessonUrl);
+            if (!isPause) {
+                play(lessonUrl);
+            }
         } else {
             DialogUtil.showSimpleAnimDialog(this, "您正在使用移动网络，是否继续观看？", "暂时不看", "继续观看", new SimpleDialog.OnSimpleClickListener() {
                 @Override
@@ -274,7 +279,6 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         super.onBackPressed();
     }
 
-
     @Override
     protected void onPause() {
         videoPlayer.getCurrentPlayer().onVideoPause();
@@ -292,11 +296,12 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isPlay) {
-            videoPlayer.getCurrentPlayer().release();
+        if (videoPlayer != null) {
+            videoPlayer.release();
         }
-        if (orientationUtils != null)
+        if (orientationUtils != null) {
             orientationUtils.releaseListener();
+        }
     }
 
     @Override
@@ -364,7 +369,8 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
     /**
      * 微信分享
      */
-    public void onShareClick(View view) {
+    @Override
+    public void onRightButtonClick() {
         Intent intent = new Intent(this, ShareActivity.class);
         intent.putExtra(ShareActivity.SHARE_URL, SYApplication.getInstance().host + "course_set/" + courseProject.courseSet.id);
         intent.putExtra(ShareActivity.SHARE_TITLE, courseProject.courseSet.title);
@@ -372,6 +378,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         intent.putExtra(ShareActivity.SHARE_THUMB_URL, courseProject.courseSet.cover.small);
         startActivity(intent);
     }
+
 
     /**
      * 去登录

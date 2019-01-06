@@ -16,7 +16,7 @@ public class RectangleImageView extends ImageView {
 
     public RectangleImageView(Context context) {
         this(context, null);
-    }
+}
 
     public RectangleImageView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);

@@ -43,7 +43,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     private int pageNo = 1;
     private boolean isLoading;
 
-    public ObservableField<Integer> searchType = new ObservableField<>(0);
+    public ObservableField<Integer> searchType = new ObservableField<>(3);
     public ObservableField<Boolean> isShowMenu = new ObservableField<>(false);
 
     private LayoutInflater layoutInflater;
@@ -165,6 +165,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
      */
     private void loadData() {
         SYDataTransport.create(SYConstants.MODULE_EXERCISE)
+                .addParam("finishState", searchType.get() == 3 ? "" : searchType.get())
                 .addParam("businessType", selectedCourse.businessId)
                 .addParam("levelId", selectedCourse.levelId)
                 .addParam("courseId", selectedCourse.courseId)
@@ -212,8 +213,12 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
      */
     public void onSearchTypeClick(View view) {
         int type = Integer.valueOf(view.getTag().toString());
-        searchType.set(type);
         isShowMenu.set(false);
+        if(type != searchType.get()) {
+            searchType.set(type);
+            pageNo = 1;
+            loadData();
+        }
     }
 
 

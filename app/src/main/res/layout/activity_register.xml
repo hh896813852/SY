@@ -19,18 +19,38 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/bg_white"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:onClick="onBackToLoginClick"
-                android:padding="15dp"
-                android:src="@drawable/icon_close_black" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onBackToLoginClick"
+                    android:padding="15dp"
+                    android:src="@drawable/icon_close_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:onClick="onBackToLoginClick"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="登录"
+                    android:textColor="@color/theme_color"
+                    android:textSize="15dp" />
+            </FrameLayout>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -52,8 +72,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="25dp"
+                android:layout_marginRight="15dp"
                 android:orientation="horizontal"
                 android:visibility="@{viewModel.registerStep == 2 ? View.VISIBLE : View.INVISIBLE}">
 
@@ -82,7 +102,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@color/line_green"
@@ -93,8 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="25dp"
+                android:layout_marginRight="15dp"
                 android:background="@color/bg_white"
                 android:hint="手机号"
                 android:inputType="number"
@@ -110,8 +130,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="15dp"
                 android:orientation="horizontal"
                 android:visibility="@{viewModel.registerStep == 2 ? View.VISIBLE : View.GONE}">
 
@@ -149,7 +169,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@color/line_green" />
@@ -158,32 +178,18 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
-                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
                 android:layout_marginTop="40dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="20dp"
                 android:background="@{viewModel.canClick ? @drawable/bg_dark_green_corner_23 : @drawable/bg_light_green_corner_23}"
                 android:clickable="@{viewModel.canClick}"
                 android:onClick="onRegisterClick"
-                tools:text="完成"
                 android:text="@{viewModel.registerText}"
                 android:textColor="@color/text_white"
-                android:textSize="17dp"
-                tools:background="@drawable/bg_dark_green_corner_23" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="10dp"
-                android:clickable="true"
-                android:onClick="onBackToLoginClick"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="登录"
-                android:textColor="@color/theme_color"
-                android:textSize="15dp" />
+                android:textSize="18dp"
+                tools:background="@drawable/bg_dark_green_corner_23"
+                tools:text="完成" />
         </LinearLayout>
     </ScrollView>
 </layout>

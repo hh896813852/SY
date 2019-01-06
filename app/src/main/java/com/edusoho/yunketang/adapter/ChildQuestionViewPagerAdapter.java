@@ -27,7 +27,7 @@ public class ChildQuestionViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Question.QuestionDetails childQuestion = childQuestionList.get(position);
         switch (childQuestion.childQuestionType) {
-            case 1: // 单选题
+            case 1: // 选择题
                 return ChildReadSelectFragment.newInstance(childQuestion);
             case 2: // 简答题： 一段文字（含图片），一个题目（含图片），一个答案（可上传图片）
                 return ChildIntegratedExercisesFragment.newInstance(childQuestion);

@@ -1,6 +1,5 @@
 package com.edusoho.yunketang.ui.testlib;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.graphics.Color;
@@ -13,7 +12,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -30,11 +32,15 @@ import com.edusoho.yunketang.bean.Rank;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.databinding.FragmentTestLibBinding;
 import com.edusoho.yunketang.helper.AppPreferences;
+import com.edusoho.yunketang.helper.PicLoadHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.ui.MainTabActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.DialogUtil;
+import com.edusoho.yunketang.utils.NotchUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
 import com.edusoho.yunketang.widget.CircleBarView;
 import com.google.gson.reflect.TypeToken;
@@ -80,31 +86,31 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
             ImageView moduleImage = view.findViewById(R.id.moduleImage);
             switch (moduleList.get(position).modelName) {
                 case "每日一练":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_mryl);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_mryl, moduleImage);
                     break;
                 case "每周一测":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_mzyc);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_mzyc, moduleImage);
                     break;
                 case "模拟考试":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_mnks);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_mnks, moduleImage);
                     break;
                 case "历年真题":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_lnzt);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_lnzt, moduleImage);
                     break;
                 case "章节练习":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_zjlx);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_zjlx, moduleImage);
                     break;
                 case "专项练习":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_zxlx);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_zxlx, moduleImage);
                     break;
                 case "听力训练":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_tlxl);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_tlxl, moduleImage);
                     break;
                 case "阅读练习":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_ydlx);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_ydlx, moduleImage);
                     break;
                 case "我的错题":
-                    moduleImage.setImageResource(R.drawable.bg_exercise_wdct);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) / 2, R.drawable.bg_exercise_wdct, moduleImage);
                     break;
             }
             return view;
@@ -208,7 +214,7 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser && !SYApplication.getInstance().isLogin()) {
+        if (isVisibleToUser && !SYApplication.getInstance().isLogin()) {
             moduleRank.set("0");
             beatPercent.set("0");
             getDataBinding().circleView.setProgressNum(0, 100);
@@ -216,6 +222,10 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
     }
 
     private void initView() {
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getDataBinding().titleLayout.getLayoutParams();
+        params.height = NotchUtil.getNotchHeight(getSupportedActivity()) + DensityUtil.dip2px(getSupportedActivity(), 55);
+        getDataBinding().titleLayout.setLayoutParams(params);
+
         isFirstSelect.set(AppPreferences.getSelectedCourse() == null || AppPreferences.getSelectedCourse().businessId == 0);
         if (isFirstSelect.get() && getSupportedActivity() != null) {
             StatusBarUtil.setImmersiveStatusBar(getSupportedActivity(), true);
@@ -231,8 +241,8 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
         configuration.lineHeight = DensityUtil.dip2px(getSupportedActivity(), 4f);
         configuration.lineWidth = DensityUtil.dip2px(getSupportedActivity(), 20f);
         configuration.lineColor = Color.parseColor("#ffffff");
-        configuration.titleNormalColor = R.color.text_white;
-        configuration.titleSelectedColor = R.color.text_white;
+        configuration.titleNormalColor = R.color.alpha_bg_white;
+        configuration.titleSelectedColor = R.color.bg_white;
         configuration.labelTextSize = 15;
         configuration.labels = labels.toArray(new String[0]);
 
@@ -545,6 +555,10 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
      * 课程类型选择
      */
     public View.OnClickListener onCoursePickClicked = v -> {
+        if (getActivity() != null) {
+            ((MainTabActivity) getActivity()).getDataBinding().tabLayout.setVisibility(View.GONE);
+            ((MainTabActivity) getActivity()).getDataBinding().tabLine.setVisibility(View.GONE);
+        }
         getDataBinding().layout.setVisibility(View.VISIBLE);
         getDataBinding().bgLayout.setVisibility(View.VISIBLE);
         Animation animation = AnimationUtils.loadAnimation(getSupportedActivity(), R.anim.slide_out_from_right);
@@ -567,6 +581,10 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                if (getActivity() != null) {
+                    ((MainTabActivity) getActivity()).getDataBinding().tabLayout.setVisibility(View.VISIBLE);
+                    ((MainTabActivity) getActivity()).getDataBinding().tabLine.setVisibility(View.VISIBLE);
+                }
                 getDataBinding().layout.setVisibility(View.GONE);
                 getDataBinding().bgLayout.setVisibility(View.GONE);
             }

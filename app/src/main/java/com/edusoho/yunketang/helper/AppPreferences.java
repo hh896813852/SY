@@ -5,9 +5,13 @@ import android.text.TextUtils;
 
 import com.edusoho.yunketang.BuildConfig;
 import com.edusoho.yunketang.SYApplication;
+import com.edusoho.yunketang.bean.Course;
 import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.Setting;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 
 /**
@@ -28,6 +32,8 @@ public class AppPreferences extends BasePreferences {
     public static final String SELECTED_COURSE = "sy.selected_course";  // 选择的课程
 
     public static final String SETTING_CONFIG = "sy.setting_config"; // 设置配置
+
+    public static final String HOME_DATA = "sy.home_data"; // 首页数据
 
     public static boolean isFirstOpenApp() {
         return getBoolean(IS_FIRST_OPEN_APP, true);
@@ -67,6 +73,16 @@ public class AppPreferences extends BasePreferences {
 
     public static void saveSettings(Setting setting) {
         setString(SETTING_CONFIG, JsonUtil.toJson(setting));
+    }
+
+    public static List<Course> getHomeData(int courseType) {
+        String json = getString(HOME_DATA + "_" + courseType, "");
+        return JsonUtil.fromJson(TextUtils.isEmpty(json) ? "[]" : json, new TypeToken<List<Course>>() {
+        });
+    }
+
+    public static void saveHomeData(int courseType, List<Course> courses) {
+        setString(HOME_DATA + "_" + courseType, JsonUtil.toJson(courses));
     }
 
     public static void setAppUpdateId(long id) {

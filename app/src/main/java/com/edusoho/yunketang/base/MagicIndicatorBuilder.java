@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.CommonPagerTitleView;
 
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by any on 16/7/26.
@@ -27,6 +30,10 @@ public class MagicIndicatorBuilder {
 
     public interface OnNavigatorClickListener {
         void onNavigatorClickListener(int index);
+    }
+
+    public interface OnNavigatorClickListener2 {
+        void onNavigatorClickListener2(int index, List<TextView> textViews);
     }
 
     public static class MagicIndicatorConfiguration {
@@ -85,7 +92,7 @@ public class MagicIndicatorBuilder {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
                 colorTransitionPagerTitleView.setText(configuration.labels[index]);
                 colorTransitionPagerTitleView.setTextSize(configuration.labelTextSize);
-                colorTransitionPagerTitleView.setTypeface(colorTransitionPagerTitleView.getTypeface(), configuration.textStyle);
+                colorTransitionPagerTitleView.setTypeface(Typeface.defaultFromStyle(configuration.textStyle));
                 colorTransitionPagerTitleView.setNormalColor(ContextCompat.getColor(context, configuration.titleNormalColor));
                 colorTransitionPagerTitleView.setSelectedColor(ContextCompat.getColor(context, configuration.titleSelectedColor));
                 colorTransitionPagerTitleView.setOnClickListener(view -> {
@@ -99,7 +106,53 @@ public class MagicIndicatorBuilder {
                 LinePagerIndicator indicator = new LinePagerIndicator(context);
                 indicator.setMode(configuration.lineMode);
                 indicator.setLineHeight(configuration.lineHeight);
-                if(configuration.lineMode == LinePagerIndicator.MODE_EXACTLY) {
+                if (configuration.lineMode == LinePagerIndicator.MODE_EXACTLY) {
+                    indicator.setLineWidth(configuration.lineWidth);
+                }
+                indicator.setColors(configuration.lineColor);
+                return indicator;
+            }
+        });
+        return commonNavigator;
+    }
+
+    public static CommonNavigator buildCommonNavigator2(Context context,
+                                                        MagicIndicatorConfiguration configuration,
+                                                        OnNavigatorClickListener2 listener) {
+        List<TextView> textViews = new ArrayList<>();
+        CommonNavigator commonNavigator = new CommonNavigator(context);
+        commonNavigator.setAdjustMode(configuration.isAdjustMode);
+        commonNavigator.setAdapter(new CommonNavigatorAdapter() {
+            @Override
+            public int getCount() {
+                return configuration.labels == null ? 0 : configuration.labels.length;
+            }
+
+            @Override
+            public IPagerTitleView getTitleView(Context context, final int index) {
+                ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                colorTransitionPagerTitleView.setText(configuration.labels[index]);
+                colorTransitionPagerTitleView.setTextSize(configuration.labelTextSize);
+                colorTransitionPagerTitleView.setTypeface(Typeface.defaultFromStyle(configuration.textStyle));
+                colorTransitionPagerTitleView.setNormalColor(ContextCompat.getColor(context, configuration.titleNormalColor));
+                colorTransitionPagerTitleView.setSelectedColor(ContextCompat.getColor(context, configuration.titleSelectedColor));
+                if(index == 0) {
+                    colorTransitionPagerTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    colorTransitionPagerTitleView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                }
+                textViews.add(colorTransitionPagerTitleView);
+                colorTransitionPagerTitleView.setOnClickListener(view -> {
+                    listener.onNavigatorClickListener2(index, textViews);
+                });
+                return colorTransitionPagerTitleView;
+            }
+
+            @Override
+            public IPagerIndicator getIndicator(Context context) {
+                LinePagerIndicator indicator = new LinePagerIndicator(context);
+                indicator.setMode(configuration.lineMode);
+                indicator.setLineHeight(configuration.lineHeight);
+                if (configuration.lineMode == LinePagerIndicator.MODE_EXACTLY) {
                     indicator.setLineWidth(configuration.lineWidth);
                 }
                 indicator.setColors(configuration.lineColor);
@@ -128,7 +181,7 @@ public class MagicIndicatorBuilder {
                 final ImageView iconTabItem = commonPagerTitleView.findViewById(R.id.iconTabItem);
                 final TextView txtvTabItem = commonPagerTitleView.findViewById(R.id.txtvTabItem);
                 txtvTabItem.setText(mainTabItems[index].title);
-                if(index == 0) {
+                if (index == 0) {
                     iconTabItem.setImageResource(mainTabItems[index].imgSrcSelected);
                 } else {
                     iconTabItem.setImageResource(mainTabItems[index].imgSrcNormal);

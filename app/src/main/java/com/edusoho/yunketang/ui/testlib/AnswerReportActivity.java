@@ -1,11 +1,13 @@
 package com.edusoho.yunketang.ui.testlib;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.exercise.ExerciseActivity;
+import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.CircleBarView;
@@ -34,6 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 @Layout(value = R.layout.activity_answer_report, title = "答题报告", rightButton = "再做一遍")
 public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBinding> {
@@ -42,6 +46,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     public static final String SELECTED_COURSE = "selected_course";
     public static final String MODULE_ID = "module_id";
     public static final String CLASS_ID = "class_id";
+    public static final String IS_EXAM = "is_exam";
     private String homeworkId;
     public String examinationId;
     private EducationCourse selectedCourse;
@@ -52,6 +57,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     public ObservableField<String> usedTime = new ObservableField<>();   // 用时
     public ObservableField<String> trueNum = new ObservableField<>("0");
     public ObservableField<String> falseNum = new ObservableField<>("0");
+    public ObservableField<Boolean> isExam = new ObservableField<>(); // 是否是考试
 
     private List<AnswerReport.AnswerDetails> answerDetailsList;
     private List<Question> faultQuestionStemList = new ArrayList<>(); // 错题题干集合
@@ -61,7 +67,8 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
+//            View view = super.getView(position, convertView, parent);
+            View view = DataBindingUtil.inflate(LayoutInflater.from(AnswerReportActivity.this), R.layout.item_answer_report, parent, false).getRoot();
             TextView correctView = view.findViewById(R.id.correctView);
             TextView falseView = view.findViewById(R.id.falseView);
             if (answerDetailsList.get(position).questionType >= 6) { // 简答题 综合题不显示对错
@@ -108,6 +115,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
         selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
         moduleId = getIntent().getIntExtra(MODULE_ID, 0);
         classId = getIntent().getStringExtra(CLASS_ID);
+        isExam.set(getIntent().getBooleanExtra(IS_EXAM, false));
         adapter.init(this, R.layout.item_answer_report, list);
         initView();
         loadData();
@@ -203,10 +211,14 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     private void refreshView(AnswerReport data) {
         trueNum.set(String.valueOf(data.correctSum));
         falseNum.set(String.valueOf(data.falseSum));
-//        usedTime.set(String.valueOf(data.falseSum));
-//        finishDate.set(String.valueOf(data.falseSum));
+        if(isExam.get()) {
+            usedTime.set("用时：" + DateUtils.second2Min(data.completeTime));
+            finishDate.set("日期：" + DateUtils.formatDate(data.updateDate, "MM-dd"));
+            getDataBinding().circleView.setMaxNum(data.totalScore);
+            getDataBinding().scoreText.setText(data.sumPoint);
+        }
         // 设置进度和动画执行时间，并开始动画
-        getDataBinding().circleView.setProgressNum(Float.valueOf(data.percent), 2000);
+        getDataBinding().circleView.setProgressNum(isExam.get() ? Float.valueOf(data.sumPoint) : Float.valueOf(data.percent), 2000);
     }
 
     /**

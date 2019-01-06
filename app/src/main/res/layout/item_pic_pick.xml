@@ -19,11 +19,12 @@
 
         <ImageView
             android:id="@+id/deleteView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="right"
-            android:background="@color/bg_white"
-            android:src="@drawable/icon_close_black" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:padding="5dp"
+            android:src="@drawable/icon_delete_pic" />
 
         <FrameLayout
             android:id="@+id/pickView"

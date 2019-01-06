@@ -94,7 +94,7 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
         Intent intent = new Intent(getSupportedActivity(), CourseDetailsActivity.class);
         intent.putExtra(CourseDetailsActivity.COURSE_TYPE, list.get(position).courseType); // 1、上元在线 2、上元会计
         intent.putExtra(CourseDetailsActivity.COURSE_ID, list.get(position).id);
-        getSupportedActivity().startActivity(intent);
+        getSupportedActivity().startActivityForResult(intent, CourseDetailsActivity.FROM_COURSE_CODE);
     };
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {
         if (getActivity() != null && getDataBinding() != null) {
@@ -103,6 +103,14 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
             loadSYKJData();
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CourseDetailsActivity.FROM_COURSE_CODE) {
+            onRefreshListener.onRefresh();
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -133,11 +141,11 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
                             JSONObject jsonObject = new JSONObject(json);
                             List<Course> courses = JsonUtil.fromJson(jsonObject.getString("data"), new TypeToken<List<Course>>() {
                             });
+                            syzxList.clear();
                             for (Course c : courses) {
                                 c.courseType = 1;
+                                syzxList.add(c);
                             }
-                            syzxList.clear();
-                            syzxList.addAll(courses);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -168,11 +176,11 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
                             JSONObject jsonObject = new JSONObject(json);
                             List<Course> courses = JsonUtil.fromJson(jsonObject.getString("data"), new TypeToken<List<Course>>() {
                             });
+                            sykjList.clear();
                             for (Course c : courses) {
                                 c.courseType = 2;
+                                sykjList.add(c);
                             }
-                            sykjList.clear();
-                            sykjList.addAll(courses);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

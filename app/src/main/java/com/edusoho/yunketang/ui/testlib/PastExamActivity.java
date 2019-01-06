@@ -71,6 +71,10 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                     if (list.get(position).finishState == 2) { // 已完成，去答题报告
                         Intent intent = new Intent(PastExamActivity.this, AnswerReportActivity.class);
                         intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
+                        intent.putExtra(AnswerReportActivity.IS_EXAM, true);
+                        intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
+                        intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                        intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                         startActivity(intent);
                     } else { // 开始（此处无继续状态）
                         if (list.get(position).chargeMode == 0 || list.get(position).isPay) { // 免费 或者 已经购买

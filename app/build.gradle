@@ -19,6 +19,19 @@ android {
 
     useLibrary 'org.apache.http.legacy'
 
+//    // 以下是为了找到android.os.SystemProperties这个隐藏的类
+//    String SDK_DIR = System.getenv("ANDROID_SDK_HOME")
+//    // ("TAG", "SDK_DIR = " + SDK_DIR );
+//    if(SDK_DIR == null) {
+//        Properties props = new Properties()
+//        props.load(new FileInputStream(project.rootProject.file("local.properties")))
+//        SDK_DIR = props.get('sdk.dir')
+//    }
+//    dependencies {
+//        compileOnly files("${SDK_DIR}/platforms/android-21/data/layoutlib.jar")
+//    }
+    // 以上是为了找到android.os.SystemProperties这个隐藏的类
+
 //    buildTypes {
 //        release {
 //            minifyEnabled false
@@ -132,7 +145,7 @@ dependencies {
     // 微信支付（不包含统计功能）
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     // Matisse
-    implementation 'com.zhihu.android:matisse:0.5.1'
+    implementation 'com.zhihu.android:matisse:0.5.2-beta3'
     // 图片裁切（固定比例，旋转，缩放）
     implementation 'com.github.yalantis:ucrop:2.2.2'
     //　腾讯TBS浏览器

@@ -8,9 +8,14 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -21,8 +26,11 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentListenSelectBinding;
+import com.edusoho.yunketang.helper.PicLoadHelper;
 import com.edusoho.yunketang.utils.DateUtils;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -49,14 +57,35 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
     public ObservableField<String> userAnswer = new ObservableField<>();
     public ObservableField<String> answerAnalysis = new ObservableField<>();
     public List<String> answerAnalysisPicList = new ArrayList<>();
-    public SYBaseAdapter answerAnalysisPicAdapter = new SYBaseAdapter();
 
     public List<Question.QuestionDetails.Option> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
-            view.findViewById(R.id.optionImage).setVisibility(list.get(position).choiceType == 1 ? View.VISIBLE : View.GONE);
+            // 手动添加选项内容和图片，防止ScrollView下ListView内容高度不确定的情况下被限制
+            LinearLayout optionContainer = view.findViewById(R.id.optionContainer);
+            optionContainer.removeAllViews();
+            if (list.get(position).choiceType == 0) {
+                TextView optionContent = new TextView(getSupportedActivity());
+                optionContent.setText(list.get(position).optionContent);
+                optionContent.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                optionContent.setGravity(Gravity.CENTER_VERTICAL); // 垂直居中
+                optionContent.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_light_black));
+                optionContainer.addView(optionContent);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionContent.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                optionContent.setLayoutParams(params);
+            } else {
+                ImageView optionImage = new ImageView(getSupportedActivity());
+                optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
+                optionContainer.addView(optionImage);
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionImage.getLayoutParams();
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                optionImage.setLayoutParams(params);
+            }
+            // 选项背景
             TextView optionView = view.findViewById(R.id.optionView);
             if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
                 if (list.get(position).isPicked) {
@@ -137,13 +166,16 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
             isUserAnswerCorrect.set(TextUtils.equals(userAnswer.get(), correctAnswer.get()));
             // 答案解析
             answerAnalysis.set(question.details.get(0).resultResolve);
-            // 答案解析图片adapter
-            answerAnalysisPicAdapter.init(getSupportedActivity(), R.layout.item_pic, answerAnalysisPicList);
             // 答案解析图片
             String resultResolveUrl = question.details.get(0).resultResolveUrl;
             if (!TextUtils.isEmpty(resultResolveUrl)) {
                 answerAnalysisPicList.addAll(Arrays.asList(resultResolveUrl.split(",")));
-                answerAnalysisPicAdapter.notifyDataSetChanged();
+                for (String url : answerAnalysisPicList) {
+                    View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    getDataBinding().answerAnalysisPicContainer.addView(innerView);
+                }
             }
         }
         // 选项adapter
@@ -272,6 +304,10 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
      * 播放/暂停
      */
     public View.OnClickListener onPlayAudioClicked = v -> {
+        if (TextUtils.isEmpty(question.topicVoiceUrl)) {
+            showSingleToast("没有找到音频文件，无法播放。");
+            return;
+        }
         if (!mediaPlayer.isPlaying()) { // 不是播放状态
             if (isPrepared) {
                 mediaPlayer.start();

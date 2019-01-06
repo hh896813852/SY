@@ -1,15 +1,16 @@
 package com.edusoho.yunketang.ui.exercise;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.ObservableField;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -20,14 +21,14 @@ import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
-import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding;
 import com.edusoho.yunketang.helper.ImageUploadHelper;
-import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
-import com.google.gson.reflect.TypeToken;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -49,25 +50,13 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
     public ObservableField<String> userAnswer = new ObservableField<>();
     public ObservableField<String> answerAnalysis = new ObservableField<>();
     public List<String> correctAnswerPicList = new ArrayList<>();
-    public SYBaseAdapter correctAnswerPicAdapter = new SYBaseAdapter();
     public List<String> teacherNotePicList = new ArrayList<>();
-    public SYBaseAdapter teacherNotePicAdapter = new SYBaseAdapter();
     public List<String> answerAnalysisPicList = new ArrayList<>();
-    public SYBaseAdapter answerAnalysisPicAdapter = new SYBaseAdapter();
 
     public ObservableField<String> questionTopic = new ObservableField<>();
     public ObservableField<String> answerContent = new ObservableField<>();
 
     public List<String> picList = new ArrayList<>();
-    public SYBaseAdapter picAdapter = new SYBaseAdapter() {
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            ImageView imageView = view.findViewById(R.id.imageView);
-            Glide.with(getSupportedActivity()).load(picList.get(position)).placeholder(R.drawable.bg_load_default_4x3).into(imageView);
-            return view;
-        }
-    };
 
     public List<String> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
@@ -86,7 +75,9 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             } else {
                 if (position == list.size() - 1) { // 添加照片
                     pickView.setVisibility(View.VISIBLE);
-                    pickView.setOnClickListener(v -> onPicPickClick());
+                    pickView.setOnClickListener(v -> {
+                        permissionCheck();
+                    });
                     deleteView.setVisibility(View.GONE);
                 } else { // 已添加并显示的照片
                     Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
@@ -104,6 +95,26 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         }
     };
 
+    /**
+     * 权限检测申请
+     */
+    private void permissionCheck() {
+        RxPermissions rxPermissions = new RxPermissions(getSupportedActivity());
+        rxPermissions.requestEach(Manifest.permission.CAMERA)
+                .subscribe(permission -> {
+                    if (permission.granted) {
+                        // 权限允许
+                        onPicPickClick();
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        // 权限拒绝，等待下次询问
+                        LogUtil.i("RxPermissions", "权限拒绝，等待下次询问：" + permission.name);
+                    } else {
+                        // 拒绝权限，不再弹出询问框，请前往APP应用设置打开此权限
+                        LogUtil.i("RxPermissions", "拒绝权限，不再弹出询问框：" + permission.name);
+                    }
+                });
+    }
+
     public static ChildIntegratedExercisesFragment newInstance(Question.QuestionDetails childQuestion) {
         ChildIntegratedExercisesFragment fragment = new ChildIntegratedExercisesFragment();
         Bundle args = new Bundle();
@@ -117,9 +128,16 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_IMAGE) { // 照片选择返回
-                List<Uri> uriList = Matisse.obtainResult(data);
+                List<String> pathList = Matisse.obtainPathResult(data);
                 ProgressDialogUtil.showProgress(getSupportedActivity(), "正在上传图片...");
-                ImageUploadHelper.uploadImage(getSupportedActivity(), uriList.get(0), uriList, (urls, urlList) -> {
+                ImageUploadHelper.uploadImage(pathList.get(0), pathList, (urls, urlList) -> {
+                    if(urlList.size() != pathList.size()) {
+                        if(urlList.size() > 0) {
+                            showSingleToast("有图片上传失败，请检查上传失败的图片。");
+                        } else {
+                            showSingleToast("图片上传失败！");
+                        }
+                    }
                     ProgressDialogUtil.hideProgress();
                     list.remove(list.size() - 1);
                     list.addAll(urlList);
@@ -146,8 +164,13 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
 
         if (!TextUtils.isEmpty(childQuestion.topicSubsidiaryUrl)) {
             picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
+            for (String url : picList) {
+                View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                ImageView imageView = innerView.findViewById(R.id.imageView);
+                PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                getDataBinding().topicPicContainer.addView(innerView);
+            }
         }
-        picAdapter.init(getSupportedActivity(), R.layout.item_pic, picList);
 
         // 是否显示答案解析
         isShowAnswerAnalysis.set(getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis);
@@ -155,35 +178,44 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         if (isShowAnswerAnalysis.get()) {
             // 正确答案
             correctAnswer.set(childQuestion.correctResult);
-            // 正确答案图片adapter
-            correctAnswerPicAdapter.init(getSupportedActivity(), R.layout.item_pic, correctAnswerPicList);
             // 正确答案图片
             String correctResultUrl = childQuestion.correctResultUrl;
             if (!TextUtils.isEmpty(correctResultUrl)) {
                 correctAnswerPicList.addAll(Arrays.asList(correctResultUrl.split(",")));
-                correctAnswerPicAdapter.notifyDataSetChanged();
+                for (String url : correctAnswerPicList) {
+                    View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    getDataBinding().correctAnswerPicContainer.addView(innerView);
+                }
             }
 
             // 老师批注
             teacherNotes.set(childQuestion.postil);
-            // 老师批注图片adapter
-            teacherNotePicAdapter.init(getSupportedActivity(), R.layout.item_pic, teacherNotePicList);
             // 老师批注图片
             String postilUrl = childQuestion.postilUrl;
             if (!TextUtils.isEmpty(postilUrl)) {
                 teacherNotePicList.addAll(Arrays.asList(postilUrl.split(",")));
-                teacherNotePicAdapter.notifyDataSetChanged();
+                for (String url : teacherNotePicList) {
+                    View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    getDataBinding().teacherNotePicContainer.addView(innerView);
+                }
             }
 
             // 答案解析
             answerAnalysis.set(childQuestion.resultResolve);
-            // 答案解析图片adapter
-            answerAnalysisPicAdapter.init(getSupportedActivity(), R.layout.item_pic, answerAnalysisPicList);
             // 答案解析图片
             String resultResolveUrl = childQuestion.resultResolveUrl;
             if (!TextUtils.isEmpty(resultResolveUrl)) {
                 answerAnalysisPicList.addAll(Arrays.asList(resultResolveUrl.split(",")));
-                answerAnalysisPicAdapter.notifyDataSetChanged();
+                for (String url : answerAnalysisPicList) {
+                    View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    getDataBinding().answerAnalysisPicContainer.addView(innerView);
+                }
             }
         }
 
@@ -197,6 +229,9 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
             // 禁止输入内容
             getDataBinding().answerContentView.setEnabled(false);
+            if (TextUtils.isEmpty(answerContent.get())) {
+                getDataBinding().answerContentView.setVisibility(View.GONE);
+            }
         } else {
             // 显示添加照片item
             list.add("");

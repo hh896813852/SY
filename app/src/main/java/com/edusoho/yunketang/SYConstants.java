@@ -12,8 +12,8 @@ public class SYConstants {
     public static final int PAGE_SIZE_20 = 20;
 //    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
 //    public static String HTTP_URL = "http://192.168.10.104:8087/shangyuan-app-web/"; // 刘健本地环境
-    public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环境
-//    public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/";   // 上元教育测试环境
+//    public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环境
+    public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/";   // 上元教育测试环境
     public static String HTTP_URL_ONLINE = "http://www.233863.com/";     // 上元在线
     public static String HTTP_URL_ACCOUNTANT = "http://www.sykjxy.com/"; // 上元会计
 
@@ -349,7 +349,7 @@ public class SYConstants {
      * 上元会计 发布评价
      * POST
      */
-    public static final String ACCOUNTANT_EVALUATE = HTTP_URL_ACCOUNTANT + "api/drag_captcha/%s";
+    public static final String ACCOUNTANT_EVALUATE = HTTP_URL_ACCOUNTANT + "api/courses/%s/reviews";
     /**
      * 上元在线 我的收藏
      * GET
@@ -370,6 +370,16 @@ public class SYConstants {
      * POST
      */
     public static final String ACCOUNTANT_MY_COIN = HTTP_URL_ACCOUNTANT + "mapi_v2/User/getUserCoin";
+    /**
+     * 上元在线 我购买的视频
+     * POST
+     */
+    public static final String ONLINE_MY_VIDEO = HTTP_URL_ONLINE + "api/me/courses?offset=0&limit=1000";
+    /**
+     * 上元会计 我购买的视频
+     * POST
+     */
+    public static final String ACCOUNTANT_MY_VIDEO = HTTP_URL_ACCOUNTANT + "api/me/courses?offset=0&limit=1000";
 
     public static final String MOBILE_APP_VERSION = "mobile/%s/version?code=%s";
     public static final String MOBILE_APP_RESOURCE = "mobile/%s/resources";

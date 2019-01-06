@@ -61,6 +61,11 @@ public class HttpUtils {
         return mOldInstance;
     }
 
+    public HttpUtils setCurrentBaseUrl(String url) {
+        mInstance.mBaseUrl = url;
+        return mInstance;
+    }
+
     public <T> T createApi(final Class<T> clazz) {
         if ("".equals(mBaseUrl) || mBaseUrl == null) {
             return RetrofitClient.getInstance(mHeaderMaps).create(clazz);

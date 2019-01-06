@@ -44,17 +44,18 @@
                     android:textSize="16dp" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:layout_weight="1"
+                        android:layout_marginRight="80dp"
                         android:clickable="true"
                         android:drawableTop="@drawable/icon_share_wx_zoom"
                         android:drawablePadding="5dp"
@@ -65,10 +66,9 @@
                         android:textSize="15dp" />
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:layout_weight="1"
                         android:clickable="true"
                         android:drawableTop="@drawable/icon_share_wechat"
                         android:drawablePadding="5dp"

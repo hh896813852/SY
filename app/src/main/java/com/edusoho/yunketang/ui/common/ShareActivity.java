@@ -38,6 +38,7 @@ public class ShareActivity extends BaseActivity<ActivityShareBinding> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(0, 0);
         super.onCreate(savedInstanceState);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_from_bottom);
         getDataBinding().llView.startAnimation(animation);

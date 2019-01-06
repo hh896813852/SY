@@ -42,20 +42,21 @@ public class QuestionCollectFragment extends BaseFragment<FragmentQuestionCollec
         }
     };
     private List<Examination> list = new ArrayList<>();
-    public SYBaseAdapter adapter = new SYBaseAdapter() {
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = super.getView(position, convertView, parent);
-            return view;
-        }
-    };
+    public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
         Intent intent = new Intent(getSupportedActivity(), ExerciseActivity.class);
         intent.putExtra(ExerciseActivity.IS_MY_COLLECTION, true);
         intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
-        startActivity(intent);
+        startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+            onRefreshListener.onRefresh();
+        }
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

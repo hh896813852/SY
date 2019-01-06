@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@{viewModel.questionTypeSort}"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="16sp"
                 tools:text="一、" />
 
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.questionTypeName}"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="16sp"
                 tools:text="单项选择题" />
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="@{viewModel.questionPointInfo}"
-                android:textColor="@color/text_black"
+                android:textColor="@color/text_light_black"
                 android:textSize="16sp"
                 tools:text="（每题2分）" />
         </LinearLayout>
@@ -55,9 +55,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="42dp"
-            android:lineSpacingExtra="5dp"
+            android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
             android:text="@{viewModel.questionExplain}"
-            android:textColor="@color/text_black"
+            android:textColor="@color/text_light_black"
             android:textSize="16sp"
             tools:text="下列题目中A、B、C、D中只有一个选项为正确答案" />
     </LinearLayout>

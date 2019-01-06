@@ -12,59 +12,73 @@
             type="com.edusoho.yunketang.ui.me.MyBoughtVideoActivity" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_white">
+        android:background="@color/bg_white"
+        android:orientation="vertical">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeView"
+        <include layout="@layout/layout_title_black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_light_gray1" />
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.hasData ? View.VISIBLE : View.GONE}"
-            bind:onRefreshListener="@{viewModel.onRefreshListener}">
+            android:background="@color/bg_white">
 
-            <com.edusoho.yunketang.widget.LoadMoreNoScrollListView
-                android:id="@+id/listView"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/bg_white"
-                android:dividerHeight="8dp"
-                android:scrollbars="none"
-                bind:adapter="@{viewModel.adapter}"
-                bind:onItemClick="@{viewModel.onItemClick}" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:visibility="@{viewModel.hasData ? View.VISIBLE : View.GONE}"
+                bind:onRefreshListener="@{viewModel.onRefreshListener}">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:visibility="@{viewModel.hasData ? View.GONE : View.VISIBLE}">
+                <com.edusoho.yunketang.widget.NoScrollListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/bg_white"
+                    android:dividerHeight="8dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.adapter}"
+                    bind:onItemClick="@{viewModel.onItemClick}" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/bg_no_bought_exam"
-                android:drawablePadding="5dp"
-                android:gravity="center_horizontal"
-                android:text="还没有购买"
-                android:textColor="@color/text_light_green"
-                android:textSize="16sp" />
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:visibility="@{viewModel.hasData ? View.GONE : View.VISIBLE}">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:clickable="true"
-                android:gravity="center_horizontal"
-                android:padding="10dp"
-                android:text="请登录查看"
-                android:textColor="@color/theme_color"
-                android:textSize="16sp"
-                android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
-                bind:clickCommand="@{viewModel.onLoginClicked}" />
-        </LinearLayout>
-    </FrameLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/bg_no_bought_exam"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_horizontal"
+                    android:text="还没有购买"
+                    android:textColor="@color/text_light_green"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:clickable="true"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="请登录查看"
+                    android:textColor="@color/theme_color"
+                    android:textSize="16sp"
+                    android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
+                    bind:clickCommand="@{viewModel.onLoginClicked}" />
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
 </layout>

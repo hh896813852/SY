@@ -7,9 +7,9 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/titleLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp">
+        android:layout_height="50dp">
 
         <ImageView
             android:layout_width="50dp"

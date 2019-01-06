@@ -10,6 +10,9 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -24,6 +27,7 @@ import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.utils.AppUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.utils.StringUtils;
 import com.edusoho.yunketang.utils.encrypt.XXTEA;
@@ -59,6 +63,10 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
     }
 
     private void initView() {
+        ScrollView.LayoutParams params = (ScrollView.LayoutParams) getDataBinding().contentLayout.getLayoutParams();
+        params.setMargins(0, NotchUtil.getNotchHeight(this), 0, 0);
+        getDataBinding().contentLayout.setLayoutParams(params);
+
         getDataBinding().phoneNoEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

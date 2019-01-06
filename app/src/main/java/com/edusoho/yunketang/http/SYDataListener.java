@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.base.core.ActivityManager;
+import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.bean.base.Message;
 import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.ui.MainTabActivity;
@@ -33,13 +34,16 @@ public class SYDataListener<T> implements DataListener<T> {
         } else {
             onFail(message.status, message.msg);
             // token失效
-            if (message.retcode == 401) {
-                SYApplication.getInstance().setUser(null);
-                Activity activity = ActivityManager.getTopActivity();
-                if (activity != null) {
-                    activity.startActivity(new Intent(activity, LoginActivity.class));
-                    if (!(activity instanceof MainTabActivity)) {
-                        activity.finish();
+            if (message.retcode == 401 && message.msg.contains("token")) {
+                User user = SYApplication.getInstance().getUser();
+                if (user != null) {
+                    SYApplication.getInstance().setUser(null);
+                    Activity activity = ActivityManager.getTopActivity();
+                    if (activity != null) {
+                        activity.startActivity(new Intent(activity, LoginActivity.class));
+                        if (!(activity instanceof MainTabActivity)) {
+                            activity.finish();
+                        }
                     }
                 }
             }

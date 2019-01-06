@@ -1,22 +1,25 @@
 package com.edusoho.yunketang.utils;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.bean.User;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -61,27 +64,66 @@ public class HttpUtil {
         return httpGet(url, TIME_OUT_DEFAULT, header);
     }
 
-    /**
-     * get访问返回字符串
-     */
-    public static String httpGet(String url, int timeout, Map<String, String> header) {
-        try {
-            URL u = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) u.openConnection();
-            if (header != null && header.size() > 0) {
-                for (String key : header.keySet()) {
-                    conn.setRequestProperty(key, header.get(key));
+//    /**
+//     * get访问返回字符串
+//     */
+//    public static String httpGet(String url, int timeout, Map<String, String> header) {
+//        try {
+//            URL u = new URL(url);
+//            HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+//            if (header != null && header.size() > 0) {
+//                for (String key : header.keySet()) {
+//                    conn.setRequestProperty(key, header.get(key));
+//                }
+//            }
+//            conn.setConnectTimeout(timeout);
+//            int code = conn.getResponseCode();
+//            if (code == HTTP_OK) {
+//                return getResponseString(conn.getInputStream());
+//            } else {
+//                LogUtil.e("Net Error:", code + "");
+//                return error + code + ",errorMsg:" + conn.getResponseMessage();
+//            }
+//        } catch (Exception e) {
+//            LogUtil.e("NetError", e);
+//            return null;
+//        }
+//    }
+
+
+    private static volatile OkHttpClient okHttpClient;
+
+    private static OkHttpClient getOkHttpInstance() {
+        if (okHttpClient == null) {
+            synchronized (HttpUtil.class) {
+                if (okHttpClient == null) {
+                    okHttpClient = new OkHttpClient().newBuilder()
+                            .connectTimeout(15, TimeUnit.SECONDS)
+                            .readTimeout(15, TimeUnit.SECONDS)
+                            .build();
                 }
             }
-            conn.setConnectTimeout(timeout);
-            int code = conn.getResponseCode();
-            if (code == HTTP_OK) {
-                return getResponseString(conn.getInputStream());
-            } else {
-                LogUtil.e("Net Error:", code + "");
-                return error + code + ",errorMsg:" + conn.getResponseMessage();
+        }
+        return okHttpClient;
+    }
+
+    public static String httpGet(String url, int timeout, Map<String, String> header) {
+        try {
+            Request.Builder request = new Request.Builder().url(url);
+            if (header != null && header.size() > 0) {
+                for (String key : header.keySet()) {
+                    request.addHeader(key, header.get(key));
+                }
             }
-        } catch (Exception e) {
+            Call call = getOkHttpInstance().newCall(request.build());
+            Response response = call.execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+                LogUtil.e("Net Error:", response.code() + "");
+                return error + response.code() + ",errorMsg:" + response.message();
+            }
+        } catch (IOException e) {
             LogUtil.e("NetError", e);
             return null;
         }
@@ -199,22 +241,22 @@ public class HttpUtil {
     }
 
     private static String getResponseString(InputStream inputStream) throws IOException {
-//		BufferedReader re = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-//		String line = null;
-//		StringBuffer rst = new StringBuffer(100);
-//		while ((line = re.readLine()) != null) {
-//			rst.append(line);
-//		}
-//		return rst.toString();
-
+        BufferedReader re = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        String line = null;
         StringBuffer rst = new StringBuffer(100);
-        byte[] buffer = new byte[1024];
-        int length = 0;
-        while ((length = inputStream.read(buffer)) > 0) {
-            String tmp = new String(buffer, 0, length, "UTF-8");
-            rst.append(tmp);
+        while ((line = re.readLine()) != null) {
+            rst.append(line);
         }
         return rst.toString();
+
+//        StringBuffer rst = new StringBuffer(100);
+//        byte[] buffer = new byte[1024];
+//        int length = 0;
+//        while ((length = inputStream.read(buffer)) > 0) {
+//            String tmp = new String(buffer, 0, length, "UTF-8");
+//            rst.append(tmp);
+//        }
+//        return rst.toString();
     }
 
     /*
@@ -243,7 +285,11 @@ public class HttpUtil {
      * @param files  图片路径
      */
     public static Observable<String> sendMultipart(String reqUrl, Map<String, String> params, Map<String, File> files) {
-        OkHttpClient mOkHttpClient = new OkHttpClient();
+        OkHttpClient mOkHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build();
         return Observable.create(subscriber -> {
             MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder();
             multipartBodyBuilder.setType(MultipartBody.FORM);
@@ -289,7 +335,6 @@ public class HttpUtil {
     }
 
     public static Observable<String> doDelete(String reqUrl, String token) {
-        OkHttpClient mOkHttpClient = new OkHttpClient();
         return Observable.create(subscriber -> {
             FormBody formBody = new FormBody.Builder().build();
             Request.Builder builder = new Request.Builder().url(reqUrl).delete(formBody);
@@ -297,7 +342,7 @@ public class HttpUtil {
             builder.addHeader("Accept", "application/vnd.edusoho.v2+json");
             Request request = builder.build();
 
-            mOkHttpClient.newCall(request).enqueue(new Callback() {
+            getOkHttpInstance().newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     subscriber.onError(e);
@@ -318,7 +363,6 @@ public class HttpUtil {
     }
 
     public static Observable<String> okJsonPost(String url, String json) {
-        OkHttpClient okHttpClient = new OkHttpClient();
         return Observable.create(subscriber -> {
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             RequestBody body = RequestBody.create(JSON, json);
@@ -326,7 +370,7 @@ public class HttpUtil {
                     .url(url)
                     .post(body)
                     .build();
-            okHttpClient.newCall(request).enqueue(new Callback() {
+            getOkHttpInstance().newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     subscriber.onError(e);
@@ -346,7 +390,6 @@ public class HttpUtil {
     }
 
     public static Observable<String> okFormPost(String url, Map<String, String> params) {
-        OkHttpClient okHttpClient = new OkHttpClient();
         return Observable.create(subscriber -> {
             FormBody.Builder formBodyBuilder = new FormBody.Builder();
             //遍历map中所有参数到builder
@@ -361,7 +404,7 @@ public class HttpUtil {
                     .url(url)
                     .post(formBodyBuilder.build())
                     .build();
-            okHttpClient.newCall(request).enqueue(new Callback() {
+            getOkHttpInstance().newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     subscriber.onError(e);

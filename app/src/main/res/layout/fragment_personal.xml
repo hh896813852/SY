@@ -23,7 +23,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="160dp"
             android:background="@color/theme_color">
 
             <LinearLayout
@@ -42,6 +42,7 @@
                     android:text="@{viewModel.nickname}"
                     android:textColor="@color/text_white"
                     android:textSize="20sp"
+                    android:visibility="@{viewModel.isLogin ? View.VISIBLE : View.GONE}"
                     tools:text="上小元" />
 
                 <TextView
@@ -53,7 +54,22 @@
                     android:text="@{viewModel.personSign}"
                     android:textColor="@color/text_white"
                     android:textSize="12sp"
+                    android:visibility="@{viewModel.isLogin ? View.VISIBLE : View.GONE}"
                     tools:text="态度决定一切，相信相信的力量。" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:text="登录/注册"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
+                    bind:clickCommand="@{viewModel.onLoginOrRegisterClicked}"
+                    tools:visibility="gone" />
             </LinearLayout>
 
             <com.edusoho.yunketang.widget.CircleImageView
@@ -82,7 +98,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="160dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -103,6 +119,34 @@
                     android:drawableLeft="@drawable/icon_my_collection"
                     android:drawablePadding="10dp"
                     android:text="我的收藏"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/icon_arrow_right_gray2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_white_corner_6"
+                android:gravity="center_vertical"
+                bind:clickCommand="@{viewModel.onMyStudyClicked}">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/icon_my_study"
+                    android:drawablePadding="10dp"
+                    android:text="我的学习"
                     android:textColor="@color/text_black"
                     android:textSize="16sp" />
 

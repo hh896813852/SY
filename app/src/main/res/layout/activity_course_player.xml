@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -30,38 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="240dp" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="16dp">
-
-                    <FrameLayout
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:clickable="true"
-                        android:onClick="onBackButtonClick">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:src="@drawable/icon_arrow_left_color_white" />
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:clickable="true"
-                        android:onClick="onShareClick">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:src="@drawable/icon_share_white" />
-                    </FrameLayout>
-                </FrameLayout>
+                <include layout="@layout/layout_title_black_with_right_image" />
             </FrameLayout>
 
             <ExpandableListView

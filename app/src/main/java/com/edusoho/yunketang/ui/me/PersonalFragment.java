@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.edusoho.yunketang.R;
@@ -26,8 +27,8 @@ import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
 
     public ObservableField<String> avatar = new ObservableField<>();
-    public ObservableField<String> nickname = new ObservableField<>();
-    public ObservableField<String> personSign = new ObservableField<>();
+    public ObservableField<String> nickname = new ObservableField<>("上小元");
+    public ObservableField<String> personSign = new ObservableField<>("态度决定一切，相信相信的力量。");
     public ObservableField<Boolean> isLogin = new ObservableField<>(false);
 
     @Override
@@ -42,8 +43,8 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
         isLogin.set(loginUser != null);
         if (loginUser != null) {
             avatar.set(loginUser.syjyUser.headImg);
-            nickname.set(loginUser.syjyUser.nickName);
-            personSign.set(loginUser.syjyUser.personSign);
+            nickname.set(TextUtils.isEmpty(loginUser.syjyUser.nickName) ? "上小元" : loginUser.syjyUser.nickName);
+            personSign.set(TextUtils.isEmpty(loginUser.syjyUser.personSign) ? "态度决定一切，相信相信的力量。" : loginUser.syjyUser.personSign);
         }
     }
 
@@ -54,6 +55,13 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
             StatusBarUtil.setTranslucentStatus(getSupportedActivity());
         }
     }
+
+    /**
+     * 登录/注册
+     */
+    public View.OnClickListener onLoginOrRegisterClicked = v -> {
+        startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
+    };
 
     /**
      * 头像点击
@@ -72,6 +80,13 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
      */
     public View.OnClickListener onMyCollectionClicked = v -> {
         startActivity(new Intent(getSupportedActivity(), MyCollectionActivity.class));
+    };
+
+    /**
+     * 我的学习
+     */
+    public View.OnClickListener onMyStudyClicked = v -> {
+        startActivity(new Intent(getSupportedActivity(), MyStudyActivity.class));
     };
 
     /**

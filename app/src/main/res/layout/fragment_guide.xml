@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.launcher.GuideFragment" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@{viewModel.guidePagerColor}">
+
+
+        <ImageView
+            android:id="@+id/imgvGuideContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:src="@{viewModel.imageResource}" />
+
+        <TextView
+            android:id="@+id/txtvGo"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="70dp"
+            android:background="@drawable/bg_green_corner_4"
+            android:gravity="center"
+            android:text="立即体验"
+            android:textColor="@color/text_white"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:visibility="@{viewModel.lastGuidePager ? View.VISIBLE : View.GONE}"
+            bind:clickCommand="@{viewModel.goPlayCommand}" />
+    </FrameLayout>
+</layout>

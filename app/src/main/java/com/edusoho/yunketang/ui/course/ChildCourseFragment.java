@@ -3,6 +3,7 @@ package com.edusoho.yunketang.ui.course;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edusoho.yunketang.helper.AppPreferences;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -63,7 +65,11 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
             View view = super.getView(position, convertView, parent);
             LinearLayout containerLayout = view.findViewById(R.id.containerLayout);
             containerLayout.removeAllViews();
-            for (Course.Discovery discovery : courseList.get(position).data) {
+            for (int i = 0; i < courseList.get(position).data.size(); i++) {
+                if (i > 2) { // 每个行业只展示3个课程
+                    break;
+                }
+                Course.Discovery discovery = courseList.get(position).data.get(i);
                 View innerView = layoutInflater.inflate(R.layout.item_inner_course, null);
                 ImageView courseImage = innerView.findViewById(R.id.courseImage);
                 TextView discountView = innerView.findViewById(R.id.discountView);
@@ -135,6 +141,11 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
         adapter.init(getSupportedActivity(), R.layout.item_course, courseList);
         layoutInflater = LayoutInflater.from(getSupportedActivity());
         loadData();
+        // 有缓存，使用缓存数据
+        List<Course> cacheData = AppPreferences.getHomeData(status);
+        if (cacheData != null && cacheData.size() > 0) {
+            refreshData(true, cacheData);
+        }
 
         showStudentNumEnabled = SharedPreferencesUtils.getInstance(getSupportedActivity())
                 .open(SharedPreferencesHelper.CourseSetting.XML_NAME)
@@ -156,32 +167,56 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
                         String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(data));
                         List<Course> courses = JsonUtil.fromJson(json, new TypeToken<List<Course>>() {
                         });
-                        for (int i = 0; i < courses.size(); i++) {
-                            if (i == 0) {
-                                firstCourse = courses.get(i);
-                            } else {
-                                if (courses.get(i).data != null && courses.get(i).data.size() > 0) {
-                                    courseList.add(courses.get(i));
-                                }
-                            }
-                        }
-                        // 重新赋值类型和顺序，用于item菜单导航
-                        for (int i = 0; i < courseList.size(); i++) {
-                            Course course = courseList.get(i);
-                            course.courseType = status;
-                            course.courseSort = i;
-                        }
-                        ((MainTabActivity) getActivity()).courseFragment.list.addAll(courseList);
-                        ((MainTabActivity) getActivity()).courseFragment.adapter.notifyDataSetChanged();
-                        // 刷新界面
-                        refreshView();
-                        adapter.notifyDataSetChanged();
-                        // 如果在当前页面加载完成，则按当前页面来设置高度
-                        if (status == ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getCurrentItem() + 1) {
-                            resetViewPagerHeight();
+                        if (courses != null && courses.size() > 0) {
+                            // 更新缓存数据
+                            AppPreferences.saveHomeData(status, courses);
+                            refreshData(false, courses);
                         }
                     }
                 });
+    }
+
+    /**
+     * 刷新数据并刷新界面
+     */
+    private void refreshData(boolean isCache, List<Course> courses) {
+        for (int i = 0; i < courses.size(); i++) {
+            if (i == 0) {
+                firstCourse = courses.get(i);
+            } else {
+                if (courses.get(i).data != null && courses.get(i).data.size() > 0) {
+                    courseList.add(courses.get(i));
+                }
+            }
+        }
+        // 重新赋值类型和顺序，用于item菜单导航
+        for (int i = 0; i < courseList.size(); i++) {
+            Course course = courseList.get(i);
+            course.courseType = status;
+            course.courseSort = i;
+        }
+        if (getActivity() != null) {
+            ((MainTabActivity) getActivity()).courseFragment.list.addAll(courseList);
+            ((MainTabActivity) getActivity()).courseFragment.adapter.notifyDataSetChanged();
+        }
+        adapter.notifyDataSetChanged();
+        if (isCache) {
+            new Handler().postDelayed(() -> {
+                // 刷新界面
+                refreshView();
+                // 如果在当前页面加载完成，则按当前页面来设置高度
+                if (getActivity() != null && status == ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getCurrentItem() + 1) {
+                    resetViewPagerHeight();
+                }
+            }, 200);
+        } else {
+            // 刷新界面
+            refreshView();
+            // 如果在当前页面加载完成，则按当前页面来设置高度
+            if (getActivity() != null && status == ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getCurrentItem() + 1) {
+                resetViewPagerHeight();
+            }
+        }
     }
 
     /**
@@ -190,10 +225,12 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
      * 设置courseFragment的viewpager高度，
      */
     public void resetViewPagerHeight() {
-        int listViewHeight = ListViewHelper.getTotalHeightOfListView(getDataBinding().listView);
-        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getLayoutParams();
-        linearParams.height = listViewHeight + DensityUtil.dip2px(getSupportedActivity(), 230); // 230 = recyclerView + 一个头部 + 一个底部
-        ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.setLayoutParams(linearParams);
+        if (getActivity() != null) {
+            int listViewHeight = ListViewHelper.getTotalHeightOfListView(getDataBinding().listView);
+            LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getLayoutParams();
+            linearParams.height = listViewHeight + DensityUtil.dip2px(getSupportedActivity(), 230); // 230 = recyclerView + 一个头部 + 一个底部
+            ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.setLayoutParams(linearParams);
+        }
     }
 
     /**

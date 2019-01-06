@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ExamAnswer implements Serializable {
     public String questionId;
+    public String classification;
     public int index;
     public List<MyAnswer> correctResults;
     public List<MyAnswer> userResults;

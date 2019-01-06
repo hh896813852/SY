@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/tools"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -28,7 +29,9 @@
             <com.edusoho.yunketang.widget.CircleImageView
                 android:id="@+id/headImage"
                 android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                app:border_color="@color/text_white"
+                app:border_width="1dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -13,6 +13,8 @@
     <dimen name="mcv_arrow_padding">4dp</dimen>
     <dimen name="mcv_arrow_margin">4dp</dimen>
 
+    <dimen name="exercise_line_spacing_extra">6dp</dimen>
+
     <!-- 以下为上元在线资源 -->
     <!--kuozhi 4.0 font size guideline-->
     <dimen name="font_xxxxl">24sp</dimen>

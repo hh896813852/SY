@@ -48,6 +48,7 @@ public class ImageUploadHelper {
                     @Override
                     public void onError(Throwable throwable) {
                         ProgressDialogUtil.hideProgress();
+                        singleImageUploadListener.singleImageUploadFailed("上传失败！");
                         LogUtil.i("imageUploadError", "throwable:" + throwable.toString());
                     }
 
@@ -89,24 +90,84 @@ public class ImageUploadHelper {
         if (urlList == null) {
             urlList = new ArrayList<>();
         }
-        uploadImage(FileUtils.getFileByUri(context, uri), url -> {
-            uriIndex++;
-            urlList.add(url);
-            if (uriIndex == uriList.size() && multiImageUploadListener != null) { // 上传完毕
-                Urls.append(url);
-                multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
-                uriIndex = 0;
-                Urls = null;
-                urlList = null;
-            } else { // 还有图片未上传，则继续上传下一张
-                Urls.append(url).append(",");
-                uploadImage(context, uriList.get(uriIndex), uriList, multiImageUploadListener);
+        uploadImage(FileUtils.getFileByUri(context, uri), new OnSingleImageUploadListener() {
+            @Override
+            public void singleImageUploadSuccess(String url) {
+                uriIndex++;
+                urlList.add(url);
+                if (uriIndex == uriList.size() && multiImageUploadListener != null) { // 上传完毕
+                    Urls.append(url);
+                    multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                    uriIndex = 0;
+                    Urls = null;
+                    urlList = null;
+                } else { // 还有图片未上传，则继续上传下一张
+                    Urls.append(url).append(",");
+                    uploadImage(context, uriList.get(uriIndex), uriList, multiImageUploadListener);
+                }
+            }
+
+            @Override
+            public void singleImageUploadFailed(String msg) {
+                uriIndex++;
+                if (uriIndex == uriList.size() && multiImageUploadListener != null) { // 上传完毕
+                    multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                    uriIndex = 0;
+                    Urls = null;
+                    urlList = null;
+                } else { // 还有图片未上传，则继续上传下一张
+                    uploadImage(context, uriList.get(uriIndex), uriList, multiImageUploadListener);
+                }
+            }
+        });
+    }
+
+    /**
+     * 同步上传多张图片
+     */
+    public static void uploadImage(String path, List<String> pathList, OnMultiImageUploadListener multiImageUploadListener) {
+        if (Urls == null) {
+            Urls = new StringBuilder();
+        }
+        if (urlList == null) {
+            urlList = new ArrayList<>();
+        }
+        uploadImage(new File(path), new OnSingleImageUploadListener() {
+            @Override
+            public void singleImageUploadSuccess(String url) {
+                uriIndex++;
+                urlList.add(url);
+                if (uriIndex == pathList.size() && multiImageUploadListener != null) { // 上传完毕
+                    Urls.append(url);
+                    multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                    uriIndex = 0;
+                    Urls = null;
+                    urlList = null;
+                } else { // 还有图片未上传，则继续上传下一张
+                    Urls.append(url).append(",");
+                    uploadImage(pathList.get(uriIndex), pathList, multiImageUploadListener);
+                }
+            }
+
+            @Override
+            public void singleImageUploadFailed(String msg) {
+                uriIndex++;
+                if (uriIndex == pathList.size() && multiImageUploadListener != null) { // 上传完毕
+                    multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                    uriIndex = 0;
+                    Urls = null;
+                    urlList = null;
+                } else { // 还有图片未上传，则继续上传下一张
+                    uploadImage(pathList.get(uriIndex), pathList, multiImageUploadListener);
+                }
             }
         });
     }
 
     public interface OnSingleImageUploadListener {
         void singleImageUploadSuccess(String url);
+
+        void singleImageUploadFailed(String msg);
     }
 
     public interface OnMultiImageUploadListener {

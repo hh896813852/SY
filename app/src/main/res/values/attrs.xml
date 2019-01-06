@@ -121,4 +121,9 @@
         <!-- 高宽比 -->
         <attr name="aspectRatio" format="float|reference" />
     </declare-styleable>
+
+    <declare-styleable name="RectangleFrameLayout">
+        <!-- 高宽比 -->
+        <attr name="layoutAspectRatio" format="float|reference" />
+    </declare-styleable>
 </resources>

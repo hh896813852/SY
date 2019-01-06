@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.ObservableField;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
+import com.zhihu.matisse.listener.OnSelectedListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,10 +58,17 @@ public class PersonalInfoActivity extends BaseActivity {
             }
             if (requestCode == UCrop.REQUEST_CROP) { // 裁剪返回
                 ProgressDialogUtil.showProgress(this, "正在更新头像...");
-                avatar.set(CropUtils.getCropPath());
-                ImageUploadHelper.uploadImage(new File(CropUtils.getCropPath()), url -> {
-                    ProgressDialogUtil.hideProgress();
-                    avatar.set(url);
+                ImageUploadHelper.uploadImage(new File(CropUtils.getCropPath()), new ImageUploadHelper.OnSingleImageUploadListener() {
+                    @Override
+                    public void singleImageUploadSuccess(String url) {
+                        ProgressDialogUtil.hideProgress();
+                        avatar.set(url);
+                    }
+
+                    @Override
+                    public void singleImageUploadFailed(String msg) {
+                        showSingleToast("头像上传失败！");
+                    }
                 });
             }
         }
@@ -94,6 +104,12 @@ public class PersonalInfoActivity extends BaseActivity {
                 .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size)) // 图片显示表格的大小
                 .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) // 图像选择和预览活动所需的方向。
                 .thumbnailScale(0.85f)          // 缩放比例
+                .setOnSelectedListener(new OnSelectedListener() {
+                    @Override
+                    public void onSelected(@NonNull List<Uri> uriList, @NonNull List<String> pathList) {
+
+                    }
+                })
                 .theme(R.style.Matisse_Zhihu)   // 主题  暗色主题 R.style.Matisse_Dracula
                 .imageEngine(new GlideEngine()) // 加载方式
                 .forResult(REQUEST_IMAGE);      // 请求码

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -18,44 +19,14 @@
         android:background="@color/bg_white"
         android:orientation="vertical">
 
-        <FrameLayout
+        <include layout="@layout/layout_title_black_with_right_image" />
+
+        <com.edusoho.yunketang.widget.RectangleImageView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="16dp">
-
-            <FrameLayout
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:onClick="onBackButtonClick">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/icon_arrow_left_color_gray" />
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:clickable="true"
-                android:onClick="onShareClick">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/icon_share" />
-            </FrameLayout>
-        </FrameLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_load_default_4x3"
             android:scaleType="fitXY"
+            app:aspectRatio="0.5625"
             bind:url="@{viewModel.coverUrl}" />
 
         <net.lucode.hackware.magicindicator.MagicIndicator
@@ -71,7 +42,7 @@
             android:layout_height="2dp"
             android:background="@color/bg_light_gray0" />
 
-        <com.edusoho.yunketang.widget.CustomViewPager
+        <com.edusoho.yunketang.widget.ChildViewPager
             android:id="@+id/vpMain"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -91,15 +62,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    tools:drawableRight="@drawable/icon_not_collect"
+                    android:drawableRight="@{viewModel.isCollected ? @drawable/icon_collected : @drawable/icon_not_collect}"
                     android:drawablePadding="5dp"
                     android:gravity="center"
-                    tools:text="@string/collect"
-                    android:drawableRight="@{viewModel.isCollected ? @drawable/icon_collected : @drawable/icon_not_collect}"
                     android:text="@{viewModel.isCollected ? @string/collected : @string/collect}"
                     android:textColor="@{viewModel.isCollected ? @color/theme_color : @color/text_black}"
-                    tools:textColor="@color/text_black"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    tools:drawableRight="@drawable/icon_not_collect"
+                    tools:text="@string/collect"
+                    tools:textColor="@color/text_black" />
 
                 <include layout="@layout/view_line" />
 
@@ -112,10 +83,10 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:onClick="onJoinStudyClick"
-                tools:text="@string/join_learn"
                 android:text="@{viewModel.isJoined ? @string/to_learn : @string/join_learn}"
                 android:textColor="@color/text_white"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                tools:text="@string/join_learn" />
         </LinearLayout>
     </LinearLayout>
 </layout>

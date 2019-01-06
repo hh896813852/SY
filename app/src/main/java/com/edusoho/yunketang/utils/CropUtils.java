@@ -72,14 +72,19 @@ public class CropUtils {
         options.setHideBottomControls(true);
         // 是否能调整裁剪框
         options.setFreeStyleCropEnabled(false);
-
-        mCropPath = new File(PHOTO_DIR, getPhotoFileName());// 给新照的照片文件命名
-        Uri destinationUri = Uri.fromFile(mCropPath); // 裁剪后保存到文件中
-        UCrop.of(sourceUri, destinationUri) // 第一个参数：需要裁剪的图片；第二个参数：裁剪后图片
+       // 第一个参数：需要裁剪的图片；第二个参数：裁剪后图片
+        UCrop.of(sourceUri, getPhotoFileUri())
                 .withAspectRatio(aspectX, aspectY) // 设置宽高比例
                 .withMaxResultSize(750, 500)
                 .withOptions(options)
                 .start(activity);
+    }
+
+    public static Uri getPhotoFileUri() {
+        // 给新照的照片文件命名
+        mCropPath = new File(PHOTO_DIR, getPhotoFileName());
+        // 裁剪后保存到文件中
+        return Uri.fromFile(mCropPath);
     }
 
     /**
