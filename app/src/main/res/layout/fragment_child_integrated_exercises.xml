@@ -35,10 +35,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-                android:text="@{viewModel.questionTopic}"
                 android:textColor="@color/text_light_black"
                 android:textSize="16sp"
                 android:visibility="@{TextUtils.isEmpty(viewModel.questionTopic) ? View.GONE : View.VISIBLE}"
+                bind:htmlText="@{viewModel.questionTopic}"
                 tools:text="2、题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目题目" />
 
             <LinearLayout
@@ -103,9 +103,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-                    android:text="@{viewModel.correctAnswer}"
                     android:textColor="@color/text_light_black"
                     android:textSize="16sp"
+                    bind:htmlText="@{viewModel.correctAnswer}"
                     tools:text="正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案正确答案" />
 
                 <LinearLayout
@@ -130,10 +130,10 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-                    android:text="@{viewModel.teacherNotes}"
                     android:textColor="@color/text_light_black"
                     android:textSize="16sp"
                     android:visibility="@{TextUtils.isEmpty(viewModel.teacherNotes) ? View.GONE : View.VISIBLE}"
+                    bind:htmlText="@{viewModel.teacherNotes}"
                     tools:text="老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注" />
 
                 <LinearLayout
@@ -158,10 +158,10 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-                    android:text="@{viewModel.answerAnalysis}"
                     android:textColor="@color/text_light_black"
                     android:textSize="16sp"
                     android:visibility="@{TextUtils.isEmpty(viewModel.answerAnalysis) ? View.GONE : View.VISIBLE}"
+                    bind:htmlText="@{viewModel.answerAnalysis}"
                     tools:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析" />
 
                 <LinearLayout

@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.testlib;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.edusoho.yunketang.SYApplication;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYConstants;
@@ -45,6 +47,8 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
 
     public ObservableField<Integer> searchType = new ObservableField<>(3);
     public ObservableField<Boolean> isShowMenu = new ObservableField<>(false);
+    public ObservableField<Boolean> isLogin = new ObservableField<>(false);
+    public ObservableField<Boolean> hasData = new ObservableField<>(true);
 
     private LayoutInflater layoutInflater;
     private List<Examination> list = new ArrayList<>();
@@ -71,14 +75,18 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) {
                     BaseDialog dialog = DialogUtil.showAnimationDialog(PracticeActivity.this, R.layout.dialog_not_login);
                     dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
-                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
+                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(PracticeActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
+                    });
                 } else {
                     Intent intent = new Intent(PracticeActivity.this, AnswerReportActivity.class);
                     intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
                     intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
                     intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
-                    startActivity(intent);
+                    startActivityForResult(intent, AnswerReportActivity.FROM_REPORT_REQUEST_CODE);
                 }
             });
             // 继续
@@ -86,7 +94,11 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) {
                     BaseDialog dialog = DialogUtil.showAnimationDialog(PracticeActivity.this, R.layout.dialog_not_login);
                     dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
-                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
+                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(PracticeActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
+                    });
                 } else {
                     Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
                     intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
@@ -103,7 +115,11 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) {
                     BaseDialog dialog = DialogUtil.showAnimationDialog(PracticeActivity.this, R.layout.dialog_not_login);
                     dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
-                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
+                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(PracticeActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
+                    });
                 } else {
                     Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
                     intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
@@ -135,6 +151,13 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
         }
+        if (requestCode == AnswerReportActivity.FROM_REPORT_REQUEST_CODE) {
+            onRefreshListener.onRefresh();
+        }
+        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            isLogin.set(SYApplication.getInstance().isLogin());
+            onRefreshListener.onRefresh();
+        }
     }
 
     @Override
@@ -154,25 +177,39 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
 
     private void initView() {
         setTitleView(getIntent().getStringExtra(TITLE_NAME));
+        isLogin.set(SYApplication.getInstance().isLogin());
         moduleId = getIntent().getIntExtra(MODULE_ID, 0);
         selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
         adapter.init(this, R.layout.item_exercise, list);
         layoutInflater = LayoutInflater.from(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isLogin.set(SYApplication.getInstance().isLogin());
+        if (!isLogin.get()) {
+            isShowMenu.set(false);
+        }
+        rightButtonImageView.setVisibility(isLogin.get() ? View.VISIBLE : View.GONE);
+    }
+
     /**
      * 加载数据
      */
     private void loadData() {
-        SYDataTransport.create(SYConstants.MODULE_EXERCISE)
-                .addParam("finishState", searchType.get() == 3 ? "" : searchType.get())
-                .addParam("businessType", selectedCourse.businessId)
+        SYDataTransport dataTransport = SYDataTransport.create(isLogin.get() ? SYConstants.MODULE_EXERCISE : SYConstants.MODULE_EXERCISE_NOT_LOGIN);
+        if (isLogin.get()) {
+            dataTransport.addParam("finishState", searchType.get())
+                    .addParam("userId", getLoginUser().syjyUser.id);
+        }
+        dataTransport.addParam("businessType", selectedCourse.businessId)
                 .addParam("levelId", selectedCourse.levelId)
                 .addParam("courseId", selectedCourse.courseId)
                 .addParam("moduleId", moduleId)
-                .addParam("userId", getLoginUser().syjyUser.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
+                .addProgressing(list.size() == 0, this, "正在加载习题列表...")
                 .execute(new SYDataListener<List<Examination>>() {
 
                     @Override
@@ -183,6 +220,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                         }
                         list.addAll(data);
                         adapter.notifyDataSetChanged();
+                        hasData.set(list.size() > 0);
                         // 防止界面已关闭，请求才回来导致getDataBinding == null
                         if (getDataBinding() != null) {
                             getDataBinding().swipeView.setRefreshing(false);
@@ -214,7 +252,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     public void onSearchTypeClick(View view) {
         int type = Integer.valueOf(view.getTag().toString());
         isShowMenu.set(false);
-        if(type != searchType.get()) {
+        if (type != searchType.get()) {
             searchType.set(type);
             pageNo = 1;
             loadData();

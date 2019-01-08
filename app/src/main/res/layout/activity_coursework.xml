@@ -54,12 +54,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="24"
                             android:text="@{viewModel.classRank}"
                             android:textColor="@color/theme_color"
                             android:textScaleX="0.8"
                             android:textSize="45dp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="24" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -100,12 +100,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="80"
                             android:text="@{viewModel.correctPercent}"
                             android:textColor="@color/theme_color"
                             android:textScaleX="0.8"
                             android:textSize="45dp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="80" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -128,22 +128,39 @@
             </LinearLayout>
         </FrameLayout>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            bind:onRefreshListener="@{viewModel.onRefreshListener}">
+            android:layout_height="match_parent">
 
-            <com.edusoho.yunketang.widget.LoadMoreListView
-                android:id="@+id/listView"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:drawableTop="@drawable/bg_no_pager"
+                android:drawablePadding="10dp"
+                android:gravity="center_horizontal"
+                android:text="暂时没有课程作业"
+                android:textColor="@color/text_light_green"
+                android:textSize="15sp"
+                android:visibility="@{viewModel.hasData ? View.GONE : View.VISIBLE}" />
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:scrollbars="none"
-                bind:adapter="@{viewModel.adapter}">
+                android:background="@android:color/transparent"
+                bind:onRefreshListener="@{viewModel.onRefreshListener}">
 
-            </com.edusoho.yunketang.widget.LoadMoreListView>
-        </android.support.v4.widget.SwipeRefreshLayout>
+                <com.edusoho.yunketang.widget.LoadMoreListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.adapter}" />
+            </android.support.v4.widget.SwipeRefreshLayout>
+        </FrameLayout>
     </LinearLayout>
 </layout>

@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.edusoho.yunketang.ui.me.PersonalInfoActivity" />
@@ -17,7 +19,7 @@
         android:background="@color/bg_light_gray0"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_title_black" />
+        <include layout="@layout/layout_title_black_with_right_text" />
 
         <View
             android:layout_width="match_parent"
@@ -71,8 +73,9 @@
                 android:layout_marginLeft="90dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/bg_white"
-                android:drawableRight="@drawable/icon_edit"
+                android:drawableRight="@{viewModel.isEditing ? @drawable/icon_edit : null}"
                 android:drawablePadding="5dp"
+                android:enabled="@{viewModel.isEditing}"
                 android:hint="请编辑用户名"
                 android:text="@={viewModel.nickname}"
                 android:textSize="14dp" />
@@ -100,7 +103,8 @@
                 android:layout_marginLeft="90dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/bg_white"
-                android:drawableRight="@drawable/icon_edit"
+                android:enabled="@{viewModel.isEditing}"
+                android:drawableRight="@{viewModel.isEditing ? @drawable/icon_edit : null}"
                 android:drawablePadding="5dp"
                 android:focusable="false"
                 android:hint="请选择性别"
@@ -131,8 +135,9 @@
                 android:layout_marginLeft="90dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/bg_white"
-                android:drawableRight="@drawable/icon_edit"
+                android:drawableRight="@{viewModel.isEditing ? @drawable/icon_edit : null}"
                 android:drawablePadding="5dp"
+                android:enabled="@{viewModel.isEditing}"
                 android:hint="请编辑个性签名"
                 android:inputType="text"
                 android:maxLines="1"
@@ -154,6 +159,7 @@
             android:text="保存"
             android:textColor="@color/text_white"
             android:textSize="18dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="@{viewModel.isEditing ? View.VISIBLE : View.GONE}" />
     </LinearLayout>
 </layout>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -56,9 +57,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="42dp"
             android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-            android:text="@{viewModel.questionExplain}"
             android:textColor="@color/text_light_black"
             android:textSize="16sp"
+            bind:htmlText="@{viewModel.questionExplain}"
             tools:text="下列题目中A、B、C、D中只有一个选项为正确答案" />
     </LinearLayout>
 </layout>

@@ -118,15 +118,15 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
     };
 
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
-        if (!SYApplication.getInstance().isLogin()) {
-            BaseDialog dialog = DialogUtil.showAnimationDialog(getSupportedActivity(), R.layout.dialog_not_login);
-            dialog.findViewById(R.id.cancelView).setOnClickListener(v -> dialog.dismiss());
-            dialog.findViewById(R.id.loginView).setOnClickListener(v -> {
-                startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
-                dialog.dismiss();
-            });
-            return;
-        }
+//        if (!SYApplication.getInstance().isLogin()) {
+//            BaseDialog dialog = DialogUtil.showAnimationDialog(getSupportedActivity(), R.layout.dialog_not_login);
+//            dialog.findViewById(R.id.cancelView).setOnClickListener(v -> dialog.dismiss());
+//            dialog.findViewById(R.id.loginView).setOnClickListener(v -> {
+//                startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
+//                dialog.dismiss();
+//            });
+//            return;
+//        }
         int modelId = moduleList.get(position).modelId;
         switch (moduleList.get(position).modelName) {
             case "每日一练":

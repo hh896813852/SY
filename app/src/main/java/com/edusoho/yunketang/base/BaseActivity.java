@@ -38,6 +38,7 @@ public class BaseActivity<DataBinding extends ViewDataBinding> extends AppCompat
 
     public TextView titleView;
     public TextView rightButtonTextView;
+    public ImageView rightButtonImageView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class BaseActivity<DataBinding extends ViewDataBinding> extends AppCompat
                 rightButtonTextView.setOnClickListener(v -> onRightButtonClick());
             }
 
-            ImageView rightButtonImageView = findViewById(R.id.imageButton);
+            rightButtonImageView = findViewById(R.id.imageButton);
             if (rightButtonImageView != null) {
                 if (layout.rightButtonRes() != -1) {
                     rightButtonImageView.setImageDrawable(ContextCompat.getDrawable(this, layout.rightButtonRes()));

@@ -174,7 +174,6 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
                     @Override
                     public void onSuccess(List<ClassInfo> data) {
                         list.clear();
-                        list.addAll(data);
                         hasClass.set(data.size() > 0);
                         adapter.notifyDataSetChanged();
                         // 因为notifyDataSetChanged()方法是异步的，并且没有方法监听其什么结束

@@ -19,6 +19,7 @@ public class Question implements Serializable {
     public String topicVoiceUrl;   // 题目说明（语音）
     public String topicPictureUrl; // 题目说明（图片）
     public String userResult;      // 用户答案
+    public int isSubmit;           // 用户是否提交过答案 0、未提交过 1、提交过
     public List<QuestionDetails> details; // 题目（可包含多个）
 
     public String subclassification;     // 题型子分类id

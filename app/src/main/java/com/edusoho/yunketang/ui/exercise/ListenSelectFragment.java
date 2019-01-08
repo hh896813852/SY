@@ -4,6 +4,7 @@ import android.databinding.ObservableField;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -43,10 +44,10 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
     private Question question;
     private MediaPlayer mediaPlayer; // 音频播放器
     private boolean isPrepared;      // 音频播放器是否准备好了
-    private TimeThread timeThread; // 时间进度线程
+    private TimeThread timeThread;   // 时间进度线程
     public ObservableField<Boolean> isPlaying = new ObservableField<>(false);// 音频播放器是否正在播放
     public ObservableField<String> audioCurrentTime = new ObservableField<>("00:00");// 音频播放了的时间
-    public ObservableField<String> audioDuration = new ObservableField<>();         // 音频时长
+    public ObservableField<String> audioDuration = new ObservableField<>("00:00");   // 音频时长
 
     public ObservableField<String> questionTopic = new ObservableField<>(); // 题目
 
@@ -79,8 +80,8 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
             } else {
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
                 optionContainer.addView(optionImage);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionImage.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
@@ -115,8 +116,10 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
         }
         adapter.notifyDataSetChanged();
         if (isFirstPick && getActivity() != null) {
-            // 第一次选择，显示下一页
-            ((ExerciseActivity) getActivity()).showNextPage();
+            new Handler().postDelayed(() -> {
+                // 第一次选择，停留300毫秒显示下一页
+                ((ExerciseActivity) getActivity()).showNextPage();
+            }, 300);
         }
     };
 
@@ -208,12 +211,12 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
     @Override
     public void onResume() {
         super.onResume();
-        if (mediaPlayer != null && !mediaPlayer.isPlaying() && isPrepared) {
-            mediaPlayer.start();
-            isPlaying.set(true);
-            timeThread = new TimeThread();
-            timeThread.start();
-        }
+//        if (mediaPlayer != null && !mediaPlayer.isPlaying() && isPrepared) {
+//            mediaPlayer.start();
+//            isPlaying.set(true);
+//            timeThread = new TimeThread();
+//            timeThread.start();
+//        }
     }
 
     @Override

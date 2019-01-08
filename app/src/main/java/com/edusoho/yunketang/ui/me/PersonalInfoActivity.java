@@ -37,7 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Layout(value = R.layout.activity_personal_info, title = "个人信息")
+@Layout(value = R.layout.activity_personal_info, title = "个人信息", rightButton = "编辑")
 public class PersonalInfoActivity extends BaseActivity {
     private static final int REQUEST_IMAGE = RequestCodeUtil.next();
 
@@ -45,6 +45,7 @@ public class PersonalInfoActivity extends BaseActivity {
     public ObservableField<String> nickname = new ObservableField<>();
     public ObservableField<String> sex = new ObservableField<>();
     public ObservableField<String> personSign = new ObservableField<>();
+    public ObservableField<Boolean> isEditing = new ObservableField<>(false);
 
     private List<String> optionsItems = new ArrayList<>();
     private User loginUser;
@@ -95,6 +96,9 @@ public class PersonalInfoActivity extends BaseActivity {
      * 头像选择
      */
     public void onAvatarClick(View view) {
+        if(!isEditing.get()) {
+            return;
+        }
         Matisse.from(this)
                 .choose(MimeType.of(MimeType.JPEG, MimeType.PNG)) // 显示图片的类型
                 .countable(false) // 是否有序选择图片
@@ -131,6 +135,16 @@ public class PersonalInfoActivity extends BaseActivity {
 
         optionsPickerView.setPicker(optionsItems);
         optionsPickerView.show();
+    }
+
+    @Override
+    public void onRightButtonClick() {
+        isEditing.set(!isEditing.get());
+        if(isEditing.get()) {
+            rightButtonTextView.setText("取消");
+        } else {
+            rightButtonTextView.setText("编辑");
+        }
     }
 
     /**

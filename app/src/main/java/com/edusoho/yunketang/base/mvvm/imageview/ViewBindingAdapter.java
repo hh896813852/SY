@@ -13,7 +13,7 @@ public class ViewBindingAdapter {
 
     @BindingAdapter({"url"})
     public static void url(ImageView imageView, String url) {
-        if (!TextUtils.isEmpty(url)) {
+        if (url != null) {
             Glide.with(imageView.getContext()).load(url).into(imageView);
         }
     }

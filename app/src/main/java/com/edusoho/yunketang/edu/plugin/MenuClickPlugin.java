@@ -223,7 +223,8 @@ public class MenuClickPlugin extends BaseBridgePlugin<Activity> {
 
     @JsAnnotation
     public void backWebView(JSONArray args, BridgeCallback callbackContext) throws JSONException {
-        MessageEngine.getInstance().sendMsgToTaget(WebViewActivity.BACK, null, mPluginContext.getActivity());
+//        MessageEngine.getInstance().sendMsgToTaget(WebViewActivity.BACK, null, mPluginContext.getActivity());
+        mPluginContext.getActivity().finish();
     }
 
     @JsAnnotation

@@ -42,9 +42,9 @@ public class PicLoadHelper {
                 int imageWidth = resource.getWidth();
                 int imageHeight = resource.getHeight();
                 int height = ScreenUtil.getScreenWidth(context) * imageHeight / imageWidth;
-                ViewGroup.LayoutParams para = imageView.getLayoutParams();
-                para.height = height;
-                para.width = ScreenUtil.getScreenWidth(context);
+                ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                params.height = height;
+                params.width = ScreenUtil.getScreenWidth(context);
                 imageView.setImageBitmap(resource);
             }
         });

@@ -18,7 +18,7 @@ import com.edusoho.yunketang.utils.DateUtils;
 import java.util.List;
 
 /**
- * Created by zy on 2018/11/13 0013.
+ * Created by huhao on 2019/11/13
  */
 
 public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
@@ -68,6 +68,9 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
      */
     @Override
     public int getChildrenCount(int groupPosition) {
+        if(expandableList.get(groupPosition).childList == null) {
+            return 0;
+        }
         return expandableList.get(groupPosition).childList.size();
     }
 

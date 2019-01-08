@@ -28,6 +28,7 @@ import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.ExamAnswer;
+import com.edusoho.yunketang.bean.Examination;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.bean.base.Message;
@@ -170,6 +171,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     private List<Question> preCommitQuestionList = new ArrayList<>(); // 预提交问题集合（包含未作答问题，不包含题干）
     private List<Question> canCommitQuestionList = new ArrayList<>(); // 可提交问题集合（不包含题干）
 
+    private long testStartTime; // 测试开始时间
+
     public List<Map<String, List<Integer>>> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
 
@@ -237,8 +240,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                     viewPagerAdapter.notifyDataSetChanged();
                     // 加载当前题型的题目
                     loadQuestion();
+                    currentQuestion = questionList.get(0);
                     // 刷新界面
-                    refreshView(questionList.get(0));
+                    refreshView(currentQuestion);
                 }
             } else {
                 // 加载题干
@@ -554,7 +558,6 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                                 if (question.questionType > 0 && question.questionType < 6) {
                                     // 遍历子题
                                     for (int j = 0; j < question.details.size(); j++) {
-
                                         // 存在用户选项
                                         if (!TextUtils.isEmpty(userResultList.get(j).result)) {
                                             // 用户选项
@@ -627,10 +630,15 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                                     showPageByPosition(stemIndex + reportCardSecondIndex + 1);
                                 }
                             }
-                            // 如果是测试/考试，则开始倒计时
+                            // 如果是测试/考试
                             if (isExamTest) {
-                                // 开始倒计时
-                                startTimer(Integer.valueOf(examinationMinute) * 60 * 1000);
+                                // 如果考试时长大于0，则开始倒计时
+                                if (!TextUtils.isEmpty(examinationMinute) && Integer.valueOf(examinationMinute) > 0) {
+                                    // 开始倒计时
+                                    startTimer(Integer.valueOf(examinationMinute) * 60 * 1000);
+                                }
+                                // 获得测试开始时间
+                                testStartTime = System.currentTimeMillis();
                             }
                         }
                     }
@@ -740,6 +748,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                                 e.printStackTrace();
                             }
                         }
+                        // 提交成功时，设置此题已经提交过
+                        question.isSubmit = 1;
                     }
 
                     @Override
@@ -868,8 +878,12 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             isQuestionCollected.set(question.isStar);
         }
         isQuestionStem.set(question.questionType == 0);
-        // 不是答案解析 并且 不是题干，则显示解析标签
-        isAnswerAnalysisTagShowed.set(!isAnswerAnalysis && question.questionType != 0);
+        // 测试 或者 是答案解析 或者 是题干，则不显示解析标签
+        if (isExamTest || isAnswerAnalysis || question.questionType == 0) {
+            isAnswerAnalysisTagShowed.set(false);
+        } else {
+            isAnswerAnalysisTagShowed.set(true);
+        }
         questionTypeName.set(question.getQuestionTypeName());
         questionTypeInfo.set(question.questionType == 0 ? "共" + question.questionSum + "题" : question.questionSort + "/" + question.questionSum);
     }
@@ -1349,7 +1363,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                 .addParam("businessType", selectedCourse.businessId)
                 .addParam("levelId", selectedCourse.levelId)
                 .addParam("courseId", selectedCourse.courseId)
-                .addParam("completeTime", Integer.valueOf(examinationMinute) * 60 - leftExamSecond) // 秒
+                .addParam("completeTime", (System.currentTimeMillis() - testStartTime) / 1000) // 秒
                 .addParam("questionDetails", getAllQuestionAnswer());
         if (!TextUtils.isEmpty(classId)) {
             dataTransport.addParam("classId", classId);
@@ -1357,16 +1371,19 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         if (moduleId != 0) {
             dataTransport.addParam("moduleId", moduleId);
         }
-        dataTransport.execute(new SYDataListener() {
+        dataTransport.execute(new SYDataListener<Examination>() {
 
             @Override
-            public void onSuccess(Object data) {
+            public void onSuccess(Examination data) {
                 ProgressDialogUtil.hideProgress();
                 Intent intent = new Intent(ExerciseActivity.this, AnswerReportActivity.class);
-                intent.putExtra(AnswerReportActivity.HOMEWORK_ID, homeworkId);
+                intent.putExtra(AnswerReportActivity.HOMEWORK_ID, data.homeworkId);
                 intent.putExtra(AnswerReportActivity.EXAMINATION_ID, examinationId);
                 intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
                 intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
+                intent.putExtra(AnswerReportActivity.IS_EXAM, isExamTest);
+                intent.putExtra(AnswerReportActivity.IS_MODULE_EXERCISE, isModuleExercise);
+                intent.putExtra(AnswerReportActivity.IS_CLASS_EXERCISE, isClassExercise);
                 startActivity(intent);
                 finish();
             }
@@ -1376,7 +1393,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                 super.onFail(status, failMessage);
                 ProgressDialogUtil.hideProgress();
             }
-        });
+        }, Examination.class);
     }
 
     /**
@@ -1442,7 +1459,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 提交试卷
      */
     private void CommitExamination() {
-        if (isAllQuestionCommit()) {
+        if ((isClassExercise || isModuleExercise) && !isAllQuestionCommit()) {
+            ProgressDialogUtil.hideProgress();
             showSingleToast("您还有题目未查看，不可提交试卷");
             return;
         }
@@ -1459,6 +1477,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                         intent.putExtra(AnswerReportActivity.EXAMINATION_ID, examinationId);
                         intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
                         intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
+                        intent.putExtra(AnswerReportActivity.IS_EXAM, isExamTest);
+                        intent.putExtra(AnswerReportActivity.IS_MODULE_EXERCISE, isModuleExercise);
+                        intent.putExtra(AnswerReportActivity.IS_CLASS_EXERCISE, isClassExercise);
                         startActivity(intent);
                         finish();
                     }
@@ -1475,7 +1496,14 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 问题是否均已提交
      */
     private boolean isAllQuestionCommit() {
-        return false;
+        for (Question question : questionList) {
+            if (question.questionType > 0) {
+                if (question.isSubmit == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -1492,15 +1520,37 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             onBgClick(null);
         } else {
             // 不存在homeworkId，说明没有提交过一道题
-            if (TextUtils.isEmpty(homeworkId) || isMyFaults || isMyCollection) {
+            if (TextUtils.isEmpty(homeworkId) || isMyFaults || isMyCollection || isAnswerAnalysis || isTeacherNotation) {
                 if (isExamTest) { // 真题测试
                     showExitTipDialog();
                 } else {
                     finish();
                 }
-            } else {
-                // 提交过作答，则显示退出提示对话框
-                showExitTipDialog();
+            } else { // 练习
+                if (isModuleExercise || isClassExercise) {
+                    if (checkQuestionIsAllDo()) {
+                        DialogUtil.showSimpleAnimDialog(this, "您的题目已做完，是否交卷？", "暂不交卷", "马上交卷", new SimpleDialog.OnSimpleClickListener() {
+                            @Override
+                            public void OnLeftBtnClicked(SimpleDialog dialog) {
+                                dialog.superDismiss(); // 无动画退出
+                                // 保存试卷信息并退出
+                                saveAndExit();
+                            }
+
+                            @Override
+                            public void OnRightBtnClicked(SimpleDialog dialog) {
+                                dialog.dismiss();
+                                // 交卷
+                                onCommitAnswerAndShowResultClick(null);
+                            }
+                        });
+                    } else {
+                        // 保存试卷信息并退出
+                        saveAndExit();
+                    }
+                } else {
+                    finish();
+                }
             }
         }
     }
@@ -1521,18 +1571,26 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             public void OnRightBtnClicked(SimpleDialog dialog) {
                 dialog.superDismiss(); // 无动画退出
                 if (isModuleExercise || isClassExercise) {
-                    if (preCommitQuestionList.size() > 0) {
-                        isPreExit = true;
-                        ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
-                        checkPreCommitQuestion();
-                    } else {
-                        finish();
-                    }
+                    // 保存试卷信息并退出
+                    saveAndExit();
                 } else {
                     finish();
                 }
             }
         });
+    }
+
+    /**
+     * 保存试卷信息并退出
+     */
+    private void saveAndExit() {
+        if (preCommitQuestionList.size() > 0) {
+            isPreExit = true;
+            ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
+            checkPreCommitQuestion();
+        } else {
+            finish();
+        }
     }
 
     /**
@@ -1547,9 +1605,15 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
             @Override
             public void OnRightBtnClicked(SimpleDialog dialog) {
+                dialog.dismiss();
                 ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在提交试卷，请稍后...");
-                // 检查问题是否均已提交
-                checkIsAnswerAllCommit();
+                if (isExamTest) {
+                    // 交卷（整体提交）
+                    commitExamAll();
+                } else {
+                    // 检查问题是否均已提交
+                    checkIsAnswerAllCommit();
+                }
             }
         });
     }
@@ -1624,8 +1688,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             leftExamSecond = 0;
             leftTime.set("00:00");
             ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在提交试卷，请稍后...", false);
-            // 一键提交
-            oneKeyCommitAll();
+            // 交卷（整体提交）
+            commitExamAll();
         }
     }
 

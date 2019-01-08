@@ -36,23 +36,42 @@
                     android:layout_height="2dp"
                     android:background="@color/bg_light_gray1" />
 
-                <android.support.v4.widget.SwipeRefreshLayout
-                    android:id="@+id/swipeView"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    bind:onRefreshListener="@{viewModel.onRefreshListener}">
+                    android:layout_height="match_parent">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycleView"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="30dp"
+                        android:drawableTop="@drawable/bg_no_pager"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_horizontal"
+                        android:text="暂时没有试卷"
+                        android:textColor="@color/text_light_green"
+                        android:textSize="15sp"
+                        android:visibility="@{viewModel.hasData ? View.GONE : View.VISIBLE}" />
+
+                    <android.support.v4.widget.SwipeRefreshLayout
+                        android:id="@+id/swipeView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
-                        android:paddingRight="10dp"
-                        android:scrollbars="none"
-                        bind:adapter="@{viewModel.adapter}"
-                        bind:onItemClick="@{viewModel.onItemClick}" />
-                </android.support.v4.widget.SwipeRefreshLayout>
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        bind:onRefreshListener="@{viewModel.onRefreshListener}">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycleView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="10dp"
+                            android:scrollbars="none"
+                            bind:adapter="@{viewModel.adapter}"
+                            bind:onItemClick="@{viewModel.onItemClick}" />
+                    </android.support.v4.widget.SwipeRefreshLayout>
+                </FrameLayout>
             </LinearLayout>
 
             <FrameLayout

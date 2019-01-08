@@ -28,8 +28,10 @@ import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.exercise.ExerciseActivity;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.CircleBarView;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
@@ -41,17 +43,22 @@ import java.util.zip.Inflater;
 
 @Layout(value = R.layout.activity_answer_report, title = "答题报告", rightButton = "再做一遍")
 public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBinding> {
+    public static final int FROM_REPORT_REQUEST_CODE = RequestCodeUtil.next();
     public static final String HOMEWORK_ID = "homework_id";
     public static final String EXAMINATION_ID = "examination_id";
     public static final String SELECTED_COURSE = "selected_course";
     public static final String MODULE_ID = "module_id";
     public static final String CLASS_ID = "class_id";
     public static final String IS_EXAM = "is_exam";
+    public static final String IS_MODULE_EXERCISE = "is_module_exercise";
+    public static final String IS_CLASS_EXERCISE = "is_class_exercise";
     private String homeworkId;
     public String examinationId;
     private EducationCourse selectedCourse;
     private int moduleId;
     private String classId;
+    private boolean isModuleExercise; // 是否是模块练习
+    private boolean isClassExercise;  // 是否是班级练习
 
     public ObservableField<String> finishDate = new ObservableField<>(); // 日期
     public ObservableField<String> usedTime = new ObservableField<>();   // 用时
@@ -110,20 +117,21 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initView();
+        loadData();
+    }
+
+    private void initView() {
         homeworkId = getIntent().getStringExtra(HOMEWORK_ID);
         examinationId = getIntent().getStringExtra(EXAMINATION_ID);
         selectedCourse = (EducationCourse) getIntent().getSerializableExtra(SELECTED_COURSE);
         moduleId = getIntent().getIntExtra(MODULE_ID, 0);
         classId = getIntent().getStringExtra(CLASS_ID);
         isExam.set(getIntent().getBooleanExtra(IS_EXAM, false));
+        isModuleExercise = getIntent().getBooleanExtra(IS_MODULE_EXERCISE, false);
+        isClassExercise = getIntent().getBooleanExtra(IS_CLASS_EXERCISE, false);
         adapter.init(this, R.layout.item_answer_report, list);
-        initView();
-        loadData();
-    }
 
-    private void initView() {
-        // TODO 暂不显示再做一遍
-        setRightButtonTextView("");
         // 设置根据进度改变文字的TextView
         getDataBinding().circleView.setTextView(getDataBinding().progressText);
         // 设置动画进度监听来改变文字和进度条颜色
@@ -211,7 +219,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     private void refreshView(AnswerReport data) {
         trueNum.set(String.valueOf(data.correctSum));
         falseNum.set(String.valueOf(data.falseSum));
-        if(isExam.get()) {
+        if (isExam.get()) {
             usedTime.set("用时：" + DateUtils.second2Min(data.completeTime));
             finishDate.set("日期：" + DateUtils.formatDate(data.updateDate, "MM-dd"));
             getDataBinding().circleView.setMaxNum(data.totalScore);
@@ -247,8 +255,8 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
             } else if (details.questionType == 6) { // 简答题
                 List<Integer> child = new ArrayList<>();
                 for (AnswerReport.AnswerDetails.Mistake mistake : details.homeworkMistakes) {
-                    MyAnswer myAnswer = JsonUtil.fromJson(mistake.userResult, MyAnswer.class);
-                    child.add(TextUtils.isEmpty(myAnswer.result) && TextUtils.isEmpty(myAnswer.userResultUrl) ? AnswerResultLayout.NOT_ANSWER : AnswerResultLayout.ANSWERED);
+                    MyAnswer answers = JsonUtil.fromJson(mistake.userResult, MyAnswer.class);
+                    child.add(TextUtils.isEmpty(answers.result) && TextUtils.isEmpty(answers.userResultUrl) ? AnswerResultLayout.NOT_ANSWER : AnswerResultLayout.ANSWERED);
                 }
                 map.put("", child);
             } else if (details.questionType == 7) { // 综合题
@@ -259,7 +267,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
                     }
                     map.put(QuestionHelper.getSort(i), child);
                 }
-            } else {
+            } else { // 单选题
                 List<Integer> child = new ArrayList<>();
                 for (int i = 0; i < details.falseCount + details.correctCount; i++) {
                     child.add(AnswerResultLayout.ANSWER_TRUE);
@@ -272,6 +280,27 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
             list.add(map);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRightButtonClick() {
+        SYDataTransport.create(SYConstants.DO_AGAIN)
+                .addParam("homeworkId", homeworkId)
+                .execute(new SYDataListener() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        Intent intent = new Intent(AnswerReportActivity.this, ExerciseActivity.class);
+                        intent.putExtra(ExerciseActivity.EXAMINATION_ID, examinationId);
+                        intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
+                        intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
+                        intent.putExtra(ExerciseActivity.CLASS_ID, classId);
+                        intent.putExtra(ExerciseActivity.IS_EXAM_TEST, isExam.get());
+                        intent.putExtra(ExerciseActivity.IS_CLASS_EXERCISE, isClassExercise);
+                        intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, isModuleExercise);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
     }
 
     /**

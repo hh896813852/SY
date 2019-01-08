@@ -195,27 +195,26 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
             course.courseType = status;
             course.courseSort = i;
         }
-        if (getActivity() != null) {
-            ((MainTabActivity) getActivity()).courseFragment.list.addAll(courseList);
-            ((MainTabActivity) getActivity()).courseFragment.adapter.notifyDataSetChanged();
-        }
         adapter.notifyDataSetChanged();
         if (isCache) {
-            new Handler().postDelayed(() -> {
-                // 刷新界面
-                refreshView();
-                // 如果在当前页面加载完成，则按当前页面来设置高度
-                if (getActivity() != null && status == ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getCurrentItem() + 1) {
-                    resetViewPagerHeight();
-                }
-            }, 200);
+            if (getActivity() != null) {
+                ((MainTabActivity) getActivity()).courseFragment.list.addAll(courseList);
+                ((MainTabActivity) getActivity()).courseFragment.adapter.notifyDataSetChanged();
+            }
+            // 刷新界面
+            new Handler().postDelayed(this::refreshView, 300);
         } else {
+            if (getActivity() != null) {
+                if (((MainTabActivity) getActivity()).courseFragment.list.size() > 6) {
+                    ((MainTabActivity) getActivity()).courseFragment.list.clear();
+                }
+                ((MainTabActivity) getActivity()).courseFragment.list.addAll(courseList);
+                if (((MainTabActivity) getActivity()).courseFragment.list.size() >= 6) {
+                    ((MainTabActivity) getActivity()).courseFragment.adapter.notifyDataSetChanged();
+                }
+            }
             // 刷新界面
             refreshView();
-            // 如果在当前页面加载完成，则按当前页面来设置高度
-            if (getActivity() != null && status == ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getCurrentItem() + 1) {
-                resetViewPagerHeight();
-            }
         }
     }
 
@@ -248,7 +247,6 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
      */
     private void refreshView() {
         title.set(firstCourse.title);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getSupportedActivity());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);// 设置 recyclerview 布局方式为横向布局
         getDataBinding().recycleView.setLayoutManager(layoutManager);
@@ -262,6 +260,10 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
             intent.putExtra(CourseDetailsActivity.COURSE_ID, firstCourse.data.get(position).id);
             getSupportedActivity().startActivity(intent);
         });
+        // 如果在当前页面加载完成，则按当前页面来设置高度
+        if (getActivity() != null && status == ((MainTabActivity) getActivity()).courseFragment.getDataBinding().vpMain.getCurrentItem() + 1) {
+            resetViewPagerHeight();
+        }
     }
 
     /**

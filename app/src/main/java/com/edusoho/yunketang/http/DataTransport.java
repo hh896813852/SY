@@ -11,6 +11,7 @@ import com.edusoho.yunketang.bean.base.Message;
 import com.edusoho.yunketang.utils.HttpUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.LogUtil;
+import com.edusoho.yunketang.utils.NetworkUtils;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class DataTransport {
     private static int requestId = 1;
 
     private ProgressDialog mProgressDialog;
+    private boolean isProgressShow;
     private Context context;
     private String progressContent;
     private boolean cancelable = true;
@@ -121,6 +123,7 @@ public class DataTransport {
      * @return
      */
     public DataTransport addDefaultProgressing(Context context) {
+        this.isProgressShow = true;
         this.context = context;
         this.progressContent = "正在加载,请稍等...";
         return this;
@@ -132,6 +135,19 @@ public class DataTransport {
      * @return
      */
     public DataTransport addProgressing(Context context, String progressContent) {
+        this.isProgressShow = true;
+        this.context = context;
+        this.progressContent = progressContent;
+        return this;
+    }
+
+    /**
+     * 如果你需要一个自定义文字的进度条
+     *
+     * @return
+     */
+    public DataTransport addProgressing(boolean isProgressShow, Context context, String progressContent) {
+        this.isProgressShow = isProgressShow;
         this.context = context;
         this.progressContent = progressContent;
         return this;
@@ -157,7 +173,7 @@ public class DataTransport {
     }
 
     private void showProgress() {
-        if (progressContent != null) {
+        if (isProgressShow) {
             if (mProgressDialog == null) {
                 mProgressDialog = new ProgressDialog(context);
                 if (Build.VERSION.SDK_INT >= 21) {
@@ -257,6 +273,9 @@ public class DataTransport {
                                         message.data = dataString;
                                     }
                                 }
+                            } else if(message.retcode == 500) {
+                                message.status = 500;
+                                message.msg = "服务器异常，请稍后尝试。";
                             }
                         }
                     } catch (JSONException e) {

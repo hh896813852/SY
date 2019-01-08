@@ -125,7 +125,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
         SYDataTransport dataTransport = SYDataTransport.create(LOGIN_URL, false);
         dataTransport.addParam("mobile", phoneNo.get());
         if (loginType.get() == SYConstants.SYJY_LOGIN) {
-            dataTransport.addParam("password", password.get());
+            dataTransport.addParam("enablePassword", password.get());
         }
         if (loginType.get() == SYConstants.SYZX_LOGIN) {
             dataTransport.addParam("password", XXTEA.encryptToBase64String(password.get(), "www.233863.com"))
@@ -146,10 +146,26 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                             try {
                                 JSONObject jsonObject = new JSONObject(String.valueOf(message.data));
                                 int type = jsonObject.getInt("type");
-                                if (type == -1) {
-                                    onFail(message.status, message.msg);
+                                if (jsonObject.has("state")) {
+                                    String state = jsonObject.getString("state");
+                                    if (!TextUtils.isEmpty(state) && TextUtils.equals(state, "1") && !TextUtils.equals(state, "null")) { // 新用户
+                                        User loginUser = new User();
+                                        loginUser.syjyToken = jsonObject.getString("syjy_token");
+                                        loginUser.syjyUser = JsonUtil.fromJson(jsonObject.getString("syjy_user"), User.class);
+                                        onSuccess(loginUser);
+                                    } else {
+                                        if (type == -1) {
+                                            onFail(message.status, message.msg);
+                                        } else {
+                                            DialogHelper.showAccountExistDialog(LoginActivity.this, type);
+                                        }
+                                    }
                                 } else {
-                                    DialogHelper.showAccountExistDialog(LoginActivity.this, type);
+                                    if (type == -1) {
+                                        onFail(message.status, message.msg);
+                                    } else {
+                                        DialogHelper.showAccountExistDialog(LoginActivity.this, type);
+                                    }
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -173,6 +189,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                         }
                         if (loginPlatform == 0) { // 未登录
                             data.mobile = phoneNo.get();
+                            data.password = password.get();
                             data.syzxUser = JsonUtil.fromJson(data.syzx_user, User.class);
                             data.sykjUser = JsonUtil.fromJson(data.sykj_user, User.class);
                             SYApplication.getInstance().setUser(data);

@@ -47,7 +47,7 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
             Drawable drawable = new BitmapDrawable(getResources(), BitmapUtil.base64ToBitmap(source));
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
             return drawable;
-        }, new MyHtmlTagHandler("myfont"));
+        }, new MyHtmlTagHandler("syfont"));
         SpannableStringBuilder spanBuilder = new SpannableStringBuilder(html);
         textView.setText(spanBuilder);
         //设置可以点击超连接
@@ -57,9 +57,8 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
     private void initView() {
         // 如果不在HTML标签最前面加入其他HTML元素，此函数可能不会生效，原因未知。
         String htmlStr = "<br/><font size=\"15px\" color=\"red\">This is some text!</font><br/><font size=\"18px\" color=\"blue\">This is some text!</font>";
-        htmlStr = htmlStr.replace("font","myfont");
+        htmlStr = htmlStr.replace("font","syfont");
         showHtml(getDataBinding().aboutUsView, htmlStr);
-
 
         version.set("版本" + AppUtil.getAppVersionName(this));
         setting = AppPreferences.getSettings();

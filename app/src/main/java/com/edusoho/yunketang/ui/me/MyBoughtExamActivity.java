@@ -174,6 +174,7 @@ public class MyBoughtExamActivity extends BaseActivity<ActivityMyBoughtExamBindi
                             list.clear();
                         }
                         list.addAll(data);
+                        hasData.set(list.size() > 0);
                         adapter.setDataList(list);
                         canLoadMore = data.size() == SYConstants.PAGE_SIZE;
                         if (getDataBinding() != null) {

@@ -26,6 +26,7 @@ import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding
 import com.edusoho.yunketang.helper.ImageUploadHelper;
 import com.edusoho.yunketang.helper.PicLoadHelper;
 import com.edusoho.yunketang.utils.LogUtil;
+import com.edusoho.yunketang.utils.LuBanUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -75,9 +76,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             } else {
                 if (position == list.size() - 1) { // 添加照片
                     pickView.setVisibility(View.VISIBLE);
-                    pickView.setOnClickListener(v -> {
-                        permissionCheck();
-                    });
+                    pickView.setOnClickListener(v -> permissionCheck());
                     deleteView.setVisibility(View.GONE);
                 } else { // 已添加并显示的照片
                     Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
@@ -110,7 +109,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                         LogUtil.i("RxPermissions", "权限拒绝，等待下次询问：" + permission.name);
                     } else {
                         // 拒绝权限，不再弹出询问框，请前往APP应用设置打开此权限
-                        LogUtil.i("RxPermissions", "拒绝权限，不再弹出询问框：" + permission.name);
+                        showSingleToast("相机权限被拒绝，请前往APP应用设置打开此权限。");
                     }
                 });
     }
@@ -130,9 +129,10 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             if (requestCode == REQUEST_IMAGE) { // 照片选择返回
                 List<String> pathList = Matisse.obtainPathResult(data);
                 ProgressDialogUtil.showProgress(getSupportedActivity(), "正在上传图片...");
-                ImageUploadHelper.uploadImage(pathList.get(0), pathList, (urls, urlList) -> {
-                    if(urlList.size() != pathList.size()) {
-                        if(urlList.size() > 0) {
+                // 先压缩，后上传
+                LuBanUtil.luBanCompress(getSupportedActivity(), pathList, compressFiles -> ImageUploadHelper.uploadImageAnsy(compressFiles, (urls, urlList) -> {
+                    if (urlList.size() != pathList.size()) {
+                        if (urlList.size() > 0) {
                             showSingleToast("有图片上传失败，请检查上传失败的图片。");
                         } else {
                             showSingleToast("图片上传失败！");
@@ -145,7 +145,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                     adapter.notifyDataSetChanged();
                     // 子题答案图片保存
                     childQuestion.myAnswerPicUrl = getQuestionPicUrl();
-                });
+                }));
             }
         }
     }

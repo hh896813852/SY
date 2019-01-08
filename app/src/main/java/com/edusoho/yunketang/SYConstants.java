@@ -11,7 +11,7 @@ public class SYConstants {
     public static final int PAGE_SIZE = 10;
     public static final int PAGE_SIZE_20 = 20;
 //    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
-//    public static String HTTP_URL = "http://192.168.10.104:8087/shangyuan-app-web/"; // 刘健本地环境
+//    public static String HTTP_URL = "http://192.168.0.253:8087/shangyuan-app-web/"; // 刘健本地环境
 //    public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环境
     public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/";   // 上元教育测试环境
     public static String HTTP_URL_ONLINE = "http://www.233863.com/";     // 上元在线
@@ -79,6 +79,10 @@ public class SYConstants {
      */
     public static final String MODULE_EXERCISE = HTTP_URL + "app/homework/moudle/query/page";
     /**
+     * 模块练习分页查询（未登录）
+     */
+    public static final String MODULE_EXERCISE_NOT_LOGIN = HTTP_URL + "app/homework/module/query/page/unlogin";
+    /**
      * 查询试卷题干
      */
     public static final String QUESTION_STEM_QUERY = HTTP_URL + "app/examination/query";
@@ -114,6 +118,10 @@ public class SYConstants {
      * 查看答题报告
      */
     public static final String CHECK_REPORT = HTTP_URL + "app/homework/examination/report";
+    /**
+     * 再做一遍
+     */
+    public static final String DO_AGAIN = HTTP_URL + "app/homework/do/again";
     /**
      * 我的班级
      */

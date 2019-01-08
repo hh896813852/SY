@@ -2,6 +2,7 @@ package com.edusoho.yunketang.ui.exercise;
 
 import android.databinding.ObservableField;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -68,8 +69,8 @@ public class JudgeSelectFragment extends BaseFragment<FragmentJudgeSelectBinding
             } else {
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
                 optionContainer.addView(optionImage);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionImage.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
@@ -104,8 +105,10 @@ public class JudgeSelectFragment extends BaseFragment<FragmentJudgeSelectBinding
         }
         adapter.notifyDataSetChanged();
         if (isFirstPick && getActivity() != null) {
-            // 第一次选择，显示下一页
-            ((ExerciseActivity) getActivity()).showNextPage();
+            new Handler().postDelayed(() -> {
+                // 第一次选择，停留300毫秒显示下一页
+                ((ExerciseActivity) getActivity()).showNextPage();
+            }, 300);
         }
     };
 

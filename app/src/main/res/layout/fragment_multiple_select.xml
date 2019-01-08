@@ -31,10 +31,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="@{viewModel.questionTopic}"
                 android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
                 android:textColor="@color/text_light_black"
                 android:textSize="16sp"
+                bind:htmlText="@{viewModel.questionTopic}"
                 tools:text="1、鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是（     ）。" />
 
             <LinearLayout
@@ -135,9 +135,9 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-                    android:text="@{viewModel.answerAnalysis}"
                     android:textColor="@color/text_light_black"
                     android:textSize="16sp"
+                    bind:htmlText="@{viewModel.answerAnalysis}"
                     tools:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析" />
 
                 <LinearLayout

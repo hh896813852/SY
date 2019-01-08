@@ -44,6 +44,7 @@ public class User implements Serializable {
     public User sykjUser;
     public boolean isRegisterSyzx; // 是否注册上元在线
     public boolean isRegisterSykj; // 是否注册上元会计
+    public String state;
 
     public User getOtherUser() {
         return syzxUser != null ? syzxUser : sykjUser;

@@ -45,6 +45,7 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
 
     public ObservableField<String> classRank = new ObservableField<>();
     public ObservableField<String> correctPercent = new ObservableField<>();
+    public ObservableField<Boolean> hasData = new ObservableField<>(true);
 
     private List<Examination> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter() {
@@ -174,10 +175,11 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
     private void loadData() {
         SYDataTransport.create(SYConstants.CLASS_HOMEWORK)
                 .addParam("userId", getLoginUser().syjyUser.id)
-                .addParam("businessType",classInfo.businessType)
+                .addParam("businessType", classInfo.businessType)
                 .addParam("classId", classInfo.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
+                .addProgressing(this, "正在加载课程作业列表...")
                 .execute(new SYDataListener<List<Examination>>() {
                     @Override
                     public void onSuccess(List<Examination> data) {
@@ -187,6 +189,7 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                         }
                         list.addAll(data);
                         adapter.notifyDataSetChanged();
+                        hasData.set(list.size() > 0);
                         // 防止界面已关闭，请求才回来导致getDataBinding == null
                         if (getDataBinding() != null) {
                             getDataBinding().swipeView.setRefreshing(false);

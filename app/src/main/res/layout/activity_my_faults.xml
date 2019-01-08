@@ -30,27 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipeView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                bind:onRefreshListener="@{viewModel.onRefreshListener}">
-
-                <com.edusoho.yunketang.widget.LoadMoreListView
-                    android:id="@+id/listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@color/bg_light_gray0"
-                    android:dividerHeight="8dp"
-                    android:scrollbars="none"
-                    bind:adapter="@{viewModel.adapter}" />
-            </android.support.v4.widget.SwipeRefreshLayout>
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.hasFaults ? View.GONE : View.VISIBLE}"
-                tools:visibility="gone">
+                android:visibility="@{viewModel.hasFaults ? View.GONE : View.VISIBLE}">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -86,6 +69,23 @@
                         android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}" />
                 </LinearLayout>
             </FrameLayout>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                bind:onRefreshListener="@{viewModel.onRefreshListener}">
+
+                <com.edusoho.yunketang.widget.LoadMoreListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/bg_light_gray0"
+                    android:dividerHeight="8dp"
+                    android:scrollbars="none"
+                    bind:adapter="@{viewModel.adapter}" />
+            </android.support.v4.widget.SwipeRefreshLayout>
         </FrameLayout>
     </LinearLayout>
 </layout>

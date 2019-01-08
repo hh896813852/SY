@@ -164,6 +164,89 @@ public class ImageUploadHelper {
         });
     }
 
+    /**
+     * 同步上传多张图片
+     */
+    public static void uploadImage(File file, List<File> FileList, OnMultiImageUploadListener multiImageUploadListener) {
+        if (Urls == null) {
+            Urls = new StringBuilder();
+        }
+        if (urlList == null) {
+            urlList = new ArrayList<>();
+        }
+        uploadImage(file, new OnSingleImageUploadListener() {
+            @Override
+            public void singleImageUploadSuccess(String url) {
+                uriIndex++;
+                urlList.add(url);
+                if (uriIndex == FileList.size() && multiImageUploadListener != null) { // 上传完毕
+                    Urls.append(url);
+                    multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                    uriIndex = 0;
+                    Urls = null;
+                    urlList = null;
+                } else { // 还有图片未上传，则继续上传下一张
+                    Urls.append(url).append(",");
+                    uploadImage(FileList.get(uriIndex), FileList, multiImageUploadListener);
+                }
+            }
+
+            @Override
+            public void singleImageUploadFailed(String msg) {
+                uriIndex++;
+                if (uriIndex == FileList.size() && multiImageUploadListener != null) { // 上传完毕
+                    multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                    uriIndex = 0;
+                    Urls = null;
+                    urlList = null;
+                } else { // 还有图片未上传，则继续上传下一张
+                    uploadImage(FileList.get(uriIndex), FileList, multiImageUploadListener);
+                }
+            }
+        });
+    }
+
+    /**
+     * 异步上传多张图片
+     */
+    public static void uploadImageAnsy(List<File> FileList, OnMultiImageUploadListener multiImageUploadListener) {
+        if (Urls == null) {
+            Urls = new StringBuilder();
+        }
+        if (urlList == null) {
+            urlList = new ArrayList<>();
+        }
+        for (File file : FileList) {
+            uploadImage(file, new OnSingleImageUploadListener() {
+                @Override
+                public void singleImageUploadSuccess(String url) {
+                    uriIndex++;
+                    urlList.add(url);
+                    if (uriIndex == FileList.size() && multiImageUploadListener != null) { // 上传完毕
+                        Urls.append(url);
+                        multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                        uriIndex = 0;
+                        Urls = null;
+                        urlList = null;
+                    } else { // 未上传完毕
+                        Urls.append(url).append(",");
+                    }
+                }
+
+                @Override
+                public void singleImageUploadFailed(String msg) {
+                    uriIndex++;
+                    if (uriIndex == FileList.size() && multiImageUploadListener != null) { // 上传完毕
+                        multiImageUploadListener.OnMultiImageUploadSuccess(Urls.toString(), urlList);
+                        uriIndex = 0;
+                        Urls = null;
+                        urlList = null;
+                    }
+                }
+            });
+        }
+    }
+
     public interface OnSingleImageUploadListener {
         void singleImageUploadSuccess(String url);
 

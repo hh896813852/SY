@@ -45,9 +45,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
-                        android:text="@{viewModel.questionTopic}"
                         android:textColor="@color/text_light_black"
                         android:textSize="16sp"
+                        bind:htmlText="@{viewModel.questionTopic}"
                         tools:text="从嘴型看，鹦鹉应当是鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是从嘴型看，鹦鹉应当是鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是从嘴型看，鹦鹉应当是鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是从嘴型看，鹦鹉应当是鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是从嘴型看，鹦鹉应当是鸟嘴的形状，下图是鹦鹉、老鹰、金丝雀、白鹭头部的头像，从嘴型看，鹦鹉应当是" />
                 </LinearLayout>
             </ScrollView>
@@ -80,7 +80,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="2dp"
+                        android:layout_marginLeft="14dp"
                         android:background="@null"
                         android:maxHeight="2dp"
                         android:minHeight="2dp"
@@ -91,6 +91,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
                         android:scaleType="centerInside"
                         android:src="@{viewModel.isPlaying ? @drawable/icon_play_green : @drawable/icon_pause_green}"
                         bind:clickCommand="@{viewModel.onPlayAudioClicked}"

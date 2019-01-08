@@ -102,7 +102,7 @@ public class RegisterOtherPlatformHelper {
                 .addParam("smsToken", smsToken)
                 .addParam("mobile", SYApplication.getInstance().getUser().mobile)
                 .addParam("smsCode", smsCode)
-                .addParam("encrypt_password", XXTEA.encryptToBase64String("111111", "www.233863.com"))
+                .addParam("encrypt_password", XXTEA.encryptToBase64String(SYApplication.getInstance().getUser().password, "www.233863.com"))
                 .addProgressing(context, "正在验证身份...")
                 .execute(new SYDataListener<String>() {
                     @Override
@@ -145,7 +145,7 @@ public class RegisterOtherPlatformHelper {
                 .addParam("smsToken", smsToken)
                 .addParam("mobile", SYApplication.getInstance().getUser().mobile)
                 .addParam("smsCode", smsCode)
-                .addParam("encrypt_password", XXTEA.encryptToBase64String("111111", "www.sykjxy.com"))
+                .addParam("encrypt_password", XXTEA.encryptToBase64String(SYApplication.getInstance().getUser().password, "www.sykjxy.com"))
                 .addProgressing(context, "正在验证身份...")
                 .execute(new SYDataListener<String>() {
                     @Override

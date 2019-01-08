@@ -29,10 +29,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="30dp"
+                android:drawableTop="@drawable/bg_no_pager"
+                android:drawablePadding="10dp"
+                android:gravity="center_horizontal"
+                android:text="暂时没有练习"
+                android:textColor="@color/text_light_green"
+                android:textSize="15sp"
+                android:visibility="@{viewModel.hasData ? View.GONE : View.VISIBLE}" />
+
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/transparent"
                 bind:onRefreshListener="@{viewModel.onRefreshListener}">
 
                 <com.edusoho.yunketang.widget.LoadMoreListView
@@ -43,9 +57,7 @@
                     android:dividerHeight="8dp"
                     android:scrollbars="none"
                     bind:adapter="@{viewModel.adapter}"
-                    bind:onItemClick="@{viewModel.onItemClick}">
-
-                </com.edusoho.yunketang.widget.LoadMoreListView>
+                    bind:onItemClick="@{viewModel.onItemClick}" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
             <FrameLayout
@@ -73,7 +85,7 @@
                         android:onClick="onSearchTypeClick"
                         android:tag="3"
                         android:text="全部"
-                        android:textColor="@{viewModel.searchType == 0 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textColor="@{viewModel.searchType == 3 ? @color/theme_color : @color/text_dark_gray}"
                         android:textSize="15sp"
                         tools:textColor="@color/theme_color" />
 
@@ -94,7 +106,7 @@
                         android:onClick="onSearchTypeClick"
                         android:tag="2"
                         android:text="已完成"
-                        android:textColor="@{viewModel.searchType == 1 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textColor="@{viewModel.searchType == 2 ? @color/theme_color : @color/text_dark_gray}"
                         android:textSize="15sp"
                         tools:textColor="@color/text_dark_gray" />
 
@@ -115,7 +127,7 @@
                         android:onClick="onSearchTypeClick"
                         android:tag="1"
                         android:text="未完成"
-                        android:textColor="@{viewModel.searchType == 2 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textColor="@{viewModel.searchType == 1 ? @color/theme_color : @color/text_dark_gray}"
                         android:textSize="15sp"
                         tools:textColor="@color/text_dark_gray" />
 
@@ -137,7 +149,7 @@
                         android:onClick="onSearchTypeClick"
                         android:tag="0"
                         android:text="未开始"
-                        android:textColor="@{viewModel.searchType == 3 ? @color/theme_color : @color/text_dark_gray}"
+                        android:textColor="@{viewModel.searchType == 0 ? @color/theme_color : @color/text_dark_gray}"
                         android:textSize="15sp"
                         tools:textColor="@color/text_dark_gray" />
                 </LinearLayout>

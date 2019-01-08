@@ -33,7 +33,7 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
     private int pageNo;
     private boolean isLoading;
 
-    public ObservableField<Boolean> hasFaults = new ObservableField<>(false);
+    public ObservableField<Boolean> hasFaults = new ObservableField<>(true);
     public ObservableField<Boolean> isLogin = new ObservableField<>(false);
 
     private List<FaultRecord> list = new ArrayList<>();

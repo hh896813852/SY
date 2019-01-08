@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.testlib;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.adapter.BaseRecycleAdapter;
 import com.edusoho.yunketang.adapter.SuperViewHolder;
@@ -50,6 +52,8 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
     private int prePayExamIndex;    // 准备支付的试卷的下标
     public ObservableField<String> examinationName = new ObservableField<>();
     public ObservableField<String> examinationPrice = new ObservableField<>();
+    public ObservableField<Boolean> isLogin = new ObservableField<>(false);
+    public ObservableField<Boolean> hasData = new ObservableField<>(true);
     public ObservableField<Integer> payType = new ObservableField<>(PayParams.PAY_TYPE_WECHAT);
 
     private boolean isLoading;
@@ -66,7 +70,11 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                 if (getLoginUser() == null || TextUtils.isEmpty(getLoginUser().syjyToken)) { // 未登录，去登录
                     BaseDialog dialog = DialogUtil.showAnimationDialog(PastExamActivity.this, R.layout.dialog_not_login);
                     dialog.findViewById(R.id.cancelView).setOnClickListener(v1 -> dialog.dismiss());
-                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> startActivity(LoginActivity.class));
+                    dialog.findViewById(R.id.loginView).setOnClickListener(v1 -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(PastExamActivity.this, LoginActivity.class);
+                        startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
+                    });
                 } else {
                     if (list.get(position).finishState == 2) { // 已完成，去答题报告
                         Intent intent = new Intent(PastExamActivity.this, AnswerReportActivity.class);
@@ -79,6 +87,7 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                     } else { // 开始（此处无继续状态）
                         if (list.get(position).chargeMode == 0 || list.get(position).isPay) { // 免费 或者 已经购买
                             Intent intent = new Intent(PastExamActivity.this, ExerciseActivity.class);
+                            intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
                             intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
                             intent.putExtra(ExerciseActivity.EXAMINATION_MINUTE, list.get(position).sumMinute);
                             intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
@@ -114,6 +123,10 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
         }
+        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            isLogin.set(SYApplication.getInstance().isLogin());
+            onRefreshListener.onRefresh();
+        }
     }
 
     @Override
@@ -123,6 +136,12 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
         initView();
         // 加载数据
         loadData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isLogin.set(SYApplication.getInstance().isLogin());
     }
 
     /**
@@ -172,14 +191,18 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
      * 加载数据
      */
     private void loadData() {
-        SYDataTransport.create(SYConstants.MODULE_EXERCISE)
-                .addParam("businessType", selectedCourse.businessId)
+        SYDataTransport dataTransport = SYDataTransport.create(isLogin.get() ? SYConstants.MODULE_EXERCISE : SYConstants.MODULE_EXERCISE_NOT_LOGIN);
+        if (isLogin.get()) {
+            dataTransport.addParam("userId", getLoginUser().syjyUser.id)
+                    .addParam("finishState", 3);
+        }
+        dataTransport.addParam("businessType", selectedCourse.businessId)
                 .addParam("levelId", selectedCourse.levelId)
                 .addParam("courseId", selectedCourse.courseId)
                 .addParam("moduleId", moduleId)
-                .addParam("userId", getLoginUser().syjyUser.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
+                .addProgressing(list.size() == 0, this, "正在加载试卷列表...")
                 .execute(new SYDataListener<List<Examination>>() {
 
                     @Override
@@ -190,6 +213,7 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                         }
                         list.addAll(data);
                         adapter.setDataList(list);
+                        hasData.set(list.size() > 0);
                         // 防止界面已关闭，请求才回来导致getDataBinding == null
                         if (getDataBinding() != null) {
                             getDataBinding().swipeView.setRefreshing(false);

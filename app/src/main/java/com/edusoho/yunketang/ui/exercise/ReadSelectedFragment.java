@@ -196,12 +196,12 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     @Override
     public void onResume() {
         super.onResume();
-        if (mediaPlayer != null && !mediaPlayer.isPlaying() && isPrepared) {
-            mediaPlayer.start();
-            isPlaying.set(true);
-            timeThread = new TimeThread();
-            timeThread.start();
-        }
+//        if (mediaPlayer != null && !mediaPlayer.isPlaying() && isPrepared) {
+//            mediaPlayer.start();
+//            isPlaying.set(true);
+//            timeThread = new TimeThread();
+//            timeThread.start();
+//        }
     }
 
     @Override

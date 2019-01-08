@@ -127,7 +127,7 @@ public class Examination implements Serializable {
             case 0:
                 return chargeMode == 0 || isPay ? "开始" : "¥" + price;
             case 1:
-                return "继续";
+                return "开始";
             case 2:
                 return "完成";
         }

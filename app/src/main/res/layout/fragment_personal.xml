@@ -22,6 +22,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/personalLayout"
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:background="@color/theme_color">
@@ -33,6 +34,20 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="110dp"
                 android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:ellipsize="end"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:text="登录/注册"
+                    android:textColor="@color/text_white"
+                    android:textSize="18sp"
+                    android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
+                    bind:clickCommand="@{viewModel.onLoginOrRegisterClicked}"
+                    tools:visibility="gone" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -53,23 +68,8 @@
                     android:maxLines="3"
                     android:text="@{viewModel.personSign}"
                     android:textColor="@color/text_white"
-                    android:textSize="12sp"
-                    android:visibility="@{viewModel.isLogin ? View.VISIBLE : View.GONE}"
+                    android:textSize="13sp"
                     tools:text="态度决定一切，相信相信的力量。" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:ellipsize="end"
-                    android:padding="5dp"
-                    android:singleLine="true"
-                    android:text="登录/注册"
-                    android:textColor="@color/text_white"
-                    android:textSize="18sp"
-                    android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
-                    bind:clickCommand="@{viewModel.onLoginOrRegisterClicked}"
-                    tools:visibility="gone" />
             </LinearLayout>
 
             <com.edusoho.yunketang.widget.CircleImageView
@@ -88,11 +88,13 @@
             <ImageView
                 android:id="@+id/rightArrow"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/icon_arrow_right_gray" />
+                android:paddingRight="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_arrow_right_gray"
+                bind:clickCommand="@{viewModel.onHeadImageClicked}" />
         </RelativeLayout>
 
         <LinearLayout
