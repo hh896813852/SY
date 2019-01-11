@@ -1,11 +1,16 @@
 package com.edusoho.yunketang.ui.classes;
 
+import android.databinding.ObservableField;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.SparseBooleanArray;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.view.TimePickerView;
@@ -30,18 +35,23 @@ import com.edusoho.yunketang.widget.materialcalendarview.decorator.HasCourseDeco
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
 
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Layout(value = R.layout.activity_class_schedule, title = "我的课表")
 public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBinding> {
     public static final String CLASS_ID = "class_id";
     public String classId;
+    private CommonNavigator commonNavigator;
+    private CommonNavigator commonNavigator2;
 
     private TimePickerView pickerView;
     private int calendarHeight;
@@ -50,6 +60,7 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
 
     private ClassScheduleFragment notLearnCourseFragment = ClassScheduleFragment.newInstance(0);
     private ClassScheduleFragment hasLearnedCourseFragment = ClassScheduleFragment.newInstance(1);
+    public ObservableField<Boolean> hasCourse = new ObservableField<>(true);
 
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {
         if (getDataBinding().vpMain.getCurrentItem() == 0) {
@@ -74,6 +85,8 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         // 指示器控件
         MagicIndicatorBuilder.MagicIndicatorConfiguration configuration = new MagicIndicatorBuilder.MagicIndicatorConfiguration(this);
         configuration.labels = new String[]{"未上课", "已上课"};
+        configuration.labelTextSize = 15;
+        configuration.titleNormalColor = R.color.text_black;
         configuration.lineMode = LinePagerIndicator.MODE_EXACTLY;
         configuration.lineHeight = DensityUtil.dip2px(this, 4f);
         configuration.lineWidth = DensityUtil.dip2px(this, 20f);
@@ -82,9 +95,22 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         getDataBinding().vpMain.setAdapter(new CommonViewPagerAdapter(getSupportFragmentManager(), notLearnCourseFragment, hasLearnedCourseFragment));
         getDataBinding().vpMain.addOnPageChangeListener(new MagicIndicatorPageListener(getDataBinding().mainTabIndicator));
         // set MagicIndicator
-        CommonNavigator commonNavigator = MagicIndicatorBuilder.buildCommonNavigator(this, configuration, new MagicIndicatorBuilder.OnNavigatorClickListener() {
+        commonNavigator = MagicIndicatorBuilder.buildCommonNavigator2(this, configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
             @Override
-            public void onNavigatorClickListener(int index) {
+            public void onNavigatorClickListener2(int index, List<TextView> textViews) {
+                for (int i = 0; i < textViews.size(); i++) {
+                    if (index == i) {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    } else {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                }
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 if (index == 0) {
                     if (notLearnCourseFragment.list.size() > 0) {
@@ -102,9 +128,22 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
 
         getDataBinding().vpMain.addOnPageChangeListener(new MagicIndicatorPageListener(getDataBinding().tabIndicator));
         // set MagicIndicator
-        CommonNavigator commonNavigator2 = MagicIndicatorBuilder.buildCommonNavigator(this, configuration, new MagicIndicatorBuilder.OnNavigatorClickListener() {
+        commonNavigator2 = MagicIndicatorBuilder.buildCommonNavigator2(this, configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
             @Override
-            public void onNavigatorClickListener(int index) {
+            public void onNavigatorClickListener2(int index, List<TextView> textViews) {
+                for (int i = 0; i < textViews.size(); i++) {
+                    if (index == i) {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                    } else {
+                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                    }
+                }
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 if (index == 0) {
                     if (notLearnCourseFragment.list.size() > 0) {
@@ -143,8 +182,14 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
             buffer.append(yearOne).append("-").append(monthOne);
             return buffer;
         });
+        // 全部不可点击
+        calendarView.addDecorator(new DisableDecorator());
         // 点击日历标题，弹出时间选择器
-        calendarView.setOnTitleClickListener(v -> pickerView.show());
+        calendarView.setOnTitleClickListener(v -> {
+            if (pickerView != null) {
+                pickerView.show();
+            }
+        });
     }
 
     /**
@@ -162,7 +207,7 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
                             CalendarDay day = CalendarDay.from(Integer.valueOf(strDate[0]), Integer.valueOf(strDate[1]), Integer.valueOf(strDate[2]));
                             hasCourseDays.add(day);
                         }
-                        if(data.size() > 0) {
+                        if (data.size() > 0) {
                             // 刷新日历
                             refreshCalendarView();
                             // 刷新日期选择器
@@ -190,7 +235,7 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         Calendar endDate = Calendar.getInstance();
         //正确设置方式 原因：注意事项有说明
         startDate.set(firstDay.getYear(), firstDay.getMonth() - 1, 1);
-        endDate.set(lastDay.getYear(), lastDay.getMonth() - 1,  DateUtils.getLastDayOfMonth(lastDay.getYear(), lastDay.getMonth()));
+        endDate.set(lastDay.getYear(), lastDay.getMonth() - 1, DateUtils.getLastDayOfMonth(lastDay.getYear(), lastDay.getMonth()));
 
         // 时间选择器
         TimePickerBuilder timePicker = new TimePickerBuilder(this, (date, v) -> {
@@ -233,16 +278,40 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         calendarView.state()
                 .edit()
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
-                //设置一周的第一天是周日还是周一
+                // 设置一周的第一天是周日还是周一
                 .setFirstDayOfWeek(DayOfWeek.of(1))
-                //设置日期范围
+                // 设置日期范围
                 .setMinimumDate(LocalDate.of(firstDay.getYear(), firstDay.getMonth(), 1))
-                .setMaximumDate(LocalDate.of(lastDay.getYear(), lastDay.getMonth(),  DateUtils.getLastDayOfMonth(lastDay.getYear(), lastDay.getMonth())))
+                .setMaximumDate(LocalDate.of(lastDay.getYear(), lastDay.getMonth(), DateUtils.getLastDayOfMonth(lastDay.getYear(), lastDay.getMonth())))
                 .commit();
-        // 设置decorators
-        calendarView.addDecorators(
-                new HasCourseDecorator(this, hasCourseDays),// 有课的日期
-                new DisableDecorator() // 全部不可点击
-        );
+        // 有课的日期
+        calendarView.addDecorator(new HasCourseDecorator(this, hasCourseDays));
+    }
+
+    // Map<Integer,Boolean> 的替换类
+    private SparseBooleanArray statusList = new SparseBooleanArray();
+
+    /**
+     * 未上课没有数据，已上课有数据。则显示已上课列表
+     * 如果都没有数据，展示该班级尚未排课
+     *
+     * @param status  0、未上课 1、已上课
+     * @param hasData 是否有数据
+     */
+    public void judgeDataSize(int status, boolean hasData) {
+        statusList.put(status, hasData);
+        if (statusList.size() == 2) {
+            if (!statusList.get(0) && statusList.get(1)) {
+                getDataBinding().vpMain.setCurrentItem(1);
+                hasLearnedCourseFragment.resetViewPagerHeight();
+                hasCourse.set(true);
+            } else if (!statusList.get(0) && !statusList.get(1)) {
+                hasCourse.set(false);
+            } else {
+                hasCourse.set(true);
+            }
+        } else {
+            hasCourse.set(true);
+        }
     }
 }

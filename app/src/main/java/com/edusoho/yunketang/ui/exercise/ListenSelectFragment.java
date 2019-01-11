@@ -143,7 +143,7 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
 
     private void initView() {
         // 题目序号 + 题目
-        questionTopic.set(question.questionSort + "、" + question.topic);
+        questionTopic.set(question.questionSort + "、" + (TextUtils.isEmpty(question.topic) ? "请点击播放" : question.topic));
 
         // 是否显示答案解析
         isShowAnswerAnalysis.set(getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis);
@@ -153,12 +153,12 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
             correctAnswer.set(question.details.get(0).getCorrectResult());
             // 如果用户作答了
             if (!TextUtils.isEmpty(question.userResult)) {
-                // 解析用户答案
-                List<MyAnswer> userAnswerList = JsonUtil.fromJson(question.userResult, new TypeToken<List<MyAnswer>>() {
-                });
+//                // 解析用户答案
+//                List<MyAnswer> userAnswerList = JsonUtil.fromJson(question.userResult, new TypeToken<List<MyAnswer>>() {
+//                });
                 // 用户答案
-                if (!TextUtils.isEmpty(userAnswerList.get(0).result)) {
-                    userAnswer.set(question.details.get(0).getUserResult(userAnswerList.get(0).result));
+                if (!TextUtils.isEmpty(question.userResult)) {
+                    userAnswer.set(question.details.get(0).getUserResult(question.userResult));
                 } else {
                     userAnswer.set("未作答");
                 }

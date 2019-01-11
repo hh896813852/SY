@@ -120,9 +120,11 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:onClick="onLogoutClick"
-                android:text="退出登录"
-                android:textColor="@color/bg_red"
-                android:textSize="15sp" />
+                android:text="@{viewModel.isLogin ? @string/exit_login : @string/login_now}"
+                android:textColor="@{viewModel.isLogin ? @color/bg_red : @color/theme_color}"
+                android:textSize="15sp"
+                tools:text="@string/exit_login"
+                tools:textColor="@color/bg_red" />
 
             <TextView
                 android:layout_width="match_parent"

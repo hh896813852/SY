@@ -552,24 +552,42 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             }
                             // 还原用户答案
                             if (question.userResult != null) {
-                                List<MyAnswer> userResultList = JsonUtil.fromJson(question.userResult, new TypeToken<List<MyAnswer>>() {
-                                });
                                 // 选择题
                                 if (question.questionType > 0 && question.questionType < 6) {
-                                    // 遍历子题
-                                    for (int j = 0; j < question.details.size(); j++) {
-                                        // 存在用户选项
-                                        if (!TextUtils.isEmpty(userResultList.get(j).result)) {
-                                            // 用户选项
-                                            List<String> option = Arrays.asList(userResultList.get(j).result.split(","));
-                                            // 遍历子题的选项
-                                            for (int k = 0; k < question.details.get(j).options.size(); k++) {
-                                                // 包含用户哪个选项，那么这个选项就是选中的
-                                                question.details.get(j).options.get(k).isPicked = option.contains(String.valueOf(k + 1));
+                                    if (question.questionType == 3) {
+                                        List<MyAnswer> userResultList = JsonUtil.fromJson(question.userResult, new TypeToken<List<MyAnswer>>() {
+                                        });
+                                        // 遍历子题
+                                        for (int j = 0; j < question.details.size(); j++) {
+                                            // 存在用户选项
+                                            if (!TextUtils.isEmpty(userResultList.get(j).result)) {
+                                                // 用户选项
+                                                List<String> option = Arrays.asList(userResultList.get(j).result.split(","));
+                                                // 遍历子题的选项
+                                                for (int k = 0; k < question.details.get(j).options.size(); k++) {
+                                                    // 包含用户哪个选项，那么这个选项就是选中的
+                                                    question.details.get(j).options.get(k).isPicked = option.contains(String.valueOf(k + 1));
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        // 遍历子题
+                                        for (int j = 0; j < question.details.size(); j++) {
+                                            // 存在用户选项
+                                            if (!TextUtils.isEmpty(question.userResult)) {
+                                                // 用户选项
+                                                List<String> option = Arrays.asList(question.userResult.split(","));
+                                                // 遍历子题的选项
+                                                for (int k = 0; k < question.details.get(j).options.size(); k++) {
+                                                    // 包含用户哪个选项，那么这个选项就是选中的
+                                                    question.details.get(j).options.get(k).isPicked = option.contains(String.valueOf(k + 1));
+                                                }
                                             }
                                         }
                                     }
                                 } else { // 简答、综合
+                                    List<MyAnswer> userResultList = JsonUtil.fromJson(question.userResult, new TypeToken<List<MyAnswer>>() {
+                                    });
                                     // 遍历子题
                                     for (int j = 0; j < question.details.size(); j++) {
                                         // 存在用户作答
@@ -1476,6 +1494,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                         intent.putExtra(AnswerReportActivity.HOMEWORK_ID, homeworkId);
                         intent.putExtra(AnswerReportActivity.EXAMINATION_ID, examinationId);
                         intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                        intent.putExtra(AnswerReportActivity.CLASS_ID, classId);
                         intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                         intent.putExtra(AnswerReportActivity.IS_EXAM, isExamTest);
                         intent.putExtra(AnswerReportActivity.IS_MODULE_EXERCISE, isModuleExercise);
@@ -1587,6 +1606,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         if (preCommitQuestionList.size() > 0) {
             isPreExit = true;
             ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在保存试卷信息...");
+            // 告诉后台做了多少题
+            tellSomethingToYou();
+            // 检查是否还有未提交问题
             checkPreCommitQuestion();
         } else {
             finish();

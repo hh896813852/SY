@@ -85,6 +85,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
                     intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
+                    intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
                     intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                     startActivityForResult(intent, AnswerReportActivity.FROM_REPORT_REQUEST_CODE);
                 }

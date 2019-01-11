@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.testlib;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
@@ -27,10 +28,12 @@ import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.exercise.ExerciseActivity;
 import com.edusoho.yunketang.utils.DateUtils;
+import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.CircleBarView;
+import com.edusoho.yunketang.widget.SimpleDialog;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
@@ -255,8 +258,9 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
             } else if (details.questionType == 6) { // 简答题
                 List<Integer> child = new ArrayList<>();
                 for (AnswerReport.AnswerDetails.Mistake mistake : details.homeworkMistakes) {
-                    MyAnswer answers = JsonUtil.fromJson(mistake.userResult, MyAnswer.class);
-                    child.add(TextUtils.isEmpty(answers.result) && TextUtils.isEmpty(answers.userResultUrl) ? AnswerResultLayout.NOT_ANSWER : AnswerResultLayout.ANSWERED);
+                    List<MyAnswer> answers = JsonUtil.fromJson(mistake.userResult, new TypeToken<List<MyAnswer>>() {
+                    });
+                    child.add(TextUtils.isEmpty(answers.get(0).result) && TextUtils.isEmpty(answers.get(0).userResultUrl) ? AnswerResultLayout.NOT_ANSWER : AnswerResultLayout.ANSWERED);
                 }
                 map.put("", child);
             } else if (details.questionType == 7) { // 综合题
@@ -284,11 +288,31 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
 
     @Override
     public void onRightButtonClick() {
-        SYDataTransport.create(SYConstants.DO_AGAIN)
+        DialogUtil.showSimpleAnimDialog(this, "再做一遍将会清空您之前的作答记录，是否再做一遍？", "取消", "再做一遍", new SimpleDialog.OnSimpleClickListener() {
+            @Override
+            public void OnLeftBtnClicked(SimpleDialog dialog) {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void OnRightBtnClicked(SimpleDialog dialog) {
+                dialog.dismiss();
+                doAgain();
+            }
+        });
+    }
+
+    /**
+     * 再做一遍
+     */
+    private void doAgain() {
+        SYDataTransport.create(TextUtils.isEmpty(classId) ? SYConstants.DO_AGAIN_IN_MODULE : SYConstants.DO_AGAIN_IN_CLASS)
                 .addParam("homeworkId", homeworkId)
+                .addProgressing(this,"正在清空之前的作答...")
                 .execute(new SYDataListener() {
                     @Override
                     public void onSuccess(Object data) {
+                        setResult(Activity.RESULT_OK);
                         Intent intent = new Intent(AnswerReportActivity.this, ExerciseActivity.class);
                         intent.putExtra(ExerciseActivity.EXAMINATION_ID, examinationId);
                         intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);

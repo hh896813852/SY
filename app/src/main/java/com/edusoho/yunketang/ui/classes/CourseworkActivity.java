@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.classes;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.BaseDialog;
 import com.edusoho.yunketang.base.annotation.Layout;
+import com.edusoho.yunketang.base.annotation.Translucent;
 import com.edusoho.yunketang.bean.ClassInfo;
 import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.Examination;
@@ -35,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+@Translucent
 @Layout(value = R.layout.activity_coursework, title = "课程作业")
 public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> {
     public static final String CLASS_INFO = "class_info";
@@ -66,12 +69,14 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                     intent.putExtra(AnswerReportActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
                     intent.putExtra(AnswerReportActivity.MODULE_ID, list.get(position).moduleId);
+                    intent.putExtra(AnswerReportActivity.CLASS_ID, list.get(position).classId);
+                    intent.putExtra(AnswerReportActivity.IS_CLASS_EXERCISE, true);
                     EducationCourse selectedCourse = new EducationCourse();
                     selectedCourse.businessId = list.get(position).businessType;
                     selectedCourse.levelId = list.get(position).levelId;
                     selectedCourse.courseId = list.get(position).courseId;
                     intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
-                    startActivity(intent);
+                    startActivityForResult(intent, AnswerReportActivity.FROM_REPORT_REQUEST_CODE);
                 }
             });
             // 继续
@@ -90,6 +95,11 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                     intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
                     intent.putExtra(ExerciseActivity.IS_CLASS_EXERCISE, true);
+                    EducationCourse selectedCourse = new EducationCourse();
+                    selectedCourse.businessId = list.get(position).businessType;
+                    selectedCourse.levelId = list.get(position).levelId;
+                    selectedCourse.courseId = list.get(position).courseId;
+                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                     startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
@@ -108,6 +118,11 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                     intent.putExtra(ExerciseActivity.COURSE_ID, list.get(position).courseId);
                     intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
                     intent.putExtra(ExerciseActivity.IS_CLASS_EXERCISE, true);
+                    EducationCourse selectedCourse = new EducationCourse();
+                    selectedCourse.businessId = list.get(position).businessType;
+                    selectedCourse.levelId = list.get(position).levelId;
+                    selectedCourse.courseId = list.get(position).courseId;
+                    intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
                     startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
                 }
             });
@@ -127,6 +142,13 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
+            // 加载班级排行
+            loadClassRank();
+        }
+        if (requestCode == AnswerReportActivity.FROM_REPORT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            onRefreshListener.onRefresh();
+            // 加载班级排行
+            loadClassRank();
         }
     }
 
@@ -179,7 +201,7 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                 .addParam("classId", classInfo.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
-                .addProgressing(this, "正在加载课程作业列表...")
+                .addProgressing(list.size() == 0, this, "正在加载课程作业列表...")
                 .execute(new SYDataListener<List<Examination>>() {
                     @Override
                     public void onSuccess(List<Examination> data) {

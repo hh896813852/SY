@@ -34,7 +34,7 @@ public class SYDataListener<T> implements DataListener<T> {
         } else {
             onFail(message.status, message.msg);
             // token失效
-            if (message.retcode == 401 && message.msg.contains("token")) {
+            if (message.retcode == 401) {
                 User user = SYApplication.getInstance().getUser();
                 if (user != null) {
                     SYApplication.getInstance().setUser(null);

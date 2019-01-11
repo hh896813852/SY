@@ -70,11 +70,15 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
      * 加载数据
      */
     private void loadData() {
+        if (getActivity() == null) {
+            return;
+        }
         SYDataTransport.create(SYConstants.CLASS_COURSE_LIST)
                 .addParam("type", status)
                 .addParam("classId", ((ClassScheduleActivity) getActivity()).classId)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
+                .addProgressing(list.size() == 0, getSupportedActivity(), "正在加载课程信息...")
                 .execute(new SYDataListener<String>() {
 
                     @Override
@@ -94,7 +98,7 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
 
                             // 如果在当前页面加载完成，则按当前页面来设置高度
                             if (status == ((ClassScheduleActivity) getActivity()).getDataBinding().vpMain.getCurrentItem()) {
-                                // 因为notifyDataSetChanged()方法是异步的，并且没有方法监听其什么结束
+                                // 因为notifyDataSetChanged()方法是异步的，并且没有方法监听其什么时候结束
                                 // 而我们需要界面绘制完成获取item高度，所以延迟300ms，进行假同步操作。
                                 new Handler().postDelayed(() -> resetViewPagerHeight(), 300);
                             }
@@ -103,6 +107,8 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        // 告知Activity列表数据个数
+                        ((ClassScheduleActivity) getActivity()).judgeDataSize(status, list.size() > 0);
                         // stop loading
                         ((ClassScheduleActivity) getActivity()).getDataBinding().swipeView.setRefreshing(false);
                     }

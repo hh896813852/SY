@@ -16,15 +16,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="46dp">
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/classNameView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@{viewModel.getTitleName}"
                 android:textColor="@color/text_black"
                 android:textSize="17dp"
@@ -33,15 +37,16 @@
 
             <TextView
                 android:id="@+id/classStatusView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
+                android:layout_weight="1"
+                android:gravity="right"
                 android:text="@{viewModel.classStatus}"
                 android:textColor="@color/text_dark_gray"
                 android:textSize="14dp"
                 android:textStyle="bold"
                 tools:text="开课中" />
-        </FrameLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/itemView1"
@@ -237,6 +242,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@{viewModel.studyModality}"
                 android:textColor="@color/text_black"
                 android:textSize="14dp"

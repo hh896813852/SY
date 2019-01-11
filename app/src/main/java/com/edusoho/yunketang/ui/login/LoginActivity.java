@@ -114,6 +114,8 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
      * 登录
      */
     public void onLoginClick(View view) {
+        // 关闭软键盘
+        AppUtil.closeSoftInputKeyBoard(LoginActivity.this);
         if (!StringUtils.isMobilePhone(phoneNo.get())) {
             showSingleToast("请输入正确的手机号码！");
             return;
@@ -143,16 +145,26 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                         if (message.status == 1) {
                             super.onMessage(message);
                         } else {
-                            try {
-                                JSONObject jsonObject = new JSONObject(String.valueOf(message.data));
-                                int type = jsonObject.getInt("type");
-                                if (jsonObject.has("state")) {
-                                    String state = jsonObject.getString("state");
-                                    if (!TextUtils.isEmpty(state) && TextUtils.equals(state, "1") && !TextUtils.equals(state, "null")) { // 新用户
-                                        User loginUser = new User();
-                                        loginUser.syjyToken = jsonObject.getString("syjy_token");
-                                        loginUser.syjyUser = JsonUtil.fromJson(jsonObject.getString("syjy_user"), User.class);
-                                        onSuccess(loginUser);
+                            if (message.data == null) {
+                                onFail(message.status, message.msg);
+                            } else {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(String.valueOf(message.data));
+                                    int type = jsonObject.getInt("type");
+                                    if (jsonObject.has("state")) {
+                                        String state = jsonObject.getString("state");
+                                        if (!TextUtils.isEmpty(state) && TextUtils.equals(state, "1") && !TextUtils.equals(state, "null")) { // 新用户
+                                            User loginUser = new User();
+                                            loginUser.syjyToken = jsonObject.getString("syjy_token");
+                                            loginUser.syjyUser = JsonUtil.fromJson(jsonObject.getString("syjy_user"), User.class);
+                                            onSuccess(loginUser);
+                                        } else {
+                                            if (type == -1) {
+                                                onFail(message.status, message.msg);
+                                            } else {
+                                                DialogHelper.showAccountExistDialog(LoginActivity.this, type);
+                                            }
+                                        }
                                     } else {
                                         if (type == -1) {
                                             onFail(message.status, message.msg);
@@ -160,15 +172,9 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                                             DialogHelper.showAccountExistDialog(LoginActivity.this, type);
                                         }
                                     }
-                                } else {
-                                    if (type == -1) {
-                                        onFail(message.status, message.msg);
-                                    } else {
-                                        DialogHelper.showAccountExistDialog(LoginActivity.this, type);
-                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
                         }
                     }
@@ -256,8 +262,6 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
      */
     private void showSuccess() {
         showSingleToast("登陆成功！");
-        // 关闭软键盘
-        AppUtil.closeSoftInputKeyBoard(LoginActivity.this);
         finish();
     }
 

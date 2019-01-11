@@ -211,7 +211,7 @@ public class Question implements Serializable {
     public String knowledgeIds;   // 知识点ids
     public String sids;           // 题目ids（英文逗号隔开）
     public int sort;              // 顺序
-    public int sumPoint;          // 该题型下所有题目分值
+    public float sumPoint;          // 该题型下所有题目分值
     public String faultSort;      // 错题序号（自定义，用于错题解析）
 
     /**

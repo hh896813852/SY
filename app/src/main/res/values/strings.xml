@@ -13,6 +13,9 @@
     <string name="user_answer">您的答案：</string>
     <string name="answer_right">回答正确</string>
 
+    <string name="exit_login">退出登录</string>
+    <string name="login_now">立即登录</string>
+
     <string name="not_login">您还没有登录账号</string>
     <string name="no_class">您还没有报名班级课程</string>
 

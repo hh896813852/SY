@@ -320,7 +320,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
             @Override
             public void onGlobalLayout() {
                 getDataBinding().containerLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int initHeight = Math.min(getDataBinding().containerLayout.getHeight(), DensityUtil.dip2px(getSupportedActivity(), 240));
+                int initHeight = Math.min(getDataBinding().containerLayout.getHeight(), DensityUtil.dip2px(getSupportedActivity(), 200));
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDataBinding().scrollView.getLayoutParams();
                 params.height = initHeight;
                 getDataBinding().scrollView.setLayoutParams(params);

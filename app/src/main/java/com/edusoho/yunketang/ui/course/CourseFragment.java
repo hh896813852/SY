@@ -47,6 +47,7 @@ import com.youth.banner.loader.ImageLoader;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
+import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
 
 import org.w3c.dom.Text;
 
@@ -61,6 +62,8 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
     private List<String> bannerUrls = new ArrayList<>();
     private boolean isOnlineBannerLoaded;    // 上元在线banner是否加载完毕
     private boolean isAccountantBannerLoaded;// 上元会计banner是否加载完毕
+    private CommonNavigator commonNavigator;
+    private CommonNavigator commonNavigator2;
 
     public ObservableField<Boolean> isMenuShowed = new ObservableField<>(false); // 导航菜单是否显示
 
@@ -118,18 +121,23 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
         getDataBinding().vpMain.setAdapter(new CommonViewPagerAdapter(getChildFragmentManager(), onlineCourseFragment, accountantCourseFragment));
         getDataBinding().vpMain.addOnPageChangeListener(new MagicIndicatorPageListener(getDataBinding().mainTabIndicator));
         // set MagicIndicator
-        CommonNavigator commonNavigator = MagicIndicatorBuilder.buildCommonNavigator2(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
+        commonNavigator = MagicIndicatorBuilder.buildCommonNavigator2(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
             @Override
             public void onNavigatorClickListener2(int index, List<TextView> textViews) {
                 for (int i = 0; i < textViews.size(); i++) {
                     if (index == i) {
                         textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                         textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     } else {
                         textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        ((ColorTransitionPagerTitleView) commonNavigator2.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                     }
                 }
+
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 // 设置网络请求baseUrl，用于其他平台网络请求框架使用。
                 SYApplication.getInstance().setHost(index == 0 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
@@ -148,16 +156,20 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
 
         getDataBinding().vpMain.addOnPageChangeListener(new MagicIndicatorPageListener(getDataBinding().tabIndicator));
         // set MagicIndicator
-        CommonNavigator commonNavigator2 = MagicIndicatorBuilder.buildCommonNavigator2(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
+        commonNavigator2 = MagicIndicatorBuilder.buildCommonNavigator2(getSupportedActivity(), configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
             @Override
             public void onNavigatorClickListener2(int index, List<TextView> textViews) {
                 for (int i = 0; i < textViews.size(); i++) {
                     if (index == i) {
                         textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                         textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     } else {
                         textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                         textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                        ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(i)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                     }
                 }
                 getDataBinding().vpMain.setCurrentItem(index, true);
@@ -179,7 +191,7 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
         // 设置scrollView滑动监听
         getDataBinding().scrollView.setOnScrollListener(scrollY -> {
             LogUtil.i("scrollY", "scrollView滑动距离：" + scrollY);
-            if (scrollY > DensityUtil.dip2px(getSupportedActivity(), 210) - NotchUtil.getNotchHeight(getSupportedActivity())) {
+            if (scrollY > ScreenUtil.getScreenWidth(getSupportedActivity()) * 9 / 16 - NotchUtil.getNotchHeight(getSupportedActivity()) + DensityUtil.dip2px(getSupportedActivity(), 10)) {
                 getDataBinding().titleIndicator.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Window window = getSupportedActivity().getWindow();

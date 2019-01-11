@@ -152,7 +152,7 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getSupportedActivity() != null) {
-            if(hasClass.get()) {
+            if (hasClass.get()) {
                 StatusBarUtil.setTranslucentStatus(getSupportedActivity());
             } else {
                 StatusBarUtil.setImmersiveStatusBar(getSupportedActivity(), true);
@@ -174,6 +174,7 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
                     @Override
                     public void onSuccess(List<ClassInfo> data) {
                         list.clear();
+                        list.addAll(data);
                         hasClass.set(data.size() > 0);
                         adapter.notifyDataSetChanged();
                         // 因为notifyDataSetChanged()方法是异步的，并且没有方法监听其什么结束
@@ -281,17 +282,14 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
      */
     private void permissionCheck() {
         RxPermissions rxPermissions = new RxPermissions(getSupportedActivity());
-        rxPermissions.requestEach(Manifest.permission.CAMERA)
-                .subscribe(permission -> {
-                    if (permission.granted) {
-                        // 权限允许
+        rxPermissions.request(Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+                .subscribe(grant -> {
+                    if (grant) {
+                        // 权限全部允许
                         startActivity(new Intent(getSupportedActivity(), CaptureActivity.class));
-                    } else if (permission.shouldShowRequestPermissionRationale) {
-                        // 权限拒绝，等待下次询问
-                        LogUtil.i("RxPermissions", "权限拒绝，等待下次询问：" + permission.name);
                     } else {
-                        // 拒绝权限，不再弹出询问框，请前往APP应用设置打开此权限
-                        LogUtil.i("RxPermissions", "拒绝权限，不再弹出询问框：" + permission.name);
+                        // 至少有一个拒绝了
+                        showSingleToast("未能取得相机或定位权限，无法扫码考勤！");
                     }
                 });
     }

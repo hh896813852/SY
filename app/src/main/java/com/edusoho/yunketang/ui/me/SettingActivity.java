@@ -34,6 +34,7 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
     public ObservableField<String> newMsgStatus = new ObservableField<>("已打开");   // 是否允许声音提示
     public ObservableField<Boolean> isAllowSound = new ObservableField<>();      // 是否允许声音提示
     public ObservableField<Boolean> isAllowVibration = new ObservableField<>();  // 是否震动
+    public ObservableField<Boolean> isLogin = new ObservableField<>(false);  // 是否登录
     private Setting setting; // 设置配置
 
     @Override
@@ -55,6 +56,7 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
     }
 
     private void initView() {
+        isLogin.set(SYApplication.getInstance().isLogin());
         // 如果不在HTML标签最前面加入其他HTML元素，此函数可能不会生效，原因未知。
         String htmlStr = "<br/><font size=\"15px\" color=\"red\">This is some text!</font><br/><font size=\"18px\" color=\"blue\">This is some text!</font>";
         htmlStr = htmlStr.replace("font","syfont");

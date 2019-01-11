@@ -85,7 +85,7 @@ public class Examination implements Serializable {
             case 0:
                 return "共" + (TextUtils.isEmpty(questionSums) ? sum : questionSums) + "题";
             case 1:
-                return finishedSum + "/" + sum;
+                return (TextUtils.isEmpty(finishedSum) ? "0" : finishedSum) + "/" + sum;
             case 2:
                 return "对:" + trueSum + "      错:" + falseSum;
         }
@@ -104,7 +104,7 @@ public class Examination implements Serializable {
      */
     public String getCompletePerson() {
         if (TextUtils.isEmpty(completeSum) || "0".equals(completeSum)) {
-            return "还没人完成";
+            return "还没其他人完成";
         }
         return completeSum + "人已完成";
     }

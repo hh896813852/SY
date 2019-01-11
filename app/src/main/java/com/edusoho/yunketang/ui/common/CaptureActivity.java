@@ -16,7 +16,10 @@
 package com.edusoho.yunketang.ui.common;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Rect;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -30,6 +33,12 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.edusoho.yunketang.SYApplication;
+import com.edusoho.yunketang.SYConstants;
+import com.edusoho.yunketang.http.SYDataListener;
+import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.utils.GPSUtils;
+import com.google.gson.JsonObject;
 import com.google.zxing.Result;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.base.BaseActivity;
@@ -41,8 +50,12 @@ import com.edusoho.yunketang.utils.zxing.utils.CaptureActivityHandler;
 import com.edusoho.yunketang.utils.zxing.utils.DecodeThread;
 import com.edusoho.yunketang.utils.zxing.utils.InactivityTimer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * 二维码扫描
@@ -69,9 +82,13 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
     private Rect mCropRect = null;
     private boolean isHasSurface = false;
     private String handleResult = "1"; // 是否由CaptureActivity自己来处理扫描结果
+    private String lat;
+    private String lng;
+    private String result; // 扫码结果
 
     /**
      * 二维码扫描到结果后的回调逻辑
+     *
      * @param rawResult The contents of the barcode.
      * @param bundle    The extras
      */
@@ -80,10 +97,9 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
         inactivityTimer.onActivity();
         beepManager.playBeepSoundAndVibrate();
         // 处理结果
-        String result = rawResult.getText();
-        if (!TextUtils.isEmpty(result)) {
-            // TODO 处理结果
-        }
+        result = rawResult.getText();
+        // 考勤
+        checkingIn();
 //        if ("0".equals(handleResult)) { // 由打开二维码扫描控件的程序自行处理
 //            showToast("0");
 //        } else { // 提示用户扫出来的内容
@@ -97,6 +113,46 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
 //                    }, true);
 //            dialog.setOnDismissListener(dialogInterface -> finish());
 //        }
+    }
+
+    /**
+     * 考勤
+     */
+    private void checkingIn() {
+        if (SYApplication.getInstance().getUser() == null || SYApplication.getInstance().getUser().syjyUser == null) {
+            showSingleToast("用户不存在！");
+            return;
+        }
+        if (TextUtils.isEmpty(result)) {
+            showSingleToast("未扫到任何结果！");
+            return;
+        }
+        if (TextUtils.isEmpty(lng) || TextUtils.isEmpty(lat)) {
+            showSingleToast("未能获取您的位置！");
+            return;
+        }
+        SYDataTransport.create(String.format(SYConstants.CHECKING_IN, result, SYApplication.getInstance().getUser().syjyUser.id, lng, lat))
+                .isGET()
+                .directReturn()
+                .execute(new SYDataListener<String>() {
+
+                    @Override
+                    public void onSuccess(String data) {
+                        // {"error":0,"errorInfo":"当前时间内不能考勤！"}
+                        try {
+                            JSONObject jsonObject = new JSONObject(data);
+                            if (jsonObject.has("error")) {
+                                int errorId = jsonObject.getInt("error");
+                                if (errorId == 0) {
+                                    showSingleToast(jsonObject.getString("errorInfo"));
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        finish();
+                    }
+                }, String.class);
     }
 
     @Override
@@ -122,6 +178,28 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
         animation.setRepeatCount(-1);
         animation.setRepeatMode(Animation.RESTART);
         scanLine.startAnimation(animation);
+
+        // GPS定位
+        getLocation();
+    }
+
+    /**
+     * 定位
+     */
+    private void getLocation() {
+        GPSUtils.getInstance(this).getLngAndLat(new GPSUtils.OnLocationResultListener() {
+            @Override
+            public void onLocationResult(Location location) {
+                lng = String.valueOf(location.getLongitude());
+                lat = String.valueOf(location.getLatitude());
+            }
+
+            @Override
+            public void OnLocationChange(Location location) {
+                lng = String.valueOf(location.getLongitude());
+                lat = String.valueOf(location.getLatitude());
+            }
+        });
     }
 
     @Override
@@ -172,6 +250,7 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
     protected void onDestroy() {
         inactivityTimer.shutdown();
         super.onDestroy();
+        GPSUtils.getInstance(this).removeListener();
     }
 
     @Override

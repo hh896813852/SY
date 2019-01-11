@@ -14,6 +14,7 @@ public class SYConstants {
 //    public static String HTTP_URL = "http://192.168.0.253:8087/shangyuan-app-web/"; // 刘健本地环境
 //    public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环境
     public static String HTTP_URL = "http://47.99.198.187:8087/shangyuan-app-web/";   // 上元教育测试环境
+//    public static String HTTP_URL = "http://sy.233863.com/shangyuan-app-web/";   // 上元教育正式环境
     public static String HTTP_URL_ONLINE = "http://www.233863.com/";     // 上元在线
     public static String HTTP_URL_ACCOUNTANT = "http://www.sykjxy.com/"; // 上元会计
 
@@ -22,7 +23,7 @@ public class SYConstants {
      */
     public static final String VALIDATE_MOBILE = HTTP_URL + "app/validateMobile";
     /**
-     * 发送验证码
+     * 发送验证码n
      * GET
      */
     public static final String SEND_SMS = HTTP_URL + "qcloud/sms/smsSingleSender?mobile=%s";
@@ -87,7 +88,7 @@ public class SYConstants {
      */
     public static final String QUESTION_STEM_QUERY = HTTP_URL + "app/examination/query";
     /**
-     * 根据题目类型，分页查询题目
+     * 根据题目类型，查询全部题目
      */
     public static final String QUESTION_QUERY = HTTP_URL + "app/examination/query/question/type";
     /**
@@ -119,9 +120,13 @@ public class SYConstants {
      */
     public static final String CHECK_REPORT = HTTP_URL + "app/homework/examination/report";
     /**
-     * 再做一遍
+     * 再做一遍（模块）
      */
-    public static final String DO_AGAIN = HTTP_URL + "app/homework/do/again";
+    public static final String DO_AGAIN_IN_MODULE = HTTP_URL + "app/homework/do/again/module";
+    /**
+     * 再做一遍（班级）
+     */
+    public static final String DO_AGAIN_IN_CLASS = HTTP_URL + "app/homework/do/again/class";
     /**
      * 我的班级
      */
@@ -179,6 +184,11 @@ public class SYConstants {
      * 老师批注的题目
      */
     public static final String TEACHER_POSLIL = HTTP_URL + "app/studenthomeworkmessage/getmistakeInfoformistakeId";
+    /**
+     * 扫码考勤
+     * GET
+     */
+    public static final String CHECKING_IN = "http://%s?stuId=%s&stuLongitude=%s&stuLatitude=%s&source=1";
 
     // ----------------------------------------   以上为上元教育接口  ------------------------------------- //
 
