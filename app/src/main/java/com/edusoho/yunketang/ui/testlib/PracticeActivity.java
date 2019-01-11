@@ -210,7 +210,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                 .addParam("moduleId", moduleId)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
-                .addProgressing(list.size() == 0, this, "正在加载习题列表...")
+                .addProgressing(list.size() == 0 && !getDataBinding().swipeView.isRefreshing(), this, "正在加载习题列表...")
                 .execute(new SYDataListener<List<Examination>>() {
 
                     @Override

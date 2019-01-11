@@ -165,6 +165,7 @@ public class MyBoughtExamActivity extends BaseActivity<ActivityMyBoughtExamBindi
                 .addParam("userId", getLoginUser().syjyUser.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
+                .addProgressing(list.size() == 0 && !getDataBinding().swipeView.isRefreshing(), this, "正在加载试卷列表...")
                 .execute(new SYDataListener<List<Examination>>() {
 
                     @Override

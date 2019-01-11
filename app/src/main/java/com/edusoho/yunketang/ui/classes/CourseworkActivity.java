@@ -201,7 +201,7 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                 .addParam("classId", classInfo.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
-                .addProgressing(list.size() == 0, this, "正在加载课程作业列表...")
+                .addProgressing(list.size() == 0 && !getDataBinding().swipeView.isRefreshing(), this, "正在加载课程作业列表...")
                 .execute(new SYDataListener<List<Examination>>() {
                     @Override
                     public void onSuccess(List<Examination> data) {

@@ -78,7 +78,7 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
                 .addParam("classId", ((ClassScheduleActivity) getActivity()).classId)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
-                .addProgressing(list.size() == 0, getSupportedActivity(), "正在加载课程信息...")
+                .addProgressing(list.size() == 0 && !((ClassScheduleActivity) getActivity()).getDataBinding().swipeView.isRefreshing(), getSupportedActivity(), "正在加载课程信息...")
                 .execute(new SYDataListener<String>() {
 
                     @Override

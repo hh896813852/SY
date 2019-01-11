@@ -91,6 +91,7 @@ public class MyFaultsActivity extends BaseActivity<ActivityMyFaultsBinding> {
                 .addParam("userId", loginUser.syjyUser.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
+                .addProgressing(list.size() == 0 && !getDataBinding().swipeView.isRefreshing(), this, "正在加载错题列表...")
                 .execute(new SYDataListener<List<FaultRecord>>() {
 
                     @Override

@@ -202,7 +202,7 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                 .addParam("moduleId", moduleId)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
-                .addProgressing(list.size() == 0, this, "正在加载试卷列表...")
+                .addProgressing(list.size() == 0 && !getDataBinding().swipeView.isRefreshing(), this, "正在加载试卷列表...")
                 .execute(new SYDataListener<List<Examination>>() {
 
                     @Override
