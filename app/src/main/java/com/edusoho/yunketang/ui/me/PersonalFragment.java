@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -14,6 +15,7 @@ import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.databinding.FragmentPersonalBinding;
+import com.edusoho.yunketang.ui.common.CaptureActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
@@ -37,7 +39,7 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDataBinding().personalLayout.getLayoutParams();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getDataBinding().personalLayout.getLayoutParams();
         params.height = DensityUtil.dip2px(getSupportedActivity(), 140) + NotchUtil.getNotchHeight(getSupportedActivity());
         getDataBinding().personalLayout.setLayoutParams(params);
     }

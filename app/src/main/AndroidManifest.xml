@@ -194,6 +194,9 @@
         <activity
             android:name="com.edusoho.yunketang.ui.classes.MyMessageActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.edusoho.yunketang.ui.classes.TeacherNotationActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

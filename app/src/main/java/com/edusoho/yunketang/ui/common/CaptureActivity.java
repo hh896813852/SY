@@ -15,8 +15,10 @@
  */
 package com.edusoho.yunketang.ui.common;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationManager;
@@ -26,18 +28,23 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.GPSUtils;
+import com.edusoho.yunketang.utils.NotchUtil;
+import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.google.gson.JsonObject;
 import com.google.zxing.Result;
 import com.edusoho.yunketang.R;
@@ -66,6 +73,8 @@ import java.util.List;
 @Translucent
 public final class CaptureActivity extends BaseActivity implements SurfaceHolder.Callback {
     private static final String TAG = CaptureActivity.class.getSimpleName();
+    public static int REQUEST_FROM_CHECK_IN = RequestCodeUtil.next();
+    public static final String EXTRAS_STRING_CHECK_IN = "check_in"; // 考勤返回信息
     // Request Code & Extras Tag
     private static final String EXTRAS_STRING_FLAG_HANDLE_RESULT = "dealProxy"; // 是否处理结果Tag
     // private
@@ -78,6 +87,8 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
     private RelativeLayout scanContainer;
     private RelativeLayout scanCropView;
     private ImageView scanLine;
+    private View statusView;
+    private ImageView topShadowView;
 
     private Rect mCropRect = null;
     private boolean isHasSurface = false;
@@ -121,14 +132,17 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
     private void checkingIn() {
         if (SYApplication.getInstance().getUser() == null || SYApplication.getInstance().getUser().syjyUser == null) {
             showSingleToast("用户不存在！");
+            finish();
             return;
         }
         if (TextUtils.isEmpty(result)) {
             showSingleToast("未扫到任何结果！");
+            finish();
             return;
         }
         if (TextUtils.isEmpty(lng) || TextUtils.isEmpty(lat)) {
             showSingleToast("未能获取您的位置！");
+            finish();
             return;
         }
         SYDataTransport.create(String.format(SYConstants.CHECKING_IN, result, SYApplication.getInstance().getUser().syjyUser.id, lng, lat))
@@ -138,14 +152,22 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
 
                     @Override
                     public void onSuccess(String data) {
+                        // {"error":-3,"errorInfo":"正在上课中！"}
                         // {"error":0,"errorInfo":"当前时间内不能考勤！"}
+                        // {"error":1,"errorInfo":"考勤成功！"}
                         try {
                             JSONObject jsonObject = new JSONObject(data);
                             if (jsonObject.has("error")) {
                                 int errorId = jsonObject.getInt("error");
-                                if (errorId == 0) {
-                                    showSingleToast(jsonObject.getString("errorInfo"));
-                                }
+                                String checkInfo = jsonObject.getString("errorInfo");
+//                                if (errorId == 0) {
+//                                    showSingleToast(jsonObject.getString("errorInfo"));
+//                                } else if (errorId == 1) {
+//                                    showSingleToast(jsonObject.getString("errorInfo"));
+//                                }
+                                Intent intent = new Intent();
+                                intent.putExtra(CaptureActivity.EXTRAS_STRING_CHECK_IN, checkInfo);
+                                setResult(Activity.RESULT_OK, intent);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -167,6 +189,8 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
         scanContainer = (RelativeLayout) findViewById(R.id.capture_container);
         scanCropView = (RelativeLayout) findViewById(R.id.capture_crop_view);
         scanLine = (ImageView) findViewById(R.id.capture_scan_line);
+        statusView = findViewById(R.id.statusView);
+        topShadowView = findViewById(R.id.topShadowView);
 
         inactivityTimer = new InactivityTimer(this);
         beepManager = new BeepManager(this);
@@ -181,6 +205,14 @@ public final class CaptureActivity extends BaseActivity implements SurfaceHolder
 
         // GPS定位
         getLocation();
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) statusView.getLayoutParams();
+        params.height = NotchUtil.getNotchHeight(this);
+        statusView.setLayoutParams(params);
+
+        RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) topShadowView.getLayoutParams();
+        params2.setMargins(0, NotchUtil.getNotchHeight(this) + DensityUtil.dip2px(this, 60), 0, 0);
+        topShadowView.setLayoutParams(params2);
     }
 
     /**

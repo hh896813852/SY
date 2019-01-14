@@ -78,7 +78,8 @@
                 android:enabled="@{viewModel.isEditing}"
                 android:hint="请编辑用户名"
                 android:text="@={viewModel.nickname}"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                bind:filterEmoji="@{true}" />
         </FrameLayout>
 
         <FrameLayout
@@ -103,9 +104,9 @@
                 android:layout_marginLeft="90dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/bg_white"
-                android:enabled="@{viewModel.isEditing}"
                 android:drawableRight="@{viewModel.isEditing ? @drawable/icon_edit : null}"
                 android:drawablePadding="5dp"
+                android:enabled="@{viewModel.isEditing}"
                 android:focusable="false"
                 android:hint="请选择性别"
                 android:onClick="onSexPickClick"
@@ -142,7 +143,8 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:text="@={viewModel.personSign}"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                bind:filterEmoji="@{true}" />
         </FrameLayout>
 
         <View

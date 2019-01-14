@@ -42,12 +42,15 @@ public class MyMessageActivity extends BaseActivity<ActivityMyMessageBinding> {
     public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
         clickItemPosition = position;
-        Intent intent = new Intent(MyMessageActivity.this, ExerciseActivity.class);
-        intent.putExtra(ExerciseActivity.IS_TEACHER_NOTATION, true);
-        intent.putExtra(ExerciseActivity.IS_ANSWER_ANALYSIS, true);
-        intent.putExtra(ExerciseActivity.TEACHER, list.get(position).teacherName);
-        intent.putExtra(ExerciseActivity.MESSAGE_ID, list.get(position).id);
-        startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+//        Intent intent = new Intent(MyMessageActivity.this, ExerciseActivity.class);
+//        intent.putExtra(ExerciseActivity.IS_TEACHER_NOTATION, true);
+//        intent.putExtra(ExerciseActivity.IS_ANSWER_ANALYSIS, true);
+//        intent.putExtra(ExerciseActivity.TEACHER, list.get(position).teacherName);
+//        intent.putExtra(ExerciseActivity.MESSAGE_ID, list.get(position).id);
+//        startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+        Intent intent = new Intent(MyMessageActivity.this, TeacherNotationActivity.class);
+        intent.putExtra(TeacherNotationActivity.MESSAGE_ID, list.get(position).id);
+        startActivityForResult(intent, TeacherNotationActivity.FROM_TEACHER_NOTATION_CODE);
     };
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {
         if (getDataBinding() != null) {
@@ -66,7 +69,13 @@ public class MyMessageActivity extends BaseActivity<ActivityMyMessageBinding> {
                 loadData();
             }
         }
-        if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+//        if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                list.get(clickItemPosition).readStatus = 1;
+//                adapter.notifyDataSetChanged();
+//            }
+//        }
+        if (requestCode == TeacherNotationActivity.FROM_TEACHER_NOTATION_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 list.get(clickItemPosition).readStatus = 1;
                 adapter.notifyDataSetChanged();

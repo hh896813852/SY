@@ -162,14 +162,14 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                                             if (type == -1) {
                                                 onFail(message.status, message.msg);
                                             } else {
-                                                DialogHelper.showAccountExistDialog(LoginActivity.this, type);
+                                                DialogHelper.showAccountExistDialog(LoginActivity.this, type, platformType -> setLoginType(platformType));
                                             }
                                         }
                                     } else {
                                         if (type == -1) {
                                             onFail(message.status, message.msg);
                                         } else {
-                                            DialogHelper.showAccountExistDialog(LoginActivity.this, type);
+                                            DialogHelper.showAccountExistDialog(LoginActivity.this, type, platformType -> setLoginType(platformType));
                                         }
                                     }
                                 } catch (JSONException e) {

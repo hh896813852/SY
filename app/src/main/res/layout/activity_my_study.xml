@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
         <import type="android.view.View" />
-
-        <import type="java.lang.Integer" />
 
         <variable
             name="viewModel"
@@ -22,6 +17,11 @@
         android:orientation="vertical">
 
         <include layout="@layout/layout_title_black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/line_light_gray" />
 
         <net.lucode.hackware.magicindicator.MagicIndicator
             android:id="@+id/mainTabIndicator"

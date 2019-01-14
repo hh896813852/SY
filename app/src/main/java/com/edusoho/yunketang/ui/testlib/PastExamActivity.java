@@ -191,8 +191,8 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
      * 加载数据
      */
     private void loadData() {
-        SYDataTransport dataTransport = SYDataTransport.create(isLogin.get() ? SYConstants.MODULE_EXERCISE : SYConstants.MODULE_EXERCISE_NOT_LOGIN);
-        if (isLogin.get()) {
+        SYDataTransport dataTransport = SYDataTransport.create(SYApplication.getInstance().isLogin() ? SYConstants.MODULE_EXERCISE : SYConstants.MODULE_EXERCISE_NOT_LOGIN);
+        if (SYApplication.getInstance().isLogin()) {
             dataTransport.addParam("userId", getLoginUser().syjyUser.id)
                     .addParam("finishState", 3);
         }
@@ -262,9 +262,9 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
         }
         SYDataTransport.create(payType.get() == PayParams.PAY_TYPE_WECHAT ? SYConstants.SY_WXPAY : SYConstants.SY_ALIPAY)
                 .addParam("goodsType", 2) // 商品分类 1:视频，2:试卷
+                .addParam("businessType", selectedCourse.businessId)
                 .addParam("moduleId", moduleId)
                 .addParam("goodsName", prePayExam.examinationName)
-                .addParam("amountStr", prePayExam.price)
                 .addParam("goodsId", prePayExam.examinationId)
                 .addProgressing(this, "正在创建订单，请稍后...")
                 .execute(new SYDataListener<PayParams>() {

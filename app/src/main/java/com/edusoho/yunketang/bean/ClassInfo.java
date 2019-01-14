@@ -29,7 +29,7 @@ public class ClassInfo implements Serializable {
     public String majorName;
     public String classStatus;
     public String totalClassCount;
-    public int totalClassHour;
+    public float totalClassHour;
     public String classCourseEntities;
     public String subjectName;
     public String schoolName;
@@ -38,7 +38,7 @@ public class ClassInfo implements Serializable {
     public String gradateMajor;
 
     public String getTitleName() {
-        if(!TextUtils.isEmpty(className)) {
+        if (!TextUtils.isEmpty(className)) {
             return className;
         }
         return batch + gradateMajor;
@@ -48,16 +48,17 @@ public class ClassInfo implements Serializable {
      * 获取学习进度
      */
     public int getProgress() {
-        if(TextUtils.isEmpty(alreadyCourses)) {
+        if (TextUtils.isEmpty(alreadyCourses)) {
             return 0;
         }
         return Integer.valueOf(alreadyCourses);
     }
+
     /**
      * 获取学习总进度
      */
     public int getProgressMax() {
-        if(TextUtils.isEmpty(totalClassCount)) {
+        if (TextUtils.isEmpty(totalClassCount)) {
             return 0;
         }
         return Integer.valueOf(totalClassCount);
@@ -67,7 +68,7 @@ public class ClassInfo implements Serializable {
      * 获取总课数（个位数前面加0）
      */
     public String getTotalClassCount() {
-        if(TextUtils.isEmpty(totalClassCount)) {
+        if (TextUtils.isEmpty(totalClassCount)) {
             return "0";
         }
         return totalClassCount.length() == 1 ? "0" + totalClassCount : totalClassCount;
@@ -77,7 +78,7 @@ public class ClassInfo implements Serializable {
      * 获取总分钟
      */
     public String getTotalClassMin() {
-        return String.valueOf(totalClassHour * 60);
+        return String.valueOf((int) totalClassHour * 60);
     }
 
     /**

@@ -11,7 +11,11 @@ import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.base.BaseDialog;
 import com.edusoho.yunketang.base.animation.BounceEnter.BounceTopEnter;
 import com.edusoho.yunketang.base.animation.SlideExit.SlideTopExit;
-import com.edusoho.yunketang.widget.SimpleDialog;
+import com.edusoho.yunketang.base.animation.ZoomEnter.ZoomInEnter;
+import com.edusoho.yunketang.base.animation.ZoomExit.ZoomOutExit;
+import com.edusoho.yunketang.widget.dialog.SXYDialog;
+import com.edusoho.yunketang.widget.dialog.SimpleDialog;
+import com.edusoho.yunketang.widget.dialog.TipDialog;
 
 /**
  * @author any
@@ -245,6 +249,44 @@ public class DialogUtil {
                 .widthScale(0.8f)
                 .showAnim(new BounceTopEnter())
                 .dismissAnim(new SlideTopExit(300))
+                .show();
+    }
+
+    /**
+     * 上小元Dialog
+     *
+     * @param context         上下文
+     * @param percent         正确率
+     * @param onClickListener 监听器
+     */
+    public static void showSXY(Context context, String percent, SXYDialog.OnClickListener onClickListener) {
+        SXYDialog sxyDialog = new SXYDialog(context);
+        sxyDialog.setCanceledOnTouchOutside(true);
+        sxyDialog.setCorrectPercent(percent)
+                .setOnClickListener(onClickListener)
+                .setCustomLayout(R.layout.dialog_sxy)
+                .widthScale(0.8f)
+                .showAnim(new ZoomInEnter())
+                .dismissAnim(new ZoomOutExit())
+                .show();
+    }
+
+    /**
+     * 提示对话框
+     *
+     * @param context         上下文
+     * @param title           标题
+     * @param content         内容
+     */
+    public static void showTipDialog(Context context, String title,String content) {
+        TipDialog tipDialog = new TipDialog(context);
+        tipDialog.setCanceledOnTouchOutside(true);
+        tipDialog.setTitleText(title)
+                .setContentText(content)
+                .setCustomLayout(R.layout.dialog_tip)
+                .widthScale(0.8f)
+                .showAnim(new ZoomInEnter())
+                .dismissAnim(new ZoomOutExit())
                 .show();
     }
 }

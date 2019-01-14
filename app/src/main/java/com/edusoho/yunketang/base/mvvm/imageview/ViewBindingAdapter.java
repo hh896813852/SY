@@ -17,5 +17,4 @@ public class ViewBindingAdapter {
             Glide.with(imageView.getContext()).load(url).into(imageView);
         }
     }
-
 }

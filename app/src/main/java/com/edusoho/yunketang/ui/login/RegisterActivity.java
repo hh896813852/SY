@@ -1,6 +1,5 @@
 package com.edusoho.yunketang.ui.login;
 
-import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,8 +10,6 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.edusoho.yunketang.R;
@@ -35,6 +32,7 @@ import org.json.JSONObject;
  */
 @Layout(value = R.layout.activity_register)
 public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
+    private MyCountDownTimer countDownTimer;
 
     public ObservableField<Integer> registerStep = new ObservableField<>(1);
     public ObservableField<String> phoneNo = new ObservableField<>();
@@ -173,7 +171,7 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
                                 if (type == -1) {
                                     super.onFail(message.status, message.msg);
                                 } else {
-                                    DialogHelper.showAccountExistDialog(RegisterActivity.this, type);
+                                    DialogHelper.showAccountExistDialog(RegisterActivity.this, type, null);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -212,7 +210,7 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
                                 if (type == -1) {
                                     super.onFail(message.status, message.msg);
                                 } else {
-                                    DialogHelper.showAccountExistDialog(RegisterActivity.this, type);
+                                    DialogHelper.showAccountExistDialog(RegisterActivity.this, type, null);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -234,7 +232,8 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
                     @Override
                     public void onSuccess(Object data) {
                         // 开始倒计时重发
-                        new MyCountDownTimer("重新发送", 60 * 1000, 1000).start();
+                        countDownTimer = new MyCountDownTimer("重新发送", 60 * 1000, 1000);
+                        countDownTimer.start();
                     }
 
                     @Override
@@ -242,6 +241,15 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
                         super.onFail(status, failMessage);
                     }
                 });
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
     }
 
     /**

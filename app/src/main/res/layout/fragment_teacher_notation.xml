@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.classes.TeacherNotationFragment" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/notationView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:lineSpacingExtra="@dimen/exercise_line_spacing_extra"
+                android:textColor="@color/text_light_black"
+                android:textSize="16sp"
+                android:visibility="@{TextUtils.isEmpty(viewModel.teacherNotes) ? View.GONE : View.VISIBLE}"
+                bind:htmlText="@{viewModel.teacherNotes}"
+                tools:text="老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注老师批注" />
+
+            <LinearLayout
+                android:id="@+id/teacherNotePicContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/scoreView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:src="@drawable/bg_score_hide"
+                android:visibility="gone"
+                bind:clickCommand="@{viewModel.onShowScoreClicked}" />
+
+            <FrameLayout
+                android:id="@+id/scoreLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                bind:clickCommand="@{viewModel.onHideScoreClicked}">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bg_score" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.score}"
+                            android:textColor="#15C97E"
+                            android:textSize="24sp"
+                            android:textStyle=""
+                            tools:text="99" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="分"
+                            android:textColor="#15C97E"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="本题得分"
+                        android:textColor="#AEAEAE"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </FrameLayout>
+        </FrameLayout>
+    </FrameLayout>
+</layout>

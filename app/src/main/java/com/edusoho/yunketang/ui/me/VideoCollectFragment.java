@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.me;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -110,6 +111,10 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
         if (requestCode == CourseDetailsActivity.FROM_COURSE_CODE) {
             onRefreshListener.onRefresh();
         }
+        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            isLogin.set(SYApplication.getInstance().getUser() != null);
+            onRefreshListener.onRefresh();
+        }
     }
 
     @Override
@@ -213,6 +218,6 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
      * 去登录
      */
     public View.OnClickListener onLoginClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
+        startActivityForResult(new Intent(getSupportedActivity(), LoginActivity.class), LoginActivity.LOGIN_REQUEST_CODE);
     };
 }

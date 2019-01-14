@@ -1,4 +1,4 @@
-package com.edusoho.yunketang.widget;
+package com.edusoho.yunketang.widget.dialog;
 
 import android.content.Context;
 import android.os.Bundle;

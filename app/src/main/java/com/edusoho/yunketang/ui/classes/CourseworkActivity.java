@@ -93,7 +93,7 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                     intent.putExtra(ExerciseActivity.LEVEL_ID, list.get(position).levelId);
                     intent.putExtra(ExerciseActivity.COURSE_ID, list.get(position).courseId);
                     intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
-                    intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
+                    intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).androidIndex);
                     intent.putExtra(ExerciseActivity.IS_CLASS_EXERCISE, true);
                     EducationCourse selectedCourse = new EducationCourse();
                     selectedCourse.businessId = list.get(position).businessType;
@@ -185,7 +185,7 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
                         @Override
                         public void onSuccess(Rank data) {
                             classRank.set(TextUtils.isEmpty(data.classRank) ? "0" : data.classRank);
-                            correctPercent.set(data.percent == 0 ? "0" : String.valueOf(data.beatPercent));
+                            correctPercent.set(data.percent == 0 ? "0" : String.valueOf(data.percent));
                         }
                     }, Rank.class);
         }

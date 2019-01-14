@@ -1,15 +1,21 @@
 package com.edusoho.yunketang.ui.classes;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,11 +24,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.edusoho.yunketang.base.BaseDialog;
 import com.edusoho.yunketang.bean.MsgInfo;
 import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.ui.MainTabActivity;
 import com.edusoho.yunketang.utils.DateUtils;
+import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
+import com.edusoho.yunketang.widget.dialog.TipDialog;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -94,6 +103,22 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
             return view;
         }
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CaptureActivity.REQUEST_FROM_CHECK_IN && resultCode == Activity.RESULT_OK) {
+            String checkInfo = data.getStringExtra(CaptureActivity.EXTRAS_STRING_CHECK_IN);
+            showCheckInDialog(checkInfo);
+        }
+    }
+
+    /**
+     * 显示考勤信息对话框
+     */
+    private void showCheckInDialog(String checkInfo) {
+        DialogUtil.showTipDialog(getSupportedActivity(), "考勤状态", checkInfo);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -274,7 +299,8 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
      * 扫一扫
      */
     public View.OnClickListener onScanClicked = v -> {
-        permissionCheck(); // 摄像头权限检查
+        // 权限检查
+        permissionCheck();
     };
 
     /**
@@ -286,7 +312,7 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
                 .subscribe(grant -> {
                     if (grant) {
                         // 权限全部允许
-                        startActivity(new Intent(getSupportedActivity(), CaptureActivity.class));
+                        startActivityForResult(new Intent(getSupportedActivity(), CaptureActivity.class), CaptureActivity.REQUEST_FROM_CHECK_IN);
                     } else {
                         // 至少有一个拒绝了
                         showSingleToast("未能取得相机或定位权限，无法扫码考勤！");

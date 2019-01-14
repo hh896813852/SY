@@ -40,13 +40,14 @@ import java.util.List;
 @Layout(value = R.layout.fragment_integrated_exercises)
 public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegratedExercisesBinding> {
     public Question question;
+    public boolean isTeacherNotation;
     private MediaPlayer mediaPlayer; // 音频播放器
     private boolean isPrepared;      // 音频播放器是否准备好了
     private TimeThread timeThread;   // 时间进度线程
     public ObservableField<Boolean> hasAudio = new ObservableField<>(false); // 是否有音频
     public ObservableField<Boolean> isPlaying = new ObservableField<>(false);// 音频播放器是否正在播放
     public ObservableField<String> audioCurrentTime = new ObservableField<>("00:00");// 音频播放了的时间
-    public ObservableField<String> audioDuration = new ObservableField<>();         // 音频时长
+    public ObservableField<String> audioDuration = new ObservableField<>("00:00");   // 音频时长
 
     public ObservableField<String> questionTopic = new ObservableField<>(); // 题目
 
@@ -68,6 +69,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         question = (Question) getArguments().getSerializable("question");
+        isTeacherNotation = getArguments().getBoolean("isTeacherNotation");
         initView();
         initData();
     }
@@ -97,7 +99,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
 
             @Override
             public void onPageSelected(int position) {
-                if (getActivity() != null) {
+                if (getActivity() != null && !isTeacherNotation) {
                     // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
                     ((ExerciseActivity) getActivity()).currentChildQuestionIndex = position;
                 }
@@ -150,8 +152,10 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser && getActivity() != null) {
-            // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
-            ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
+            if(!isTeacherNotation) {
+                // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
+                ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
+            }
             // 初始化containerLayout、dragView、viewPager高度
             initLayoutHeight();
         }

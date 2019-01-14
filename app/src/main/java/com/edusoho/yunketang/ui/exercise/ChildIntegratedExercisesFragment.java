@@ -10,9 +10,11 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -25,10 +27,12 @@ import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding;
 import com.edusoho.yunketang.helper.ImageUploadHelper;
 import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.LuBanUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
+import com.edusoho.yunketang.utils.ViewUtils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -37,7 +41,9 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Layout(value = R.layout.fragment_child_integrated_exercises)
 public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChildIntegratedExercisesBinding> {
@@ -69,7 +75,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             ImageView deleteView = view.findViewById(R.id.deleteView);
             FrameLayout pickView = view.findViewById(R.id.pickView);
             // 答案解析不可更改作答，隐藏删除照片按钮
-            if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+            if ((getParentFragment() != null && ((IntegratedExercisesFragment) getParentFragment()).isTeacherNotation) || (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis)) {
                 deleteView.setVisibility(View.GONE);
                 pickView.setVisibility(View.GONE);
                 Glide.with(getSupportedActivity()).load(list.get(position)).placeholder(R.drawable.bg_load_default_3x4).into(answerImage);
@@ -173,7 +179,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         }
 
         // 是否显示答案解析
-        isShowAnswerAnalysis.set(getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis);
+        isShowAnswerAnalysis.set((getParentFragment() != null && ((IntegratedExercisesFragment) getParentFragment()).isTeacherNotation) || (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis));
         // 如果显示答案解析
         if (isShowAnswerAnalysis.get()) {
             // 正确答案
@@ -190,17 +196,19 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                 }
             }
 
-            // 老师批注
-            teacherNotes.set(childQuestion.postil);
-            // 老师批注图片
-            String postilUrl = childQuestion.postilUrl;
-            if (!TextUtils.isEmpty(postilUrl)) {
-                teacherNotePicList.addAll(Arrays.asList(postilUrl.split(",")));
-                for (String url : teacherNotePicList) {
-                    View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
-                    ImageView imageView = innerView.findViewById(R.id.imageView);
-                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
-                    getDataBinding().teacherNotePicContainer.addView(innerView);
+            if(!(getParentFragment() != null && ((IntegratedExercisesFragment) getParentFragment()).isTeacherNotation)) {
+                // 老师批注
+                teacherNotes.set(childQuestion.postil);
+                // 老师批注图片
+                String postilUrl = childQuestion.postilUrl;
+                if (!TextUtils.isEmpty(postilUrl)) {
+                    teacherNotePicList.addAll(Arrays.asList(postilUrl.split(",")));
+                    for (String url : teacherNotePicList) {
+                        View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
+                        ImageView imageView = innerView.findViewById(R.id.imageView);
+                        PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                        getDataBinding().teacherNotePicContainer.addView(innerView);
+                    }
                 }
             }
 
@@ -226,7 +234,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
             list.addAll(Arrays.asList(childQuestion.myAnswerPicUrl.split(",")));
         }
         // 答案解析禁止输入内容、不显示添加照片item
-        if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+        if ((getParentFragment() != null && ((IntegratedExercisesFragment) getParentFragment()).isTeacherNotation) || (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis)) {
             // 禁止输入内容
             getDataBinding().answerContentView.setEnabled(false);
             if (TextUtils.isEmpty(answerContent.get())) {
@@ -294,4 +302,33 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
         }
         return builder.deleteCharAt(builder.length() - 1).toString();
     }
+
+//    private SparseIntArray
+
+//    /**
+//     * 显示老师批注
+//     */
+//    private void showTeacherNotation() {
+//        getDataBinding().scrollLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                getDataBinding().scrollLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                int scrollLayoutHeight = getDataBinding().scrollLayout.getHeight(); // scrollLayout高度
+//            }
+//        });
+//        getDataBinding().notationTitleView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                getDataBinding().notationTitleView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                int notationTitleHeight = getDataBinding().notationTitleView.getHeight(); // notationTitle高度
+//            }
+//        });
+//        getDataBinding().notationView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                getDataBinding().notationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                int notationHeight = getDataBinding().notationView.getHeight(); // notation高度
+//            }
+//        });
+//    }
 }

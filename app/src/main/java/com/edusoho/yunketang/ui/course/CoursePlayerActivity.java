@@ -16,7 +16,7 @@ import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.NetworkUtils;
-import com.edusoho.yunketang.widget.SimpleDialog;
+import com.edusoho.yunketang.widget.dialog.SimpleDialog;
 import com.google.gson.reflect.TypeToken;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;

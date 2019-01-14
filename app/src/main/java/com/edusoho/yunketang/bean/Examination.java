@@ -10,6 +10,7 @@ import com.edusoho.yunketang.utils.DateUtils;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Examination implements Serializable {
@@ -29,7 +30,7 @@ public class Examination implements Serializable {
     public String questionSums;   // 题目总数
     @SerializedName("finishCountSum")
     public String finishedSum;    // 完成题目数量
-    public int lastPageIndex;     // 最后停留页面
+    public int androidIndex;      // 最后停留页面
     public String trueSum;        // 正确数量
     public String falseSum;       // 错误数量
     public String completeSum;    // 试卷已完成人数
@@ -44,13 +45,13 @@ public class Examination implements Serializable {
         public int questionSum;        // 题目数量
         public int questionType;       // 题目类型：1、单选题 2、多选题 3、阅读选择题 4、听力选择题 5、判断选择题 6、简答题 7、综合题
         public String questionTypeName;// 题目类型名称
-        public int questionPoint;      // 题目分值
+        public float questionPoint;    // 题目分值
 
         /**
          * 获取题型信息
          */
         public String getQuestionInfo() {
-            return "共" + questionSum + "题，共" + questionPoint + "分";
+            return "共" + questionSum + "题，共" + String.valueOf(questionPoint).replace(".0", "") + "分";
         }
 
         /**

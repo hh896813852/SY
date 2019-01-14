@@ -33,7 +33,8 @@ import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
 import com.edusoho.yunketang.widget.CircleBarView;
-import com.edusoho.yunketang.widget.SimpleDialog;
+import com.edusoho.yunketang.widget.dialog.SXYDialog;
+import com.edusoho.yunketang.widget.dialog.SimpleDialog;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
@@ -42,7 +43,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 @Layout(value = R.layout.activity_answer_report, title = "答题报告", rightButton = "再做一遍")
 public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBinding> {
@@ -230,6 +230,18 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
         }
         // 设置进度和动画执行时间，并开始动画
         getDataBinding().circleView.setProgressNum(isExam.get() ? Float.valueOf(data.sumPoint) : Float.valueOf(data.percent), 2000);
+        // 显示上小元对话框
+        showSXYDialog(data.percent);
+    }
+
+    /**
+     * 显示上小元对话框
+     */
+    private void showSXYDialog(String percent) {
+        DialogUtil.showSXY(this, percent, dialog -> {
+            dialog.dismiss();
+            onRightButtonClick();
+        });
     }
 
     /**
@@ -308,7 +320,7 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
     private void doAgain() {
         SYDataTransport.create(TextUtils.isEmpty(classId) ? SYConstants.DO_AGAIN_IN_MODULE : SYConstants.DO_AGAIN_IN_CLASS)
                 .addParam("homeworkId", homeworkId)
-                .addProgressing(this,"正在清空之前的作答...")
+                .addProgressing(this, "正在清空之前的作答...")
                 .execute(new SYDataListener() {
                     @Override
                     public void onSuccess(Object data) {

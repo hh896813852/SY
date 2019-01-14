@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/scoreBgImage"
+        android:layout_width="210dp"
+        android:layout_height="280dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bg_high_score" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/content1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:text="小元的主人好样的！"
+            android:textColor="@color/text_light_black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/content2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="本次答题正确率80%"
+            android:textColor="@color/text_dark_gray"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/content3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="不要灰心，小元陪你一起努力！"
+            android:textColor="@color/text_dark_gray"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/doAgainBtn"
+            android:layout_width="126dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_gradient_yellow_corner_2"
+            android:gravity="center"
+            android:text="再做一遍"
+            android:textColor="@color/text_white"
+            android:textSize="13sp" />
+    </LinearLayout>
+</FrameLayout>

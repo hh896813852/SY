@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
@@ -39,7 +38,6 @@ import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.testlib.AnswerReportActivity;
-import com.edusoho.yunketang.ui.testlib.PracticeActivity;
 import com.edusoho.yunketang.utils.BitmapUtil;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DialogUtil;
@@ -49,7 +47,7 @@ import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
 import com.edusoho.yunketang.widget.AnswerResultLayout;
-import com.edusoho.yunketang.widget.SimpleDialog;
+import com.edusoho.yunketang.widget.dialog.SimpleDialog;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
@@ -429,6 +427,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
                     @Override
                     public void onSuccess(Question data) {
+                        ProgressDialogUtil.hideProgress();
                         setResult(Activity.RESULT_OK);
                         if (data == null) {
                             showSingleToast("未查询到老师批注的题目！");
@@ -462,7 +461,6 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                         // 刷新界面
                         refreshView(currentQuestion);
                         viewPagerAdapter.notifyDataSetChanged();
-                        ProgressDialogUtil.hideProgress();
                     }
 
                     @Override
@@ -678,7 +676,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         SYDataTransport dataTransport = SYDataTransport.create(SYConstants.HOMEWORK_REDIS);
         dataTransport.addParam("userId", getLoginUser().syjyUser.id)
                 .addParam("examinationId", examinationId)
-                .addParam("index", getDataBinding().viewPager.getCurrentItem())
+                .addParam("androidIndex", getDataBinding().viewPager.getCurrentItem())
                 .addParam("finishCount", getQuestionFinishCount());
         if (!TextUtils.isEmpty(classId)) {
             dataTransport.addParam("classId", classId);
@@ -721,7 +719,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                 .addParam("levelId", selectedCourse == null ? levelId : selectedCourse.levelId)
                 .addParam("courseId", selectedCourse == null ? courseId : selectedCourse.courseId)
                 .addParam("questionType", question.questionType)
+                .addParam("sort", question.sort)
                 .addParam("classification", question.subclassification)
+                .addParam("identificationIndex", question.identificationIndex)
                 .addParam("homeworkType", TextUtils.isEmpty(classId) ? 1 : 0) // 0：班级作业，1：模块练习
                 .addParam("questionIndex", question.questionSort)
                 .addParam("questionId", question.questionId);

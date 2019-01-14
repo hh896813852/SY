@@ -24,6 +24,7 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
@@ -62,7 +63,8 @@
                 android:scrollbars="none"
                 android:text="@{viewModel.answerContent}"
                 android:textColor="@color/text_light_black"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                bind:filterEmoji="@{true}" />
 
             <com.edusoho.yunketang.widget.NoScrollGridView
                 android:id="@+id/gridView"
@@ -116,6 +118,7 @@
                     android:orientation="vertical" />
 
                 <TextView
+                    android:id="@+id/notationTitleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -125,6 +128,7 @@
                     android:visibility="@{TextUtils.isEmpty(viewModel.teacherNotes) ? View.GONE : View.VISIBLE}" />
 
                 <TextView
+                    android:id="@+id/notationView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"

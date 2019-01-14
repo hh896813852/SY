@@ -37,7 +37,7 @@ public class DialogHelper {
     /**
      * 显示账号已在其他平台存在的对话框
      */
-    public static void showAccountExistDialog(Context context, int existPlatform) {
+    public static void showAccountExistDialog(Context context, int existPlatform, OnPlatformPickedListener onPlatformPickedListener) {
         SpannableString span1;
         SpannableString span2;
         RelativeSizeSpan sizeSpan1;
@@ -71,6 +71,15 @@ public class DialogHelper {
                 span1.setSpan(styleSpan1, 2, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 span2.setSpan(styleSpan2, 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tipView.setText(TextUtils.concat(span1, "，", span2));
+                syjyView.setClickable(true);
+                syzxView.setClickable(false);
+                sykjView.setClickable(false);
+                syjyView.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    if (onPlatformPickedListener != null) {
+                        onPlatformPickedListener.platformPicked(1);
+                    }
+                });
                 break;
             case 1: // 在上元在线注册了
                 // 改变TextView图片和颜色
@@ -90,6 +99,15 @@ public class DialogHelper {
                 span1.setSpan(styleSpan1, 2, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 span2.setSpan(styleSpan2, 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tipView.setText(TextUtils.concat(span1, "，", span2));
+                syjyView.setClickable(false);
+                syzxView.setClickable(true);
+                sykjView.setClickable(false);
+                syzxView.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    if (onPlatformPickedListener != null) {
+                        onPlatformPickedListener.platformPicked(2);
+                    }
+                });
                 break;
             case 2: // 在上元会计注册了
                 // 改变TextView图片和颜色
@@ -109,6 +127,15 @@ public class DialogHelper {
                 span1.setSpan(styleSpan1, 2, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 span2.setSpan(styleSpan2, 3, 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tipView.setText(TextUtils.concat(span1, "，", span2));
+                syjyView.setClickable(false);
+                syzxView.setClickable(false);
+                sykjView.setClickable(true);
+                sykjView.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    if (onPlatformPickedListener != null) {
+                        onPlatformPickedListener.platformPicked(3);
+                    }
+                });
                 break;
             case 3: // 在上元在线和上元会计注册了
                 // 改变TextView图片和颜色
@@ -132,6 +159,21 @@ public class DialogHelper {
                 span1.setSpan(styleSpan1, 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 span2.setSpan(styleSpan2, 3, 12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tipView.setText(TextUtils.concat(span1, "，", span2));
+                syjyView.setClickable(false);
+                syzxView.setClickable(true);
+                sykjView.setClickable(true);
+                syzxView.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    if (onPlatformPickedListener != null) {
+                        onPlatformPickedListener.platformPicked(2);
+                    }
+                });
+                sykjView.setOnClickListener(v -> {
+                    dialog.dismiss();
+                    if (onPlatformPickedListener != null) {
+                        onPlatformPickedListener.platformPicked(3);
+                    }
+                });
                 break;
         }
     }
@@ -350,5 +392,9 @@ public class DialogHelper {
         void registerSuccess();
 
         void onSMSError(TextView sendCodeView);
+    }
+
+    public interface OnPlatformPickedListener {
+        void platformPicked(int platformType);
     }
 }

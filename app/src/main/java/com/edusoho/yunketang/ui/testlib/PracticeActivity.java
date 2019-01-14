@@ -106,7 +106,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                     intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
                     intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
                     intent.putExtra(ExerciseActivity.HOMEWORK_ID, list.get(position).homeworkId);
-                    intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).lastPageIndex);
+                    intent.putExtra(ExerciseActivity.LAST_PAGE_INDEX, list.get(position).androidIndex);
                     intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
                     startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
                 }
@@ -199,7 +199,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
      * 加载数据
      */
     private void loadData() {
-        SYDataTransport dataTransport = SYDataTransport.create(isLogin.get() ? SYConstants.MODULE_EXERCISE : SYConstants.MODULE_EXERCISE_NOT_LOGIN);
+        SYDataTransport dataTransport = SYDataTransport.create(SYApplication.getInstance().isLogin() ? SYConstants.MODULE_EXERCISE : SYConstants.MODULE_EXERCISE_NOT_LOGIN);
         if (isLogin.get()) {
             dataTransport.addParam("finishState", searchType.get())
                     .addParam("userId", getLoginUser().syjyUser.id);

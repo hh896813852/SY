@@ -24,6 +24,7 @@ public class Question implements Serializable {
 
     public String subclassification;     // 题型子分类id
     public String subclassificationName; // 题型子分类名称
+    public String identificationIndex;   // 题型子排序（从0开始）
     public String errorId;               // 错误题目id（我的错题里面含有,用于删除错题）
 
     public String score;           // 得分
@@ -211,7 +212,7 @@ public class Question implements Serializable {
     public String knowledgeIds;   // 知识点ids
     public String sids;           // 题目ids（英文逗号隔开）
     public int sort;              // 顺序
-    public float sumPoint;          // 该题型下所有题目分值
+    public float sumPoint;        // 该题型下所有题目分值
     public String faultSort;      // 错题序号（自定义，用于错题解析）
 
     /**

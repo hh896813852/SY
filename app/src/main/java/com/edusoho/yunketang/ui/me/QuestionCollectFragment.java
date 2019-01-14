@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.ui.me;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -47,13 +48,17 @@ public class QuestionCollectFragment extends BaseFragment<FragmentQuestionCollec
         Intent intent = new Intent(getSupportedActivity(), ExerciseActivity.class);
         intent.putExtra(ExerciseActivity.IS_MY_COLLECTION, true);
         intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
-        startActivityForResult(intent,ExerciseActivity.FROM_EXERCISE_CODE);
+        startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
     };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+        if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+            onRefreshListener.onRefresh();
+        }
+        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            isLogin.set(SYApplication.getInstance().getUser() != null);
             onRefreshListener.onRefresh();
         }
     }
@@ -79,6 +84,10 @@ public class QuestionCollectFragment extends BaseFragment<FragmentQuestionCollec
     }
 
     private void loadData() {
+        if (SYApplication.getInstance().getUser() == null) {
+            hasData.set(false);
+            return;
+        }
         SYDataTransport.create(SYConstants.MY_COLLECT_HOMEWORK)
                 .addParam("userId", SYApplication.getInstance().getUser().syjyUser.id)
                 .addParam("page", pageNo)
@@ -115,6 +124,6 @@ public class QuestionCollectFragment extends BaseFragment<FragmentQuestionCollec
      * 去登录
      */
     public View.OnClickListener onLoginClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
+        startActivityForResult(new Intent(getSupportedActivity(), LoginActivity.class), LoginActivity.LOGIN_REQUEST_CODE);
     };
 }
