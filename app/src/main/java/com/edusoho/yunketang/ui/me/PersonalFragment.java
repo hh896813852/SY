@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -18,15 +16,10 @@ import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.databinding.FragmentPersonalBinding;
-import com.edusoho.yunketang.ui.common.CaptureActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
-import com.edusoho.yunketang.wxapi.WXshare;
-import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.opensdk.modelmsg.WXTextObject;
 
 /**
  * @author huhao on 2018/7/4
@@ -74,9 +67,7 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     /**
      * 登录/注册
      */
-    public View.OnClickListener onLoginOrRegisterClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
-    };
+    public View.OnClickListener onLoginOrRegisterClicked = v -> startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
 
     /**
      * 头像点击
@@ -98,30 +89,22 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     /**
      * 我的收藏
      */
-    public View.OnClickListener onMyCollectionClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), MyCollectionActivity.class));
-    };
+    public View.OnClickListener onMyCollectionClicked = v -> startActivity(new Intent(getSupportedActivity(), MyCollectionActivity.class));
 
     /**
      * 我的学习
      */
-    public View.OnClickListener onMyStudyClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), MyStudyActivity.class));
-    };
+    public View.OnClickListener onMyStudyClicked = v -> startActivity(new Intent(getSupportedActivity(), MyStudyActivity.class));
 
     /**
      * 购买的视频
      */
-    public View.OnClickListener onBuyVideoClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), MyBoughtVideoActivity.class));
-    };
+    public View.OnClickListener onBuyVideoClicked = v -> startActivity(new Intent(getSupportedActivity(), MyBoughtVideoActivity.class));
 
     /**
      * 购买的试卷
      */
-    public View.OnClickListener onBuyPaperClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), MyBoughtExamActivity.class));
-    };
+    public View.OnClickListener onBuyPaperClicked = v -> startActivity(new Intent(getSupportedActivity(), MyBoughtExamActivity.class));
 
     /**
      * 上元在线元宝
@@ -144,7 +127,5 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     /**
      * 设置
      */
-    public View.OnClickListener onSetClicked = v -> {
-        startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
-    };
+    public View.OnClickListener onSetClicked = v -> startActivity(new Intent(getSupportedActivity(), SettingActivity.class));
 }
