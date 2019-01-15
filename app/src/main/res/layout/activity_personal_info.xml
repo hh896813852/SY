@@ -38,6 +38,7 @@
                 android:layout_height="60dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/icon_default_avatar"
+                android:transitionName="headImage"
                 app:border_color="@color/text_white"
                 app:border_width="1dp"
                 bind:url="@{viewModel.avatar}" />

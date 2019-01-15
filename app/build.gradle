@@ -139,4 +139,6 @@ dependencies {
     implementation 'com.github.yalantis:ucrop:2.2.2'
     //　腾讯TBS浏览器
     implementation files('libs/tbs_sdk_thirdapp_v3.5.0.jar')
+    // Bugly（个人账号）
+    implementation 'com.tencent.bugly:crashreport:2.8.6'
 }

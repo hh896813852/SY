@@ -44,7 +44,7 @@
                     android:singleLine="true"
                     android:text="登录/注册"
                     android:textColor="@color/text_white"
-                    android:textSize="18sp"
+                    android:textSize="19sp"
                     android:visibility="@{viewModel.isLogin ? View.GONE : View.VISIBLE}"
                     bind:clickCommand="@{viewModel.onLoginOrRegisterClicked}"
                     tools:visibility="gone" />
@@ -56,7 +56,7 @@
                     android:singleLine="true"
                     android:text="@{viewModel.nickname}"
                     android:textColor="@color/text_white"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:visibility="@{viewModel.isLogin ? View.VISIBLE : View.GONE}"
                     tools:text="上小元" />
 

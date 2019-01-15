@@ -1,13 +1,16 @@
 package com.edusoho.yunketang.ui.me;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.databinding.ObservableField;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
@@ -80,7 +83,12 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
      */
     public View.OnClickListener onHeadImageClicked = v -> {
         if (SYApplication.getInstance().isLogin()) {
-            startActivity(new Intent(getSupportedActivity(), PersonalInfoActivity.class));
+            Intent intent = new Intent(getSupportedActivity(), PersonalInfoActivity.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getSupportedActivity(), getDataBinding().headImage, "headImage").toBundle());
+            } else {
+                startActivity(intent);
+            }
         } else {
             startActivity(new Intent(getSupportedActivity(), LoginActivity.class));
             showSingleToast("请先登录！");

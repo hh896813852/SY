@@ -1,10 +1,12 @@
 package com.edusoho.yunketang.ui.me;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.ObservableField;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -96,7 +98,7 @@ public class PersonalInfoActivity extends BaseActivity {
      * 头像选择
      */
     public void onAvatarClick(View view) {
-        if(!isEditing.get()) {
+        if (!isEditing.get()) {
             return;
         }
         Matisse.from(this)
@@ -138,9 +140,18 @@ public class PersonalInfoActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackButtonClick(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAfterTransition();
+        } else {
+            super.onBackButtonClick(view);
+        }
+    }
+
+    @Override
     public void onRightButtonClick() {
         isEditing.set(!isEditing.get());
-        if(isEditing.get()) {
+        if (isEditing.get()) {
             rightButtonTextView.setText("取消");
         } else {
             rightButtonTextView.setText("编辑");
