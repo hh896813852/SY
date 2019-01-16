@@ -96,6 +96,10 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
             RegisterOtherPlatformHelper.setToken(dragCaptchaToken);
             sendView.performClick(); // 发送验证码点击
         }
+        if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // 加载数据
+            loadData();
+        }
     }
 
     @Override
@@ -267,14 +271,15 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
     public void onJoinStudyClick(View view) {
         User loginUser = SYApplication.getInstance().getUser();
         if (loginUser == null) { // 未登录
-            startActivity(LoginActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
         } else { // 已登录
             if (SYApplication.getInstance().hasTokenInOtherPlatform(courseType)) { // 没有toke
                 if (SYApplication.getInstance().isRegisterInOtherPlatform(courseType)) { // 注册了
                     // 去登录
                     Intent intent = new Intent(this, LoginActivity.class);
                     intent.putExtra(LoginActivity.LOGIN_PLATFORM, courseType + 1);
-                    startActivity(intent);
+                    startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
                 } else { // 未注册
                     // 去验证注册
                     checkHelpRegister();
@@ -464,6 +469,8 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
                             isJoined.set(true);
                         } else {
                             if (courseProject != null) {
+                                SYApplication.getInstance().courseType = courseType;
+                                SYApplication.getInstance().setHost(courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
                                 ConfirmOrderActivity.launch(CourseDetailsActivity.this, courseProject.courseSet.id, courseProject.id);
                             }
                         }

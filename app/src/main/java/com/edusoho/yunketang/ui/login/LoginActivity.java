@@ -185,12 +185,14 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                             SYApplication.getInstance().getUser().syzxToken = data.syzxToken;
                             SYApplication.getInstance().getUser().syjyToken = data.syjyToken;
                             SYApplication.getInstance().reSaveUser();
+                            setResult(Activity.RESULT_OK);
                             showSuccess();
                         }
                         if (loginPlatform == 3) { // 已登录，现在要登录上元会计获取其token
                             SYApplication.getInstance().getUser().sykjToken = data.sykjToken;
                             SYApplication.getInstance().getUser().syjyToken = data.syjyToken;
                             SYApplication.getInstance().reSaveUser();
+                            setResult(Activity.RESULT_OK);
                             showSuccess();
                         }
                         if (loginPlatform == 0) { // 未登录

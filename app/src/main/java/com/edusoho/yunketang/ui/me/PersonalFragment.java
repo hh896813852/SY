@@ -35,9 +35,9 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getDataBinding().personalLayout.getLayoutParams();
-        params.height = DensityUtil.dip2px(getSupportedActivity(), 140) + NotchUtil.getNotchHeight(getSupportedActivity());
-        getDataBinding().personalLayout.setLayoutParams(params);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getDataBinding().statusView.getLayoutParams();
+        params.height = NotchUtil.getNotchHeight(getSupportedActivity()) / 2;
+        getDataBinding().statusView.setLayoutParams(params);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edusoho.yunketang.SYApplication;
+import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.edu.WebViewActivity;
 import com.edusoho.yunketang.edu.bean.MessageEvent;
@@ -76,15 +77,16 @@ public class MenuClickPlugin extends BaseBridgePlugin<Activity> {
         if (args != null && args.length() > 0) {
             String type = args.getString(1);
 
+            SYApplication.getInstance().setHost(SYApplication.getInstance().courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
             Intent intent = new Intent(mContext, CourseDetailsActivity.class);
             intent.putExtra(CourseDetailsActivity.COURSE_TYPE, SYApplication.getInstance().courseType); // 1、上元在线 2、上元会计
             intent.putExtra(CourseDetailsActivity.COURSE_ID, args.getInt(0));
             mContext.startActivity(intent);
-            if ("course".equals(type)) {
+//            if ("course".equals(type)) {
 //                CourseProjectActivity.launch(mContext, args.getInt(0));
-            } else if ("courseSet".equals(type)) {
+//            } else if ("courseSet".equals(type)) {
 //                CourseUnLearnActivity.launch(mContext, args.getInt(0));
-            }
+//            }
         }
     }
 

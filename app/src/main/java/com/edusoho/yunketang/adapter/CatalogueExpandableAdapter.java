@@ -68,7 +68,7 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
      */
     @Override
     public int getChildrenCount(int groupPosition) {
-        if(expandableList.get(groupPosition).childList == null) {
+        if (expandableList.get(groupPosition).childList == null) {
             return 0;
         }
         return expandableList.get(groupPosition).childList.size();
@@ -192,24 +192,29 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
         CourseItem courseItem = expandableList.get(groupPosition).childList.get(childPosition);
         childViewHolder.playImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_pause_white));
         childViewHolder.taskNo.setText(String.valueOf(courseItem.number));
-        childViewHolder.taskTitle.setText(String.valueOf(courseItem.task.title));
-        if ("live".equals(courseItem.task.type)) {
-            childViewHolder.taskFrontTip.setVisibility(View.GONE);
-            childViewHolder.playImage.setVisibility(View.VISIBLE);
-            // 设置直播状态
-            setLiveStatus(childViewHolder, courseItem);
+        childViewHolder.taskTitle.setText(String.valueOf(courseItem.title));
+        if (courseItem.task == null) {
+            convertView.setVisibility(View.GONE);
         } else {
-            childViewHolder.taskFrontTip.setVisibility(View.VISIBLE);
-            childViewHolder.playImage.setVisibility(View.GONE);
-            childViewHolder.taskBackTip.setText(DateUtils.second2Min(courseItem.task.length));
-            if (isShowTryLookable(courseItem.task)) {
-                childViewHolder.taskFrontTip.setText("试看");
-                childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.text_yellow));
-            } else if (courseItem.task.isFree == 1 && !isCourseMember) {
-                childViewHolder.taskFrontTip.setText("免费");
-                childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
-            } else {
+            convertView.setVisibility(View.VISIBLE);
+            if ("live".equals(courseItem.task.type)) {
                 childViewHolder.taskFrontTip.setVisibility(View.GONE);
+                childViewHolder.playImage.setVisibility(View.VISIBLE);
+                // 设置直播状态
+                setLiveStatus(childViewHolder, courseItem);
+            } else {
+                childViewHolder.taskFrontTip.setVisibility(View.VISIBLE);
+                childViewHolder.playImage.setVisibility(View.GONE);
+                childViewHolder.taskBackTip.setText(DateUtils.second2Min(courseItem.task.length));
+                if (isShowTryLookable(courseItem.task)) {
+                    childViewHolder.taskFrontTip.setText("试看");
+                    childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.text_yellow));
+                } else if (courseItem.task.isFree == 1 && !isCourseMember) {
+                    childViewHolder.taskFrontTip.setText("免费");
+                    childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
+                } else {
+                    childViewHolder.taskFrontTip.setVisibility(View.GONE);
+                }
             }
         }
         return convertView;

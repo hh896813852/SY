@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.adapter.QuestionViewPagerAdapter;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
@@ -30,6 +31,7 @@ import com.edusoho.yunketang.bean.ExamAnswer;
 import com.edusoho.yunketang.bean.Examination;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
+import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.bean.base.Message;
 import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.ActivityExerciseBinding;
@@ -155,7 +157,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
 
     private Question currentQuestion;           // 当前显示的题目
     public int currentChildQuestionIndex;       // 当前题目子题的下标，用于展示哪道子题的答案解析
-    public int currentChildIndexFromAnswerCard; // 当前题目子题的下标，有答题卡选择
+    public int currentChildIndexFromAnswerCard; // 当前题目子题的下标，由答题卡选择
 
     public ObservableField<String> inputText = new ObservableField<>("0");
     private StringBuilder inputOne = new StringBuilder("0"); // 计算器输入的第一个数字
@@ -712,9 +714,13 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
      * 提交"可提交问题集合"里的问题
      */
     private void commitQuestionAnswer(final Question question) {
+        User loginUser = SYApplication.getInstance().getUser();
+        if (loginUser == null || loginUser.syjyUser == null) {
+            return;
+        }
         SYDataTransport dataTransport = SYDataTransport.create(SYConstants.QUESTION_COMMIT);
         dataTransport.addParam("examinationId", examinationId)
-                .addParam("userId", getLoginUser().syjyUser.id)
+                .addParam("userId", loginUser.syjyUser.id)
                 .addParam("businessType", selectedCourse == null ? businessId : selectedCourse.businessId)
                 .addParam("levelId", selectedCourse == null ? levelId : selectedCourse.levelId)
                 .addParam("courseId", selectedCourse == null ? courseId : selectedCourse.courseId)

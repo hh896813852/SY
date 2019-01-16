@@ -195,8 +195,12 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
      * 加载数据
      */
     private void loadData() {
+        User loginUser = SYApplication.getInstance().getUser();
+        if (loginUser == null || loginUser.syjyUser == null) {
+            return;
+        }
         SYDataTransport.create(SYConstants.CLASS_HOMEWORK)
-                .addParam("userId", getLoginUser().syjyUser.id)
+                .addParam("userId", loginUser.syjyUser.id)
                 .addParam("businessType", classInfo.businessType)
                 .addParam("classId", classInfo.id)
                 .addParam("page", pageNo)

@@ -21,10 +21,15 @@
         android:background="@color/bg_light_gray1"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/personalLayout"
+        <View
+            android:id="@+id/statusView"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="20dp"
+            android:background="@color/theme_color" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
             android:background="@color/theme_color">
 
             <LinearLayout
