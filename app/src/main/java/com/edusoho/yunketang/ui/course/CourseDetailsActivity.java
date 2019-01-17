@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.edusoho.yunketang.bean.Course;
+import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.google.gson.reflect.TypeToken;
@@ -171,14 +173,18 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
                             startActivity(LoginActivity.class);
                             return;
                         }
-                        // 将数据中富文本内容转成可被解析的json数据
-                        String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(data));
-                        courseList = JsonUtil.fromJson(json, new TypeToken<List<CourseProject>>() {
-                        });
-                        if (courseList != null && courseList.size() > 0 && courseList.get(0) != null) {
-                            courseProject = courseList.get(0);
-                            refreshView();
-                            loadIsJoin();
+                        try {
+                            // 将数据中富文本内容转成可被解析的json数据
+                            String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(data));
+                            courseList = JsonUtil.fromJson(json, new TypeToken<List<CourseProject>>() {
+                            });
+                            if (courseList != null && courseList.size() > 0 && courseList.get(0) != null) {
+                                courseProject = courseList.get(0);
+                                refreshView();
+                                loadIsJoin();
+                            }
+                        } catch (Exception e) {
+
                         }
                     }
                 });

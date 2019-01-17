@@ -23,6 +23,7 @@ import com.edusoho.yunketang.bean.EducationCourse;
 import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.ActivityAnswerReportBinding;
+import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
@@ -230,8 +231,13 @@ public class AnswerReportActivity extends BaseActivity<ActivityAnswerReportBindi
         }
         // 设置进度和动画执行时间，并开始动画
         getDataBinding().circleView.setProgressNum(isExam.get() ? Float.valueOf(data.sumPoint) : Float.valueOf(data.percent), 2000);
-        // 显示上小元对话框
-        showSXYDialog(data.percent);
+        // 第一次查看答题报告
+        if (AppPreferences.isFirstCheckReport(homeworkId)) {
+            // 显示上小元对话框
+            showSXYDialog(data.percent);
+            // 设置成不是第一次查看答题报告
+            AppPreferences.setFirstCheckReport(homeworkId, false);
+        }
     }
 
     /**

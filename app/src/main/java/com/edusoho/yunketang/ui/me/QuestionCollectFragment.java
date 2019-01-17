@@ -72,6 +72,7 @@ public class QuestionCollectFragment extends BaseFragment<FragmentQuestionCollec
             if (!isLoading && !getDataBinding().swipeView.isRefreshing()) {
                 pageNo++;
                 isLoading = true;
+                loadData();
             }
         });
         loadData();

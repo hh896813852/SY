@@ -14,6 +14,12 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <!--android8.0全屏不透明的activity才可以设置方向-->
+    <style name="FullScreenNotTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <!-- 自定义spinner箭头 -->
     <style name="spinner_style" parent="Base.Widget.AppCompat.Spinner">
         <item name="android:background">@drawable/spinner_arrow</item>

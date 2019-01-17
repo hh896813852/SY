@@ -214,10 +214,17 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && !SYApplication.getInstance().isLogin()) {
-            moduleRank.set("0");
-            beatPercent.set("0");
-            getDataBinding().circleView.setProgressNum(0, 100);
+        if (isVisibleToUser) {
+            if (isFirstSelect.get()) {
+                StatusBarUtil.setImmersiveStatusBar(getSupportedActivity(), true);
+            } else {
+                StatusBarUtil.setTranslucentStatus(getSupportedActivity());
+            }
+            if (!SYApplication.getInstance().isLogin()) {
+                moduleRank.set("0");
+                beatPercent.set("0");
+                getDataBinding().circleView.setProgressNum(0, 100);
+            }
         }
     }
 

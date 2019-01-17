@@ -62,6 +62,7 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
             if (!isLoading && !((ClassScheduleActivity) getActivity()).getDataBinding().swipeView.isRefreshing()) {
                 pageNo++;
                 isLoading = true;
+                loadData();
             }
         });
     }

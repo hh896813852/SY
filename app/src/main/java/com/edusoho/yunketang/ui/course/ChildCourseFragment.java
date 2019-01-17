@@ -11,12 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.edusoho.yunketang.helper.AppPreferences;
-import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
@@ -29,6 +26,7 @@ import com.edusoho.yunketang.databinding.FragmentOnlineCourseBinding;
 import com.edusoho.yunketang.edu.WebViewActivity;
 import com.edusoho.yunketang.edu.utils.SharedPreferencesHelper;
 import com.edusoho.yunketang.edu.utils.SharedPreferencesUtils;
+import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.helper.ListViewHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
@@ -37,6 +35,7 @@ import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.StringUtils;
 import com.edusoho.yunketang.utils.glide.GlideRoundTransform;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,12 +164,16 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
                         courseList.clear();
                         // 将数据中富文本内容转成可被解析的json数据
                         String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(data));
-                        List<Course> courses = JsonUtil.fromJson(json, new TypeToken<List<Course>>() {
-                        });
-                        if (courses != null && courses.size() > 0) {
-                            // 更新缓存数据
-                            AppPreferences.saveHomeData(status, courses);
-                            refreshData(false, courses);
+                        try {
+                            List<Course> courses = JsonUtil.fromJson(json, new TypeToken<List<Course>>() {
+                            });
+                            if (courses != null && courses.size() > 0) {
+                                // 更新缓存数据
+                                AppPreferences.saveHomeData(status, courses);
+                                refreshData(false, courses);
+                            }
+                        } catch (Exception e) {
+
                         }
                     }
                 });
@@ -272,6 +275,9 @@ public class ChildCourseFragment extends BaseFragment<FragmentOnlineCourseBindin
     public View.OnClickListener onLookMoreClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (firstCourse == null) {
+                return;
+            }
             setMoreClickListener(firstCourse.orderType == null ? "recommend" : firstCourse.orderType, firstCourse.type, firstCourse.categoryId);
         }
     };

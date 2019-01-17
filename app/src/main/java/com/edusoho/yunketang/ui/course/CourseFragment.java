@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edusoho.yunketang.ui.MainTabActivity;
 import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
@@ -97,7 +98,8 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && getSupportedActivity() != null) {
-            StatusBarUtil.setTranslucentStatus(getSupportedActivity());
+            // 向上滑动1px来进入滑动监听回调变相控制状态栏背景
+            getDataBinding().scrollView.scrollBy(0, -1);
         }
     }
 
@@ -194,12 +196,15 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
             if (scrollY > ScreenUtil.getScreenWidth(getSupportedActivity()) * 9 / 16 - NotchUtil.getNotchHeight(getSupportedActivity()) + DensityUtil.dip2px(getSupportedActivity(), 10)) {
                 getDataBinding().titleIndicator.setVisibility(View.VISIBLE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Window window = getSupportedActivity().getWindow();
-                    // 有些情况下需要先清除透明flag
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.setStatusBarColor(getResources().getColor(R.color.bg_white));
-                    StatusBarUtil.setCommonUI(getSupportedActivity());
+                    // 防止在其他tab时，这里滑动未停止而改变了状态栏背景
+                    if (getActivity() != null && ((MainTabActivity) getActivity()).getDataBinding().vpMain.getCurrentItem() == 0) {
+                        Window window = getSupportedActivity().getWindow();
+                        // 有些情况下需要先清除透明flag
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(getResources().getColor(R.color.bg_white));
+                        StatusBarUtil.setCommonUI(getSupportedActivity());
+                    }
                 }
             } else {
                 getDataBinding().titleIndicator.setVisibility(View.GONE);

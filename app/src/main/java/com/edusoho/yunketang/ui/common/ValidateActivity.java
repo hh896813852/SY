@@ -3,6 +3,7 @@ package com.edusoho.yunketang.ui.common;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Base64;
@@ -133,7 +134,9 @@ public class ValidateActivity extends BaseActivity {
                 }
             }
         };
-        Glide.with(this).load(dragCaptcha.getUrl()).asBitmap().into(target);
+        if (!isDestroyed()) {
+            Glide.with(this).load(dragCaptcha.getUrl()).asBitmap().into(target);
+        }
     }
 
     /**

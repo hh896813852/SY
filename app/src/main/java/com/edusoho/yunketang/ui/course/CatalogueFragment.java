@@ -2,6 +2,8 @@ package com.edusoho.yunketang.ui.course;
 
 import android.content.Intent;
 
+import com.edusoho.yunketang.bean.Course;
+import com.edusoho.yunketang.helper.AppPreferences;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYConstants;
@@ -73,6 +75,9 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
      * 加载课程目录
      */
     public void loadCatalogueData(int courseType, int courseProjectId) {
+        if (getActivity() == null) {
+            return;
+        }
         if (expandableAdapter == null) {
             initExpandView();
         }
@@ -85,12 +90,16 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
                     @Override
                     public void onSuccess(String data) {
                         expandableList.clear();
-                        // 将数据中富文本内容转成可被解析的json数据
-                        String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(data));
-                        courseItems = JsonUtil.fromJson(json, new TypeToken<List<CourseItem>>() {
-                        });
-                        if (courseItems != null && courseItems.size() > 0) {
-                            splitData(courseItems);
+                        try {
+                            // 将数据中富文本内容转成可被解析的json数据
+                            String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(data));
+                            courseItems = JsonUtil.fromJson(json, new TypeToken<List<CourseItem>>() {
+                            });
+                            if (courseItems != null && courseItems.size() > 0) {
+                                splitData(courseItems);
+                            }
+                        } catch (Exception e) {
+
                         }
                     }
                 });

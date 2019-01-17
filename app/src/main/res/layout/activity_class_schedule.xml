@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <com.edusoho.yunketang.widget.VerticalSwipeRefreshLayout
                 android:id="@+id/swipeView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -78,7 +78,7 @@
                                     android:layout_height="1dp"
                                     android:background="@color/line_light_gray" />
 
-                                <com.edusoho.yunketang.widget.CustomViewPager
+                                <android.support.v4.view.ViewPager
                                     android:id="@+id/vpMain"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -99,7 +99,7 @@
                         </FrameLayout>
                     </LinearLayout>
                 </com.edusoho.yunketang.widget.CustomScrollView>
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </com.edusoho.yunketang.widget.VerticalSwipeRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/titleIndicator"

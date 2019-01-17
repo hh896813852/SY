@@ -131,14 +131,18 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
      * 初始化目录
      */
     private void initCatalogue() {
-        // 将数据中富文本内容转成可被解析的json数据
-        String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(courseCatalogueJson));
-        expandableList.addAll(JsonUtil.fromJson(json, new TypeToken<List<CourseItem>>() {
-        }));
-        expandableAdapter.notifyDataSetChanged();
-        // 默认全部展开
-        for (int i = 0; i < expandableList.size(); i++) {
-            getDataBinding().expandableView.expandGroup(i);
+        try {
+            // 将数据中富文本内容转成可被解析的json数据
+            String json = StringUtils.jsonStringConvert(StringUtils.replaceBlank(courseCatalogueJson));
+            expandableList.addAll(JsonUtil.fromJson(json, new TypeToken<List<CourseItem>>() {
+            }));
+            expandableAdapter.notifyDataSetChanged();
+            // 默认全部展开
+            for (int i = 0; i < expandableList.size(); i++) {
+                getDataBinding().expandableView.expandGroup(i);
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -216,14 +220,18 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
 
                     @Override
                     public void onSuccess(String data) {
-                        // 将数据中富文本内容转成可被解析的json数据
-                        String json = StringUtils.jsonStringConvert(data);
-                        LessonItem lessonItem = JsonUtil.fromJson(json, LessonItem.class);
-                        if (lessonItem != null && !TextUtils.isEmpty(lessonItem.mediaUri)) {
-                            String lessonUrl = lessonItem.type.equals("video") ? lessonItem.mediaUri : lessonItem.audioUri;
-                            canPlay(filterUrl(lessonUrl));
-                        } else {
-                            showSingleToast("视频不存在！");
+                        try {
+                            // 将数据中富文本内容转成可被解析的json数据
+                            String json = StringUtils.jsonStringConvert(data);
+                            LessonItem lessonItem = JsonUtil.fromJson(json, LessonItem.class);
+                            if (lessonItem != null && !TextUtils.isEmpty(lessonItem.mediaUri)) {
+                                String lessonUrl = lessonItem.type.equals("video") ? lessonItem.mediaUri : lessonItem.audioUri;
+                                canPlay(filterUrl(lessonUrl));
+                            } else {
+                                showSingleToast("视频不存在！");
+                            }
+                        } catch (Exception e) {
+
                         }
                     }
 

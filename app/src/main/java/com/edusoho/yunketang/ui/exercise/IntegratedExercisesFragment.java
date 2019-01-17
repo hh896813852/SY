@@ -24,6 +24,7 @@ import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.FragmentIntegratedExercisesBinding;
 import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.ViewUtils;
@@ -81,10 +82,14 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
             picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
         }
-        for (String url : picList) {
+        for (int i = 0; i < picList.size(); i++) {
             View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
             ImageView imageView = innerView.findViewById(R.id.imageView);
-            PicLoadHelper.load(getSupportedActivity(), url, imageView);
+            imageView.setTag(String.valueOf(i));
+            PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+            imageView.setOnClickListener(v -> {
+                PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(),Integer.valueOf(imageView.getTag().toString()));
+            });
             getDataBinding().containerLayout.addView(innerView);
         }
         // 初始化viewPager

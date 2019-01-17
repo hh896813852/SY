@@ -13,13 +13,14 @@
     <!-- 扫一扫，打开摄像头 -->
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- 定位权限 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-    <uses-permission android:name="android.permission.READ_LOGS"
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
 
     <application
@@ -99,6 +100,7 @@
             android:name="com.edusoho.yunketang.ui.course.CourseDetailsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan|stateHidden" />
 
         <activity
@@ -110,6 +112,11 @@
             android:name="com.edusoho.yunketang.ui.common.ValidateActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TranslucentFullScreenTheme" />
+
+        <activity
+            android:name="com.edusoho.yunketang.ui.common.ImageLookActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenNotTranslucentTheme" />
 
         <activity
             android:name=".ui.common.ShareActivity"

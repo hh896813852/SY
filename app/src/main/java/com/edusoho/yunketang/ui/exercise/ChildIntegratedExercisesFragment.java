@@ -27,6 +27,7 @@ import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentChildIntegratedExercisesBinding;
 import com.edusoho.yunketang.helper.ImageUploadHelper;
 import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.LuBanUtil;
@@ -93,6 +94,12 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                         adapter.notifyDataSetChanged();
                         // 子题答案图片修改
                         childQuestion.myAnswerPicUrl = getQuestionPicUrl();
+                    });
+                    // 点击预览
+                    answerImage.setOnClickListener(v -> {
+                        List<String> previewData = new ArrayList<>(list);
+                        previewData.remove(previewData.size() - 1);
+                        PicPreviewHelper.getInstance().setData(previewData).preview(getSupportedActivity(),position);
                     });
                 }
             }
@@ -170,10 +177,14 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
 
         if (!TextUtils.isEmpty(childQuestion.topicSubsidiaryUrl)) {
             picList.addAll(Arrays.asList(childQuestion.topicSubsidiaryUrl.split(",")));
-            for (String url : picList) {
+            for (int i = 0; i < picList.size(); i++) {
                 View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                 ImageView imageView = innerView.findViewById(R.id.imageView);
-                PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                imageView.setTag(String.valueOf(i));
+                PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+                imageView.setOnClickListener(v -> {
+                    PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(),Integer.valueOf(imageView.getTag().toString()));
+                });
                 getDataBinding().topicPicContainer.addView(innerView);
             }
         }

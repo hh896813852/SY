@@ -17,20 +17,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
-import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentSingleSelectBinding;
-import com.edusoho.yunketang.helper.ListViewHelper;
 import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.utils.DensityUtil;
-import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,16 +64,19 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
                 optionContent.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_light_black));
                 optionContainer.addView(optionContent);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionContent.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionContent.setLayoutParams(params);
             } else {
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
                 optionContainer.addView(optionImage);
-                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
+                PicLoadHelper.load_16_10(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 110), list.get(position).optionPicUrl, optionImage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionImage.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
+                optionImage.setOnClickListener(v -> {
+                    PicPreviewHelper.getInstance().setUrl(list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
+                });
             }
             // 选项背景
             TextView optionView = view.findViewById(R.id.optionView);
@@ -90,32 +89,33 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
             } else {
                 optionView.setBackground(ContextCompat.getDrawable(getSupportedActivity(), list.get(position).isPicked ? R.drawable.shape_oval_bg_orange : R.drawable.bg_white_stroke_gray_corner_16));
             }
+            // 选项点击
+            FrameLayout optionLayout = view.findViewById(R.id.optionLayout);
+            optionLayout.setOnClickListener(v -> {
+                // 答案解析不可更改选项
+                if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+                    return;
+                }
+                // 是否是第一次选择
+                boolean isFirstPick = true;
+                for (int i = 0; i < list.size(); i++) {
+                    // 有选项选过，则不是第一次选择
+                    if (list.get(i).isPicked) {
+                        isFirstPick = false;
+                    }
+                    list.get(i).isPicked = position == i;
+                }
+                adapter.notifyDataSetChanged();
+                if (isFirstPick && getActivity() != null) {
+                    new Handler().postDelayed(() -> {
+                        // 第一次选择，停留300毫秒显示下一页
+                        ((ExerciseActivity) getActivity()).showNextPage();
+                    }, 300);
+                }
+            });
             return view;
         }
     };
-    public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
-        // 答案解析不可更改选项
-        if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
-            return;
-        }
-        // 是否是第一次选择
-        boolean isFirstPick = true;
-        for (int i = 0; i < list.size(); i++) {
-            // 有选项选过，则不是第一次选择
-            if (list.get(i).isPicked) {
-                isFirstPick = false;
-            }
-            list.get(i).isPicked = position == i;
-        }
-        adapter.notifyDataSetChanged();
-        if (isFirstPick && getActivity() != null) {
-            new Handler().postDelayed(() -> {
-                // 第一次选择，停留300毫秒显示下一页
-                ((ExerciseActivity) getActivity()).showNextPage();
-            }, 300);
-        }
-    };
-
 
     public static SingleSelectFragment newInstance(Question question) {
         SingleSelectFragment fragment = new SingleSelectFragment();
@@ -139,10 +139,14 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
             getDataBinding().topicPicContainer.setVisibility(View.VISIBLE);
             picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
-            for (String url : picList) {
+            for (int i = 0; i < picList.size(); i++) {
                 View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                 ImageView imageView = innerView.findViewById(R.id.imageView);
-                PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                imageView.setTag(String.valueOf(i));
+                PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+                imageView.setOnClickListener(v -> {
+                    PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(), Integer.valueOf(imageView.getTag().toString()));
+                });
                 getDataBinding().topicPicContainer.addView(innerView);
             }
         } else {

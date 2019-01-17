@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -28,6 +29,7 @@ import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentListenSelectBinding;
 import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
@@ -81,10 +83,13 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
                 optionContainer.addView(optionImage);
-                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 50), list.get(position).optionPicUrl, optionImage);
+                PicLoadHelper.load_16_10(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 110), list.get(position).optionPicUrl, optionImage);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionImage.getLayoutParams();
-                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
+                params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
+                optionImage.setOnClickListener(v -> {
+                    PicPreviewHelper.getInstance().setUrl(list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
+                });
             }
             // 选项背景
             TextView optionView = view.findViewById(R.id.optionView);
@@ -97,29 +102,31 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
             } else {
                 optionView.setBackground(ContextCompat.getDrawable(getSupportedActivity(), list.get(position).isPicked ? R.drawable.shape_oval_bg_orange : R.drawable.bg_white_stroke_gray_corner_16));
             }
+            // 选项点击
+            FrameLayout optionLayout = view.findViewById(R.id.optionLayout);
+            optionLayout.setOnClickListener(v -> {
+                // 答案解析不可更改选项
+                if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+                    return;
+                }
+                // 是否是第一次选择
+                boolean isFirstPick = true;
+                for (int i = 0; i < list.size(); i++) {
+                    // 有选项选过，则不是第一次选择
+                    if (list.get(i).isPicked) {
+                        isFirstPick = false;
+                    }
+                    list.get(i).isPicked = position == i;
+                }
+                adapter.notifyDataSetChanged();
+                if (isFirstPick && getActivity() != null) {
+                    new Handler().postDelayed(() -> {
+                        // 第一次选择，停留300毫秒显示下一页
+                        ((ExerciseActivity) getActivity()).showNextPage();
+                    }, 300);
+                }
+            });
             return view;
-        }
-    };
-    public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
-        // 答案解析不可更改选项
-        if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
-            return;
-        }
-        // 是否是第一次选择
-        boolean isFirstPick = true;
-        for (int i = 0; i < list.size(); i++) {
-            // 有选项选过，则不是第一次选择
-            if (list.get(i).isPicked) {
-                isFirstPick = false;
-            }
-            list.get(i).isPicked = position == i;
-        }
-        adapter.notifyDataSetChanged();
-        if (isFirstPick && getActivity() != null) {
-            new Handler().postDelayed(() -> {
-                // 第一次选择，停留300毫秒显示下一页
-                ((ExerciseActivity) getActivity()).showNextPage();
-            }, 300);
         }
     };
 

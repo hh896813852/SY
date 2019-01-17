@@ -113,13 +113,9 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
                 }
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 if (index == 0) {
-                    if (notLearnCourseFragment.list.size() > 0) {
-                        notLearnCourseFragment.resetViewPagerHeight();
-                    }
+                    notLearnCourseFragment.resetViewPagerHeight();
                 } else {
-                    if (hasLearnedCourseFragment.list.size() > 0) {
-                        hasLearnedCourseFragment.resetViewPagerHeight();
-                    }
+                    hasLearnedCourseFragment.resetViewPagerHeight();
                 }
                 getDataBinding().scrollView.scrollTo(0, 0);
             }
@@ -146,13 +142,9 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
                 }
                 getDataBinding().vpMain.setCurrentItem(index, true);
                 if (index == 0) {
-                    if (notLearnCourseFragment.list.size() > 0) {
-                        notLearnCourseFragment.resetViewPagerHeight();
-                    }
+                    notLearnCourseFragment.resetViewPagerHeight();
                 } else {
-                    if (hasLearnedCourseFragment.list.size() > 0) {
-                        hasLearnedCourseFragment.resetViewPagerHeight();
-                    }
+                    hasLearnedCourseFragment.resetViewPagerHeight();
                 }
             }
         });
@@ -288,7 +280,7 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         calendarView.addDecorator(new HasCourseDecorator(this, hasCourseDays));
     }
 
-    // Map<Integer,Boolean> 的替换类
+    // Map<Integer,Boolean> 的替代类
     private SparseBooleanArray statusList = new SparseBooleanArray();
 
     /**

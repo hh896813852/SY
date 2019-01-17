@@ -101,6 +101,14 @@ public class AppPreferences extends BasePreferences {
         setBoolean(APP_FORCE_UPDATE, isForce);
     }
 
+    public static boolean isFirstCheckReport(String homeworkId) {
+        return getBoolean(homeworkId, true);
+    }
+
+    public static void setFirstCheckReport(String homeworkId, boolean isForce) {
+        setBoolean(homeworkId, isForce);
+    }
+
     public static EducationCourse getSelectedCourse() {
         String json = getString(SELECTED_COURSE, "");
         if (TextUtils.isEmpty(json)) {
