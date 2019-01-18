@@ -79,6 +79,28 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionContent.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionContent.setLayoutParams(params);
+                view.setOnClickListener(v -> {
+                    // 答案解析不可更改选项
+                    if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+                        return;
+                    }
+                    // 是否是第一次选择
+                    boolean isFirstPick = true;
+                    for (int i = 0; i < list.size(); i++) {
+                        // 有选项选过，则不是第一次选择
+                        if (list.get(i).isPicked) {
+                            isFirstPick = false;
+                        }
+                        list.get(i).isPicked = position == i;
+                    }
+                    adapter.notifyDataSetChanged();
+                    if (isFirstPick && getActivity() != null) {
+                        new Handler().postDelayed(() -> {
+                            // 第一次选择，停留300毫秒显示下一页
+                            ((ExerciseActivity) getActivity()).showNextPage();
+                        }, 300);
+                    }
+                });
             } else {
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -88,7 +110,7 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
                 optionImage.setOnClickListener(v -> {
-                    PicPreviewHelper.getInstance().setUrl(list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
+                    PicPreviewHelper.getInstance().setUrl(optionImage, list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
                 });
             }
             // 选项背景
@@ -183,7 +205,7 @@ public class ListenSelectFragment extends BaseFragment<FragmentListenSelectBindi
                 for (String url : answerAnalysisPicList) {
                     View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                     ImageView imageView = innerView.findViewById(R.id.imageView);
-                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                     getDataBinding().answerAnalysisPicContainer.addView(innerView);
                 }
             }

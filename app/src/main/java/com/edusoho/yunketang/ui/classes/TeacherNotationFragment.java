@@ -17,6 +17,8 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentTeacherNotationBinding;
 import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.utils.DensityUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +68,7 @@ public class TeacherNotationFragment extends BaseFragment<FragmentTeacherNotatio
             for (String url : teacherNotePicList) {
                 View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                 ImageView imageView = innerView.findViewById(R.id.imageView);
-                PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                 getDataBinding().teacherNotePicContainer.addView(innerView);
             }
         }

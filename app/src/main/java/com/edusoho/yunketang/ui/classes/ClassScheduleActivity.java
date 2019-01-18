@@ -160,7 +160,7 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         });
 
         // 设置scrollView滑动监听
-        getDataBinding().scrollView.setOnScrollListener(scrollY -> getDataBinding().titleIndicator.setVisibility(scrollY > calendarHeight ? View.VISIBLE : View.GONE));
+        getDataBinding().scrollView.setOnScrollListener(scrollY -> getDataBinding().titleIndicator.setVisibility(scrollY > (calendarHeight + DensityUtil.dip2px(this, 8)) ? View.VISIBLE : View.GONE));
 
         //日历控件
         calendarView = getDataBinding().calendarView;
@@ -294,7 +294,7 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         statusList.put(status, hasData);
         if (statusList.size() == 2) {
             if (!statusList.get(0) && statusList.get(1)) {
-                getDataBinding().vpMain.setCurrentItem(1);
+                ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(1)).callOnClick();
                 hasLearnedCourseFragment.resetViewPagerHeight();
                 hasCourse.set(true);
             } else if (!statusList.get(0) && !statusList.get(1)) {

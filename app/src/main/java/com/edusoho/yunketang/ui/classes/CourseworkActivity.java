@@ -134,6 +134,8 @@ public class CourseworkActivity extends BaseActivity<ActivityCourseworkBinding> 
         if (getDataBinding() != null && !isLoading) {
             pageNo = 1;
             loadData();
+            // 加载班级排行
+            loadClassRank();
         }
     };
 

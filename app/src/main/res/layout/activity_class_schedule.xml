@@ -108,11 +108,6 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:background="@color/bg_light_gray0" />
-
                 <net.lucode.hackware.magicindicator.MagicIndicator
                     android:id="@+id/tabIndicator"
                     android:layout_width="match_parent"

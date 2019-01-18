@@ -1714,7 +1714,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         @Override
         public void onFinish() {
             leftExamSecond = 0;
-            leftTime.set("00:00");
+            leftTime.set("00:00:00");
             ProgressDialogUtil.showProgress(ExerciseActivity.this, "正在提交试卷，请稍后...", false);
             // 交卷（整体提交）
             commitExamAll();

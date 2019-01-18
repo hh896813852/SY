@@ -5,16 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.databinding.ObservableField;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -33,7 +32,7 @@ import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.LuBanUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
-import com.edusoho.yunketang.utils.ViewUtils;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -42,9 +41,7 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Layout(value = R.layout.fragment_child_integrated_exercises)
 public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChildIntegratedExercisesBinding> {
@@ -99,7 +96,9 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                     answerImage.setOnClickListener(v -> {
                         List<String> previewData = new ArrayList<>(list);
                         previewData.remove(previewData.size() - 1);
-                        PicPreviewHelper.getInstance().setData(previewData).preview(getSupportedActivity(),position);
+                        Rect rect = new Rect();
+                        answerImage.getGlobalVisibleRect(rect);
+                        PicPreviewHelper.getInstance().setData(rect, previewData, position).preview(getSupportedActivity(), position);
                     });
                 }
             }
@@ -181,9 +180,10 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                 View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                 ImageView imageView = innerView.findViewById(R.id.imageView);
                 imageView.setTag(String.valueOf(i));
-                PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), picList.get(i), imageView);
                 imageView.setOnClickListener(v -> {
-                    PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(),Integer.valueOf(imageView.getTag().toString()));
+                    int position = Integer.valueOf(imageView.getTag().toString());
+                    PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), position);
                 });
                 getDataBinding().topicPicContainer.addView(innerView);
             }
@@ -202,12 +202,12 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                 for (String url : correctAnswerPicList) {
                     View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                     ImageView imageView = innerView.findViewById(R.id.imageView);
-                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                     getDataBinding().correctAnswerPicContainer.addView(innerView);
                 }
             }
 
-            if(!(getParentFragment() != null && ((IntegratedExercisesFragment) getParentFragment()).isTeacherNotation)) {
+            if (!(getParentFragment() != null && ((IntegratedExercisesFragment) getParentFragment()).isTeacherNotation)) {
                 // 老师批注
                 teacherNotes.set(childQuestion.postil);
                 // 老师批注图片
@@ -217,7 +217,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                     for (String url : teacherNotePicList) {
                         View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                         ImageView imageView = innerView.findViewById(R.id.imageView);
-                        PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                        PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                         getDataBinding().teacherNotePicContainer.addView(innerView);
                     }
                 }
@@ -232,7 +232,7 @@ public class ChildIntegratedExercisesFragment extends BaseFragment<FragmentChild
                 for (String url : answerAnalysisPicList) {
                     View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                     ImageView imageView = innerView.findViewById(R.id.imageView);
-                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                     getDataBinding().answerAnalysisPicContainer.addView(innerView);
                 }
             }

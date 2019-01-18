@@ -1,6 +1,7 @@
 package com.edusoho.yunketang.ui.exercise;
 
 import android.databinding.ObservableField;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -66,6 +67,28 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionContent.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionContent.setLayoutParams(params);
+                view.setOnClickListener(v -> {
+                    // 答案解析不可更改选项
+                    if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+                        return;
+                    }
+                    // 是否是第一次选择
+                    boolean isFirstPick = true;
+                    for (int i = 0; i < list.size(); i++) {
+                        // 有选项选过，则不是第一次选择
+                        if (list.get(i).isPicked) {
+                            isFirstPick = false;
+                        }
+                        list.get(i).isPicked = position == i;
+                    }
+                    adapter.notifyDataSetChanged();
+                    if (isFirstPick && getActivity() != null) {
+                        new Handler().postDelayed(() -> {
+                            // 第一次选择，停留300毫秒显示下一页
+                            ((ExerciseActivity) getActivity()).showNextPage();
+                        }, 300);
+                    }
+                });
             } else {
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -75,7 +98,7 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
                 optionImage.setOnClickListener(v -> {
-                    PicPreviewHelper.getInstance().setUrl(list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
+                    PicPreviewHelper.getInstance().setUrl(optionImage, list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
                 });
             }
             // 选项背景
@@ -134,7 +157,7 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
 
     private void initView() {
         // 题目序号 + 题目
-        questionTopic.set(question.questionSort + "、" + question.topic);
+        questionTopic.set(question.questionSort + "、" + (TextUtils.isEmpty(question.topic) ? "" : question.topic));
         // 题目图片adapter
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
             getDataBinding().topicPicContainer.setVisibility(View.VISIBLE);
@@ -143,9 +166,10 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
                 View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                 ImageView imageView = innerView.findViewById(R.id.imageView);
                 imageView.setTag(String.valueOf(i));
-                PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), picList.get(i), imageView);
                 imageView.setOnClickListener(v -> {
-                    PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(), Integer.valueOf(imageView.getTag().toString()));
+                    int position = Integer.valueOf(imageView.getTag().toString());
+                    PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), position);
                 });
                 getDataBinding().topicPicContainer.addView(innerView);
             }
@@ -184,7 +208,7 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
                 for (String url : answerAnalysisPicList) {
                     View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                     ImageView imageView = innerView.findViewById(R.id.imageView);
-                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                     getDataBinding().answerAnalysisPicContainer.addView(innerView);
                 }
             }

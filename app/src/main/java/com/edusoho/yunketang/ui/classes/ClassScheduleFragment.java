@@ -131,9 +131,11 @@ public class ClassScheduleFragment extends BaseFragment<FragmentClassScheduleBin
      * 设置courseFragment的viewpager高度，
      */
     public void resetViewPagerHeight() {
-        int listViewHeight = ListViewHelper.getTotalHeightOfListView(getDataBinding().listView);
-        LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) ((ClassScheduleActivity) getActivity()).getDataBinding().vpMain.getLayoutParams();
-        linearParams.height = listViewHeight - DensityUtil.dip2px(getSupportedActivity(), 20);
-        ((ClassScheduleActivity) getActivity()).getDataBinding().vpMain.setLayoutParams(linearParams);
+        if (getActivity() != null) {
+            int listViewHeight = ListViewHelper.getTotalHeightOfListView(getDataBinding().listView);
+            LinearLayout.LayoutParams linearParams = (LinearLayout.LayoutParams) ((ClassScheduleActivity) getActivity()).getDataBinding().vpMain.getLayoutParams();
+            linearParams.height = listViewHeight - DensityUtil.dip2px(getSupportedActivity(), 20);
+            ((ClassScheduleActivity) getActivity()).getDataBinding().vpMain.setLayoutParams(linearParams);
+        }
     }
 }

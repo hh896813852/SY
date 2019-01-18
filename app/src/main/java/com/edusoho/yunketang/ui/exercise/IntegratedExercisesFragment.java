@@ -1,6 +1,7 @@
 package com.edusoho.yunketang.ui.exercise;
 
 import android.databinding.ObservableField;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
-import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.ChildQuestionViewPagerAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
@@ -27,6 +27,7 @@ import com.edusoho.yunketang.helper.PicLoadHelper;
 import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.utils.DateUtils;
 import com.edusoho.yunketang.utils.DensityUtil;
+import com.edusoho.yunketang.utils.ScreenUtil;
 import com.edusoho.yunketang.utils.ViewUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,7 +77,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
     }
 
     private void initView() {
-        questionTopic.set(question.questionSort + "、" + question.topic);
+        questionTopic.set(question.questionSort + "、" + (TextUtils.isEmpty(question.topic) ? "" : question.topic));
         hasAudio.set(!TextUtils.isEmpty(question.topicVoiceUrl));
         // 初始化题目图片
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
@@ -86,9 +87,10 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
             View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
             ImageView imageView = innerView.findViewById(R.id.imageView);
             imageView.setTag(String.valueOf(i));
-            PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+            PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), picList.get(i), imageView);
             imageView.setOnClickListener(v -> {
-                PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(),Integer.valueOf(imageView.getTag().toString()));
+                int position = Integer.valueOf(imageView.getTag().toString());
+                PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), position);
             });
             getDataBinding().containerLayout.addView(innerView);
         }
@@ -157,7 +159,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
         if (isVisibleToUser && getActivity() != null) {
-            if(!isTeacherNotation) {
+            if (!isTeacherNotation) {
                 // 告诉Activity当前子题下标，用于Activity展示相应的答案解析
                 ((ExerciseActivity) getActivity()).currentChildQuestionIndex = getDataBinding().viewPager.getCurrentItem();
             }

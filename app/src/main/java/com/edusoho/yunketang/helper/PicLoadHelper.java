@@ -10,6 +10,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
 
 public class PicLoadHelper {
@@ -41,10 +42,10 @@ public class PicLoadHelper {
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 int imageWidth = resource.getWidth();
                 int imageHeight = resource.getHeight();
-                int height = ScreenUtil.getScreenWidth(context) * imageHeight / imageWidth;
+                int height = width * imageHeight / imageWidth;
                 ViewGroup.LayoutParams params = imageView.getLayoutParams();
                 params.height = height;
-                params.width = ScreenUtil.getScreenWidth(context);
+                params.width = width;
                 imageView.setImageBitmap(resource);
             }
         });
@@ -77,6 +78,8 @@ public class PicLoadHelper {
         Glide.with(context).load(url).asBitmap().placeholder(R.drawable.bg_load_default_4x3).into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                int limitWidth = DensityUtil.dip2px(context, 80); // 最小宽度限制
+                int limitHeight = limitWidth * 10 / 16;// 最小高度限制
                 int imageWidth = resource.getWidth();  // 图片宽度
                 int imageHeight = resource.getHeight();// 图片高度
                 int maxHeight = maxWidth * 10 / 16;    // 最大高度
@@ -86,8 +89,21 @@ public class PicLoadHelper {
                 int resultHeight;
                 // 如果图片宽高均小于等于其最大限制
                 if (imageWidth <= maxWidth && imageHeight <= maxHeight) {
-                    resultWidth = imageWidth;
-                    resultHeight = imageHeight;
+                    // 宽高均小于其最小限制，则放大图片至某一边到最小限制
+                    if (imageWidth < limitWidth && imageHeight < limitHeight) {
+                        // 把图片的宽度设为最小宽度限制,得到图片变化后的高度
+                        resultHeight = limitWidth * imageHeight / imageWidth;
+                        // 如果图片变化后的高度大于最小高度限制，设置图片最大高度为 limitHeight
+                        if (resultHeight > limitHeight) {
+                            resultHeight = limitHeight;
+                            resultWidth = imageWidth * limitHeight / imageHeight;
+                        } else {
+                            resultWidth = limitWidth;
+                        }
+                    } else {
+                        resultWidth = imageWidth;
+                        resultHeight = imageHeight;
+                    }
                 } else {
                     // 把图片的宽度设为最大宽度,得到图片变化后的高度
                     resultHeight = maxWidth * imageHeight / imageWidth;

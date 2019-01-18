@@ -77,7 +77,7 @@ public class MyBoughtExamActivity extends BaseActivity<ActivityMyBoughtExamBindi
                     selectedCourse.levelId = list.get(position).levelId;
                     selectedCourse.courseId = list.get(position).courseId;
                     intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
-                    startActivity(intent);
+                    startActivityForResult(intent, AnswerReportActivity.FROM_REPORT_REQUEST_CODE);
                 } else { // 开始（此处无继续状态）
                     Intent intent = new Intent(MyBoughtExamActivity.this, ExerciseActivity.class);
                     intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
@@ -105,6 +105,12 @@ public class MyBoughtExamActivity extends BaseActivity<ActivityMyBoughtExamBindi
                 pageNo = 1;
                 loadData();
             }
+        }
+        if (requestCode == AnswerReportActivity.FROM_REPORT_REQUEST_CODE) {
+            onRefreshListener.onRefresh();
+        }
+        if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+            onRefreshListener.onRefresh();
         }
     }
 

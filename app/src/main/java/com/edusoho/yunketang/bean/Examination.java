@@ -19,7 +19,7 @@ public class Examination implements Serializable {
     public String examinationId;  // 试卷主键id
     public String homeworkId;     // 作业id
     public String homeworkType;   // 1、模块作业 2、班级作业
-    public String moduleId;       // 模块id
+    public int moduleId;          // 模块id
     public int businessType;      // 行业id
     public int levelId;           // 职业/等级id
     public int courseId;          // 课程id
@@ -105,7 +105,7 @@ public class Examination implements Serializable {
      */
     public String getCompletePerson() {
         if (TextUtils.isEmpty(completeSum) || "0".equals(completeSum)) {
-            return "还没其他人完成";
+            return "还没有人完成";
         }
         return completeSum + "人已完成";
     }

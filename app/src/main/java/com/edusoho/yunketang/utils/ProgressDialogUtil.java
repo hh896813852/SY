@@ -1,5 +1,6 @@
 package com.edusoho.yunketang.utils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 
@@ -19,13 +20,15 @@ public class ProgressDialogUtil {
     }
 
     public static void showProgress(Context context, String msg, boolean cancelable) {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
+        if (isValidContext(context)) {
+            if (mProgressDialog != null) {
+                mProgressDialog.cancel();
+            }
+            mProgressDialog = new ProgressDialog(context);
+            mProgressDialog.setMessage(msg);
+            mProgressDialog.setCancelable(cancelable);
+            mProgressDialog.show();
         }
-        mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(msg);
-        mProgressDialog.setCancelable(cancelable);
-        mProgressDialog.show();
     }
 
     public static void hideProgress() {
@@ -40,4 +43,10 @@ public class ProgressDialogUtil {
         }
         return false;
     }
+
+    private static boolean isValidContext(Context context) {
+        Activity a = (Activity) context;
+        return !a.isDestroyed() && !a.isFinishing();
+    }
+
 }

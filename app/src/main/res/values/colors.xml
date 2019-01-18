@@ -30,6 +30,8 @@
     <!-- 背景 -->
     <!-- 背景 主题色 -->
     <color name="theme_color">#17A884</color>
+    <!-- 背景 透明主题色 -->
+    <color name="alpha_theme_color">#6017A884</color>
     <!-- 背景 绿色 -->
     <color name="bg_green_color">#30BFA2</color>
     <color name="bg_transparent">#00ffffff</color>

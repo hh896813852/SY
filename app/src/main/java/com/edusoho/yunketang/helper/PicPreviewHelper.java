@@ -2,11 +2,11 @@ package com.edusoho.yunketang.helper;
 
 import android.app.Activity;
 import android.graphics.Rect;
+import android.widget.ImageView;
 
-import com.edusoho.yunketang.ui.common.ImageLookActivity;
+import com.edusoho.yunketang.bean.preview.UserViewInfo;
 import com.previewlibrary.GPreviewBuilder;
 import com.previewlibrary.ZoomMediaLoader;
-import com.previewlibrary.enitity.ThumbViewInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 public class PicPreviewHelper {
 
     private static volatile PicPreviewHelper defaultInstance;
-    private static ArrayList<ThumbViewInfo> mThumbViewInfoList;
+    private static ArrayList<UserViewInfo> mThumbViewInfoList;
 
     private PicPreviewHelper() {
     }
@@ -32,21 +32,33 @@ public class PicPreviewHelper {
         return defaultInstance;
     }
 
-    public PicPreviewHelper setUrl(String url) {
+    public PicPreviewHelper setUrl(ImageView imageView, String url) {
         mThumbViewInfoList.clear();
         Rect bounds = new Rect();
-        ThumbViewInfo item = new ThumbViewInfo(url);
+        imageView.getGlobalVisibleRect(bounds);
+        UserViewInfo item = new UserViewInfo(url);
         item.setBounds(bounds);
         mThumbViewInfoList.add(item);
         return defaultInstance;
     }
 
-    public PicPreviewHelper setData(List<String> urls) {
+    public PicPreviewHelper setData(List<Rect> rects, List<String> urls) {
         mThumbViewInfoList.clear();
-        for (String url : urls) {
-            Rect bounds = new Rect();
-            ThumbViewInfo item = new ThumbViewInfo(url);
-            item.setBounds(bounds);
+        for (int i = 0; i < urls.size(); i++) {
+            UserViewInfo item = new UserViewInfo(urls.get(i));
+            item.setBounds(rects.get(i));
+            mThumbViewInfoList.add(item);
+        }
+        return defaultInstance;
+    }
+
+    public PicPreviewHelper setData(Rect rect, List<String> urls, int position) {
+        mThumbViewInfoList.clear();
+        for (int i = 0; i < urls.size(); i++) {
+            UserViewInfo item = new UserViewInfo(urls.get(i));
+            if (i == position) {
+                item.setBounds(rect);
+            }
             mThumbViewInfoList.add(item);
         }
         return defaultInstance;
@@ -54,15 +66,13 @@ public class PicPreviewHelper {
 
     public void preview(Activity activity, int currentIndex) {
         // 打开预览界面
-        GPreviewBuilder.from(activity)
-                //是否使用自定义预览界面，当然8.0之后因为配置问题，必须要使用
-                .to(ImageLookActivity.class)
-                .setData(mThumbViewInfoList)
-                .setCurrentIndex(currentIndex)
-                .setSingleFling(true)
-                .setType(GPreviewBuilder.IndicatorType.Number)
-                // 小圆点
-                .setType(GPreviewBuilder.IndicatorType.Dot)
-                .start();//启动
+        GPreviewBuilder.from(activity)                     // activity实例必须
+                .setData(mThumbViewInfoList)               // 集合
+                .setCurrentIndex(currentIndex)             // 设置当前位置
+                .setSingleFling(true)                      // 是否在黑屏区域点击返回
+                .setDrag(false)                            // 是否禁用图片拖拽返回
+                .setType(GPreviewBuilder.IndicatorType.Dot)// 指示器类型
+                .start();                                  // 启动
+
     }
 }

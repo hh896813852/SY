@@ -1,6 +1,7 @@
 package com.edusoho.yunketang.ui.exercise;
 
 import android.databinding.ObservableField;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -11,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,15 +21,12 @@ import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
 import com.edusoho.yunketang.base.annotation.Layout;
-import com.edusoho.yunketang.bean.MyAnswer;
 import com.edusoho.yunketang.bean.Question;
 import com.edusoho.yunketang.databinding.FragmentJudgeSelectBinding;
 import com.edusoho.yunketang.helper.PicLoadHelper;
 import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.utils.DensityUtil;
-import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +65,28 @@ public class JudgeSelectFragment extends BaseFragment<FragmentJudgeSelectBinding
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) optionContent.getLayoutParams();
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionContent.setLayoutParams(params);
+                view.setOnClickListener(v -> {
+                    // 答案解析不可更改选项
+                    if (getActivity() != null && ((ExerciseActivity) getActivity()).isAnswerAnalysis) {
+                        return;
+                    }
+                    // 是否是第一次选择
+                    boolean isFirstPick = true;
+                    for (int i = 0; i < list.size(); i++) {
+                        // 有选项选过，则不是第一次选择
+                        if (list.get(i).isPicked) {
+                            isFirstPick = false;
+                        }
+                        list.get(i).isPicked = position == i;
+                    }
+                    adapter.notifyDataSetChanged();
+                    if (isFirstPick && getActivity() != null) {
+                        new Handler().postDelayed(() -> {
+                            // 第一次选择，停留300毫秒显示下一页
+                            ((ExerciseActivity) getActivity()).showNextPage();
+                        }, 300);
+                    }
+                });
             } else {
                 ImageView optionImage = new ImageView(getSupportedActivity());
                 optionImage.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -77,7 +96,7 @@ public class JudgeSelectFragment extends BaseFragment<FragmentJudgeSelectBinding
                 params.setMargins(DensityUtil.dip2px(getSupportedActivity(), 10), DensityUtil.dip2px(getSupportedActivity(), 5), 0, DensityUtil.dip2px(getSupportedActivity(), 5));
                 optionImage.setLayoutParams(params);
                 optionImage.setOnClickListener(v -> {
-                    PicPreviewHelper.getInstance().setUrl(list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
+                    PicPreviewHelper.getInstance().setUrl(optionImage, list.get(position).optionPicUrl).preview(getSupportedActivity(), 0);
                 });
             }
             // 选项背景
@@ -136,18 +155,19 @@ public class JudgeSelectFragment extends BaseFragment<FragmentJudgeSelectBinding
 
     private void initView() {
         // 题目序号 + 题目
-        questionTopic.set(question.questionSort + "、" + question.topic);
+        questionTopic.set(question.questionSort + "、" + (TextUtils.isEmpty(question.topic) ? "" : question.topic));
         // 题目图片adapter
-        if(!TextUtils.isEmpty(question.topicPictureUrl)) {
+        if (!TextUtils.isEmpty(question.topicPictureUrl)) {
             getDataBinding().topicPicContainer.setVisibility(View.VISIBLE);
             picList.addAll(Arrays.asList(question.topicPictureUrl.split(",")));
             for (int i = 0; i < picList.size(); i++) {
                 View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                 ImageView imageView = innerView.findViewById(R.id.imageView);
                 imageView.setTag(String.valueOf(i));
-                PicLoadHelper.load(getSupportedActivity(), picList.get(i), imageView);
+                PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), picList.get(i), imageView);
                 imageView.setOnClickListener(v -> {
-                    PicPreviewHelper.getInstance().setData(picList).preview(getSupportedActivity(),Integer.valueOf(imageView.getTag().toString()));
+                    int position = Integer.valueOf(imageView.getTag().toString());
+                    PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), position);
                 });
                 getDataBinding().topicPicContainer.addView(innerView);
             }
@@ -186,7 +206,7 @@ public class JudgeSelectFragment extends BaseFragment<FragmentJudgeSelectBinding
                 for (String url : answerAnalysisPicList) {
                     View innerView = LayoutInflater.from(getSupportedActivity()).inflate(R.layout.item_pic, null);
                     ImageView imageView = innerView.findViewById(R.id.imageView);
-                    PicLoadHelper.load(getSupportedActivity(), url, imageView);
+                    PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), url, imageView);
                     getDataBinding().answerAnalysisPicContainer.addView(innerView);
                 }
             }

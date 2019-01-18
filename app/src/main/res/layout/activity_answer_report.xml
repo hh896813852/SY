@@ -35,23 +35,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
                 android:layout_marginTop="180dp"
-                android:background="@color/bg_light_gray0" />
+                android:background="@color/bg_white" />
 
             <include layout="@layout/layout_title_white_with_right_text" />
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="90dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/bg_white_corner_6">
+                android:layout_height="190dp"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="70dp"
+                android:paddingRight="10dp"
+                android:background="@drawable/bg_report_rank">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="22dp"
                     android:text="@{viewModel.finishDate}"
                     android:textColor="@color/theme_color"
                     android:textSize="13dp"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="55dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -87,6 +87,7 @@
                 <FrameLayout
                     android:layout_width="110dp"
                     android:layout_height="110dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_gravity="center">
 
                     <com.edusoho.yunketang.widget.CircleBarView
@@ -173,7 +174,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="22dp"
                     android:layout_marginRight="10dp"
                     android:text="@{viewModel.usedTime}"
                     android:textColor="@color/theme_color"
@@ -184,7 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|right"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="55dp"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
