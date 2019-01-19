@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.SYApplication;
+import com.edusoho.yunketang.ui.common.PaymentActivity;
 import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYConstants;
@@ -42,6 +43,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     private int moduleId;
     private EducationCourse selectedCourse;
 
+    private int prePayExamIndex;    // 准备支付的试卷的下标
     private int pageNo = 1;
     private boolean isLoading;
 
@@ -122,12 +124,28 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
                         startActivityForResult(intent, LoginActivity.LOGIN_REQUEST_CODE);
                     });
                 } else {
-                    Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
-                    intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
-                    intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
-                    intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
-                    intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
-                    startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+                    if (list.get(position).chargeMode == 0 || list.get(position).isPay) {
+                        Intent intent = new Intent(PracticeActivity.this, ExerciseActivity.class);
+                        intent.putExtra(ExerciseActivity.EXAMINATION_ID, list.get(position).examinationId);
+                        intent.putExtra(ExerciseActivity.SELECTED_COURSE, selectedCourse);
+                        intent.putExtra(ExerciseActivity.MODULE_ID, moduleId);
+                        intent.putExtra(ExerciseActivity.IS_MODULE_EXERCISE, true);
+                        startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
+                    } else { // 去购买
+                        prePayExamIndex = position;
+                        if (list.get(position) == null) {
+                            showSingleToast("当前试卷不存在！");
+                            return;
+                        }
+                        Intent intent = new Intent(PracticeActivity.this, PaymentActivity.class);
+                        intent.putExtra(PaymentActivity.GOODS_TYPE, 2);
+                        intent.putExtra(PaymentActivity.BUSINESS_ID, selectedCourse.businessId);
+                        intent.putExtra(PaymentActivity.MODULE_Id, moduleId);
+                        intent.putExtra(PaymentActivity.GOODS_NAME, list.get(position).examinationName);
+                        intent.putExtra(PaymentActivity.GOODS_ID, list.get(position).examinationId);
+                        intent.putExtra(PaymentActivity.GOODS_PRICE, list.get(position).price);
+                        startActivityForResult(intent, PaymentActivity.FROM_PAYMENT_CODE);
+                    }
                 }
             });
             return view;
@@ -149,6 +167,10 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PaymentActivity.FROM_PAYMENT_CODE && resultCode == Activity.RESULT_OK) {
+            list.get(prePayExamIndex).isPay = true;
+            adapter.notifyDataSetChanged();
+        }
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
         }

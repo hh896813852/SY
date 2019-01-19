@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.edusoho.yunketang.bean.PayParams" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.common.PaymentActivity" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#60000000"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:onClick="onPayTypePickCloseClick" />
+
+        <LinearLayout
+            android:id="@+id/llView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_top_corner_8"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="确认订单"
+                    android:textColor="@color/text_black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:clickable="true"
+                    android:onClick="onPayTypePickCloseClick"
+                    android:src="@drawable/icon_close_black" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{viewModel.goodsName}"
+                android:textColor="@color/text_black"
+                android:textSize="16sp"
+                tools:text="会计初级职称" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@{viewModel.goodsPrice}"
+                android:textColor="@color/theme_color"
+                android:textSize="16sp"
+                tools:text="¥8000" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/bg_light_gray0" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:onClick="onPayTypeSelectClick"
+                android:tag="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/icon_wechat"
+                    android:drawablePadding="8dp"
+                    android:text="微信"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:src="@{viewModel.payType == PayParams.PAY_TYPE_WECHAT ? @drawable/icon_picked : @drawable/icon_not_pick}"
+                    tools:src="@drawable/icon_not_pick" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/bg_light_gray0" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:onClick="onPayTypeSelectClick"
+                android:tag="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/icon_alipay"
+                    android:drawablePadding="8dp"
+                    android:text="支付宝"
+                    android:textColor="@color/text_black"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="10dp"
+                    android:src="@{viewModel.payType == PayParams.PAY_TYPE_ALIPAY ? @drawable/icon_picked : @drawable/icon_not_pick}"
+                    tools:src="@drawable/icon_picked" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/bg_light_gray0" />
+
+            <TextView
+                android:layout_width="240dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/bg_theme_color_corner_25"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onCommitOrderClick"
+                android:text="提交订单"
+                android:textColor="@color/text_white"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

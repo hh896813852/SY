@@ -20,6 +20,20 @@
         <item name="android:windowDisablePreview">true</item>
     </style>
 
+    <!--全屏加透明无转场动画-->
+    <style name="TranslucentFullScreenNoAnimTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/bg_transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@style/NoAnimStyle</item>
+    </style>
+
+    <style name="NoAnimStyle" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+    </style>
+
     <!-- 自定义spinner箭头 -->
     <style name="spinner_style" parent="Base.Widget.AppCompat.Spinner">
         <item name="android:background">@drawable/spinner_arrow</item>

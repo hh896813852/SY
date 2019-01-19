@@ -125,6 +125,12 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <activity
+            android:name=".ui.common.PaymentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentFullScreenNoAnimTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+
+        <activity
             android:name="com.edusoho.yunketang.ui.course.CourseEvaluateActivity"
             android:screenOrientation="portrait" />
 

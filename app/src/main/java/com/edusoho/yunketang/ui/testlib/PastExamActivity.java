@@ -30,6 +30,7 @@ import com.edusoho.yunketang.databinding.ActivityPastExamBinding;
 import com.edusoho.yunketang.helper.PayHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.ui.common.PaymentActivity;
 import com.edusoho.yunketang.ui.exercise.ExerciseActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.DensityUtil;
@@ -48,7 +49,6 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
     private int moduleId;
     private EducationCourse selectedCourse;
 
-    private Examination prePayExam; // 准备支付的试卷
     private int prePayExamIndex;    // 准备支付的试卷的下标
     public ObservableField<String> examinationName = new ObservableField<>();
     public ObservableField<String> examinationPrice = new ObservableField<>();
@@ -96,11 +96,18 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                             startActivityForResult(intent, ExerciseActivity.FROM_EXERCISE_CODE);
                         } else { // 去购买
                             prePayExamIndex = position;
-                            prePayExam = list.get(position);
-                            examinationName.set(prePayExam.examinationName);
-                            examinationPrice.set("¥" + prePayExam.price);
-                            // 显示支付选择框
-                            showPayTypePickView();
+                            if (list.get(position) == null) {
+                                showSingleToast("当前试卷不存在！");
+                                return;
+                            }
+                            Intent intent = new Intent(PastExamActivity.this, PaymentActivity.class);
+                            intent.putExtra(PaymentActivity.GOODS_TYPE, 2);
+                            intent.putExtra(PaymentActivity.BUSINESS_ID, selectedCourse.businessId);
+                            intent.putExtra(PaymentActivity.MODULE_Id, moduleId);
+                            intent.putExtra(PaymentActivity.GOODS_NAME, list.get(position).examinationName);
+                            intent.putExtra(PaymentActivity.GOODS_ID, list.get(position).examinationId);
+                            intent.putExtra(PaymentActivity.GOODS_PRICE, list.get(position).price);
+                            startActivityForResult(intent, PaymentActivity.FROM_PAYMENT_CODE);
                         }
                     }
                 }
@@ -120,6 +127,10 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PaymentActivity.FROM_PAYMENT_CODE && resultCode == Activity.RESULT_OK) {
+            list.get(prePayExamIndex).isPay = true;
+            adapter.notifyItemChanged(prePayExamIndex);
+        }
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
         }
@@ -233,95 +244,5 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                     }
                 }, new TypeToken<List<Examination>>() {
                 });
-    }
-
-    /**
-     * 显示支付方式选择窗口
-     */
-    private void showPayTypePickView() {
-        getDataBinding().layout.setVisibility(View.VISIBLE);
-        getDataBinding().bgLayout.setVisibility(View.VISIBLE);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_from_bottom);
-        getDataBinding().layout.startAnimation(animation);
-    }
-
-    /**
-     * 关闭支付方式选择窗口
-     */
-    public void onPayTypePickCloseClick(View view) {
-        onBgClick(null);
-    }
-
-    /**
-     * 提交订单
-     */
-    public void onCommitOrderClick(View view) {
-        if (prePayExam == null) {
-            showSingleToast("当前试卷不存在！");
-            return;
-        }
-        SYDataTransport.create(payType.get() == PayParams.PAY_TYPE_WECHAT ? SYConstants.SY_WXPAY : SYConstants.SY_ALIPAY)
-                .addParam("goodsType", 2) // 商品分类 1:视频，2:试卷
-                .addParam("businessType", selectedCourse.businessId)
-                .addParam("moduleId", moduleId)
-                .addParam("goodsName", prePayExam.examinationName)
-                .addParam("goodsId", prePayExam.examinationId)
-                .addProgressing(this, "正在创建订单，请稍后...")
-                .execute(new SYDataListener<PayParams>() {
-
-                    @Override
-                    public void onSuccess(PayParams data) {
-                        data.setPayType(payType.get());
-                        PayHelper.getInstance().pay(PastExamActivity.this, data, isSuccess -> {
-                            if (isSuccess) {
-                                showSingleToast("支付成功！");
-                                prePayExam.isPay = true;
-                                adapter.notifyItemChanged(prePayExamIndex);
-                            } else {
-                                showSingleToast("支付失败！");
-                            }
-                            onBgClick(null);
-                        });
-                    }
-                }, PayParams.class);
-    }
-
-    /**
-     * 支付方式选择
-     */
-    public void onPayTypeSelectClick(View view) {
-        switch (view.getTag().toString()) {
-            case "1": // 微信
-                payType.set(PayParams.PAY_TYPE_WECHAT);
-                break;
-            case "2": // 支付宝
-                payType.set(PayParams.PAY_TYPE_ALIPAY);
-                break;
-        }
-    }
-
-    /**
-     * 背景点击
-     */
-    public void onBgClick(View view) {
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_bottom);
-        getDataBinding().layout.startAnimation(animation);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                getDataBinding().layout.setVisibility(View.GONE);
-                getDataBinding().bgLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
     }
 }
