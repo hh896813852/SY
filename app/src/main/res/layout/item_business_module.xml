@@ -15,6 +15,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bg_white"
-        android:scaleType="fitXY"
-        android:src="@drawable/bg_exercise_zjlx" />
+        android:scaleType="fitXY" />
 </layout>
