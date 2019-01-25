@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.edusoho.yunketang.ui.me.study.LiveStudyFragment" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableTop="@drawable/bg_no_bought_exam"
+            android:drawablePadding="5dp"
+            android:gravity="center_horizontal"
+            android:text="还没有学习的直播"
+            android:textColor="@color/text_light_green"
+            android:textSize="16sp"
+            android:visibility="@{viewModel.hasData ? View.GONE : View.VISIBLE}" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            bind:onRefreshListener="@{viewModel.onRefreshListener}">
+
+            <com.edusoho.yunketang.widget.NoScrollListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/bg_white"
+                android:dividerHeight="8dp"
+                android:scrollbars="none"
+                bind:adapter="@{viewModel.adapter}"
+                bind:onItemClick="@{viewModel.onItemClick}" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout>
+</layout>

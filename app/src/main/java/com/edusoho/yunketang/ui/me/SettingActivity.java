@@ -1,15 +1,21 @@
 package com.edusoho.yunketang.ui.me;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.ObservableField;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
@@ -20,10 +26,13 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Setting;
 import com.edusoho.yunketang.databinding.ActivitySettingBinding;
 import com.edusoho.yunketang.helper.AppPreferences;
+import com.edusoho.yunketang.helper.UpdateHelper;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.AppUtil;
 import com.edusoho.yunketang.utils.BitmapUtil;
 import com.edusoho.yunketang.utils.html.MyHtmlTagHandler;
+
+import java.io.File;
 
 @Layout(value = R.layout.activity_setting, title = "设置")
 public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
@@ -122,5 +131,12 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
     @Override
     public void onBackPressed() {
         onBackButtonClick(null);
+    }
+
+    /**
+     * 检测更新
+     */
+    public void onUpdateClick(View view) {
+        UpdateHelper.checkUpdate(this, true, true);
     }
 }

@@ -227,7 +227,7 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
         SYDataTransport.create(String.format(SYConstants.SEND_SMS, phoneNo.get()))
                 .isGET2()
                 .addProgressing(this, "正在发送验证码...")
-                .execute(new SYDataListener() {
+                .execute(new SYDataListener<Object>() {
 
                     @Override
                     public void onSuccess(Object data) {
@@ -240,7 +240,7 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
                     public void onFail(int status, String failMessage) {
                         super.onFail(status, failMessage);
                     }
-                });
+                }, Object.class);
     }
 
 

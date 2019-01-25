@@ -37,7 +37,7 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
     @Override
     public void onResume() {
         super.onResume();
-        if (courseType != 0) {
+        if (courseType != 0 && courseProjectId != 0) {
             loadCatalogueData(courseType, courseProjectId);
         }
     }

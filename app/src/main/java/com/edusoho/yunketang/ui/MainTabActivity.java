@@ -19,6 +19,7 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.base.annotation.Translucent;
 import com.edusoho.yunketang.base.core.ActivityManager;
 import com.edusoho.yunketang.databinding.ActivityMainTabBinding;
+import com.edusoho.yunketang.helper.UpdateHelper;
 import com.edusoho.yunketang.ui.classes.ClassFragment;
 import com.edusoho.yunketang.ui.course.CourseFragment;
 import com.edusoho.yunketang.ui.me.PersonalFragment;
@@ -56,6 +57,8 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
         initData();
         // 初始化
         initView();
+        // 检测更新
+        checkUpdate();
     }
 
     private void initData() {
@@ -91,6 +94,13 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(screenW * 25 / 64, DensityUtil.dip2px(this, 2), 0, 0);
         getDataBinding().unreadCountView.setLayoutParams(params);
+    }
+
+    /**
+     * 检测更新
+     */
+    private void checkUpdate() {
+        UpdateHelper.checkUpdateIndex(this);
     }
 
     /**

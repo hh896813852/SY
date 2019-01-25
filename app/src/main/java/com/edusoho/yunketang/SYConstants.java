@@ -12,7 +12,7 @@ public class SYConstants {
     public static final int PAGE_SIZE_20 = 20;
 //    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
 //    public static String HTTP_URL = "http://192.168.0.253:8087/shangyuan-app-web/"; // 刘健本地环境
-//    public static String HTTP_URL = "http://192.168.0.128:8088/shangyuan-app-web/"; // 余斌本地环
+//    public static String HTTP_URL = "http://192.168.0.237:8088/shangyuan-app-web/"; // 余斌本地环
 //    public static String HTTP_URL = "http://test.233863.com/shangyuan-app-web/"; // 上元教育测试环境
     public static String HTTP_URL = "http://sy.233863.com/shangyuan-app-web/";   // 上元教育正式环境
     public static String HTTP_URL_ONLINE = "http://www.233863.com/";     // 上元在线
@@ -189,6 +189,10 @@ public class SYConstants {
      * GET
      */
     public static final String CHECKING_IN = "http://%s&stuId=%s&stuLongitude=%s&stuLatitude=%s&source=1";
+    /**
+     * 检测更新
+     */
+    public static final String CHECK_VERSION = HTTP_URL + "app/version/android/query";
 
     // ----------------------------------------   以上为上元教育接口  ------------------------------------- //
 
@@ -390,14 +394,44 @@ public class SYConstants {
     public static final String ACCOUNTANT_MY_COIN = HTTP_URL_ACCOUNTANT + "mapi_v2/User/getUserCoin";
     /**
      * 上元在线 我购买的视频
-     * POST
      */
     public static final String ONLINE_MY_VIDEO = HTTP_URL_ONLINE + "api/me/courses?offset=0&limit=1000";
     /**
      * 上元会计 我购买的视频
-     * POST
      */
     public static final String ACCOUNTANT_MY_VIDEO = HTTP_URL_ACCOUNTANT + "api/me/courses?offset=0&limit=1000";
+    /**
+     * 上元在线 我购买的直播
+     */
+    public static final String ONLINE_MY_LIVE = HTTP_URL_ONLINE + "api/me/live_course_sets?offset=0&limit=1000";
+    /**
+     * 上元会计 我购买的直播
+     */
+    public static final String ACCOUNTANT_MY_LIVE = HTTP_URL_ACCOUNTANT + "api/me/live_course_sets?offset=0&limit=1000";
+    /**
+     * 上元在线 我的班级
+     */
+    public static final String ONLINE_MY_CLASS = HTTP_URL_ONLINE + "api/me/classrooms?offset=0&limit=1000";
+    /**
+     * 上元会计 我的班级
+     */
+    public static final String ACCOUNTANT_MY_CLASS = HTTP_URL_ACCOUNTANT + "api/me/classrooms?offset=0&limit=1000";
+    /**
+     * 上元在线 我的班级详情
+     */
+    public static final String ONLINE_MY_CLASSROOM = HTTP_URL_ONLINE + "api/classrooms/%s";
+    /**
+     * 上元会计 我的班级详情
+     */
+    public static final String ACCOUNTANT_MY_CLASSROOM = HTTP_URL_ACCOUNTANT + "api/classrooms/%s";
+    /**
+     * 上元在线 我的班级课程目录
+     */
+    public static final String ONLINE_CLASS_CATEGORY = HTTP_URL_ONLINE + "api/classrooms/%s/courses";
+    /**
+     * 上元会计 我的班级课程目录
+     */
+    public static final String ACCOUNTANT_CLASS_CATEGORY = HTTP_URL_ACCOUNTANT + "api/classrooms/%s/courses";
 
     public static final String MOBILE_APP_VERSION = "mobile/%s/version?code=%s";
     public static final String MOBILE_APP_RESOURCE = "mobile/%s/resources";

@@ -18,23 +18,16 @@
 
         <include layout="@layout/layout_title_black" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/line_light_gray" />
-
         <net.lucode.hackware.magicindicator.MagicIndicator
             android:id="@+id/mainTabIndicator"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@color/bg_white"
-            android:visibility="gone" />
+            android:background="@color/bg_white" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/line_light_gray"
-            android:visibility="gone" />
+            android:background="@color/line_light_gray" />
 
         <com.edusoho.yunketang.widget.ChildViewPager
             android:id="@+id/vpMain"

@@ -17,6 +17,7 @@ import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.databinding.FragmentPersonalBinding;
 import com.edusoho.yunketang.ui.login.LoginActivity;
+import com.edusoho.yunketang.ui.me.study.MyStudyOldActivity;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.statusbar.StatusBarUtil;
@@ -94,7 +95,7 @@ public class PersonalFragment extends BaseFragment<FragmentPersonalBinding> {
     /**
      * 我的学习
      */
-    public View.OnClickListener onMyStudyClicked = v -> startActivity(new Intent(getSupportedActivity(), MyStudyActivity.class));
+    public View.OnClickListener onMyStudyClicked = v -> startActivity(new Intent(getSupportedActivity(), MyStudyOldActivity.class));
 
     /**
      * 购买的视频

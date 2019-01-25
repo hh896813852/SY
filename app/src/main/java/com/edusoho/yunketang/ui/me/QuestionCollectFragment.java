@@ -85,7 +85,7 @@ public class QuestionCollectFragment extends BaseFragment<FragmentQuestionCollec
     }
 
     private void loadData() {
-        if (SYApplication.getInstance().getUser() == null) {
+        if (SYApplication.getInstance().getUser() == null || SYApplication.getInstance().getUser().syjyUser == null) {
             hasData.set(false);
             return;
         }

@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 
 public class Study {
     public int id;
+    public int courseType; // 1、上元在线 2、上元会计
     public String type;
     public String title;
     public String summary;

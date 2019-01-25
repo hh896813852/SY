@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.base.BaseDialog;
+import com.edusoho.yunketang.base.animation.BaseAnimatorSet;
 import com.edusoho.yunketang.base.animation.BounceEnter.BounceTopEnter;
 import com.edusoho.yunketang.base.animation.SlideExit.SlideTopExit;
 import com.edusoho.yunketang.base.animation.ZoomEnter.ZoomInEnter;
@@ -16,6 +17,7 @@ import com.edusoho.yunketang.base.animation.ZoomExit.ZoomOutExit;
 import com.edusoho.yunketang.widget.dialog.SXYDialog;
 import com.edusoho.yunketang.widget.dialog.SimpleDialog;
 import com.edusoho.yunketang.widget.dialog.TipDialog;
+import com.edusoho.yunketang.widget.dialog.UpdateDialog;
 
 /**
  * @author any
@@ -239,6 +241,19 @@ public class DialogUtil {
      * @param simpleClickListener 监听器
      */
     public static void showSimpleAnimDialog(Context context, String content, String leftBtnText, String rightBtnText, SimpleDialog.OnSimpleClickListener simpleClickListener) {
+        showSimpleAnimDialog(context, content, leftBtnText, rightBtnText, new BounceTopEnter(), new SlideTopExit(300), simpleClickListener);
+    }
+
+    /**
+     * 简易Dialog
+     *
+     * @param context             上下文
+     * @param content             内容
+     * @param leftBtnText         左侧按钮文字
+     * @param rightBtnText        右侧按钮文字
+     * @param simpleClickListener 监听器
+     */
+    public static void showSimpleAnimDialog(Context context, String content, String leftBtnText, String rightBtnText, BaseAnimatorSet showAnim, BaseAnimatorSet dismissAnim, SimpleDialog.OnSimpleClickListener simpleClickListener) {
         SimpleDialog simpleDialog = new SimpleDialog(context);
         simpleDialog.setCanceledOnTouchOutside(true);
         simpleDialog.setContentText(content)
@@ -247,8 +262,29 @@ public class DialogUtil {
                 .setOnSimpleClickListener(simpleClickListener)
                 .setCustomLayout(R.layout.dialog_simple)
                 .widthScale(0.8f)
-                .showAnim(new BounceTopEnter())
-                .dismissAnim(new SlideTopExit(300))
+                .showAnim(showAnim)
+                .dismissAnim(dismissAnim)
+                .show();
+    }
+
+    /**
+     * 更新Dialog
+     * @param context         上下文
+     * @param version         版本号
+     * @param content         更新内容
+     * @param onClickListener 监听器
+     */
+    public static void showUpdateDialog(Context context, boolean isForce, String version, String content, UpdateDialog.OnClickListener onClickListener) {
+        UpdateDialog updateDialog = new UpdateDialog(context);
+        updateDialog.setCanceledOnTouchOutside(!isForce);
+        updateDialog.setVersionText(version)
+                .setOnClickListener(onClickListener)
+                .setIsForce(isForce)
+                .setContentText(content)
+                .setCustomLayout(R.layout.dialog_update)
+                .widthScale(0.8f)
+                .showAnim(new ZoomInEnter())
+                .dismissAnim(new ZoomOutExit())
                 .show();
     }
 
@@ -274,11 +310,11 @@ public class DialogUtil {
     /**
      * 提示对话框
      *
-     * @param context         上下文
-     * @param title           标题
-     * @param content         内容
+     * @param context 上下文
+     * @param title   标题
+     * @param content 内容
      */
-    public static void showTipDialog(Context context, String title,String content) {
+    public static void showTipDialog(Context context, String title, String content) {
         TipDialog tipDialog = new TipDialog(context);
         tipDialog.setCanceledOnTouchOutside(true);
         tipDialog.setTitleText(title)

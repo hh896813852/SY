@@ -11,9 +11,11 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -238,19 +240,33 @@ public class AppUtil {
      * installApk 安装应用
      *
      * @param context
-     * @param filePath
+     * @param file
      * @return
      */
-    public static boolean installApk(Context context, String filePath) {
-        File file = new File(filePath);
-        if (!file.exists() || !file.isFile() || file.length() <= 0) {
-            return false;
+    public static void installApk(Context context, File file) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Uri uriForFile = FileProvider.getUriForFile(context, "com.edusoho.yunketang.fileprovider", file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(uriForFile, context.getContentResolver().getType(uriForFile));
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), getMIMEType(file));
         }
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.parse("file://" + filePath), "application/vnd.android.package-archive");
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
-        return true;
+        try {
+            context.startActivity(intent);
+        } catch (Exception var5) {
+            var5.printStackTrace();
+        }
+    }
+
+    private static String getMIMEType(File file) {
+        String var1;
+        String var2 = file.getName();
+        String var3 = var2.substring(var2.lastIndexOf(".") + 1, var2.length()).toLowerCase();
+        var1 = MimeTypeMap.getSingleton().getMimeTypeFromExtension(var3);
+        return var1;
     }
 
     /**
@@ -264,10 +280,10 @@ public class AppUtil {
         if (fileUri == null) {
             return false;
         }
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(fileUri, "application/vnd.android.package-archive");
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(fileUri, "application/vnd.android.package-archive");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
         return true;
     }
 

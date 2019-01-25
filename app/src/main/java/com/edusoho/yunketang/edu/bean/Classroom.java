@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class Classroom implements Serializable {
-
+    public int courseType; // 1、上元在线 2、上元会计
     public int id;
     public String title;
     public String about;
