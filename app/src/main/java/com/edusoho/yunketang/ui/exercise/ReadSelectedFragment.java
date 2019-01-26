@@ -48,7 +48,7 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
     public ObservableField<Boolean> hasAudio = new ObservableField<>(false); // 是否有音频
     public ObservableField<Boolean> isPlaying = new ObservableField<>(false);// 音频播放器是否正在播放
     public ObservableField<String> audioCurrentTime = new ObservableField<>("00:00");// 音频播放了的时间
-    public ObservableField<String> audioDuration = new ObservableField<>();         // 音频时长
+    public ObservableField<String> audioDuration = new ObservableField<>("00:00");   // 音频时长
 
     public ObservableField<String> questionTopic = new ObservableField<>(); // 题目
 
@@ -75,6 +75,7 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
 
     private void initView() {
         questionTopic.set(question.questionSort + "、" + (TextUtils.isEmpty(question.topic) ? "" : question.topic));
+        // 是否包含音频文件
         hasAudio.set(!TextUtils.isEmpty(question.topicVoiceUrl));
         // 初始化题目图片
         if (!TextUtils.isEmpty(question.topicPictureUrl)) {
@@ -87,7 +88,7 @@ public class ReadSelectedFragment extends BaseFragment<FragmentReadSelectBinding
             PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), picList.get(i), imageView);
             imageView.setOnClickListener(v -> {
                 int position = Integer.valueOf(imageView.getTag().toString());
-                PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), position);
+                PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), 0);
             });
             getDataBinding().containerLayout.addView(innerView);
         }

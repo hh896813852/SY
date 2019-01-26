@@ -26,6 +26,70 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/bg_white_stroke_gray_corner_4"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="@{viewModel.hasAudio ? View.VISIBLE : View.GONE}">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <SeekBar
+                        android:id="@+id/seekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="14dp"
+                        android:background="@null"
+                        android:maxHeight="2dp"
+                        android:minHeight="2dp"
+                        android:progressDrawable="@drawable/sy_video_seek_progress"
+                        android:thumb="@drawable/sy_video_seek_thumb" />
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:scaleType="centerInside"
+                        android:src="@{viewModel.isPlaying ? @drawable/icon_play_green : @drawable/icon_pause_green}"
+                        bind:clickCommand="@{viewModel.onPlayAudioClicked}"
+                        tools:src="@drawable/icon_pause_green" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.audioCurrentTime}"
+                    android:textColor="@color/text_light_black"
+                    android:textSize="14sp"
+                    tools:text="00:00" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@color/text_light_black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="@{viewModel.audioDuration}"
+                    android:textColor="@color/text_light_black"
+                    android:textSize="14sp"
+                    tools:text="02:13" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +104,8 @@
                 android:id="@+id/topicPicContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical" />
 
             <com.edusoho.yunketang.widget.NoScrollListView
@@ -142,7 +207,8 @@
                     android:id="@+id/answerAnalysisPicContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
             </LinearLayout>
         </LinearLayout>

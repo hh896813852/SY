@@ -90,7 +90,7 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
             PicLoadHelper.load(getSupportedActivity(), ScreenUtil.getScreenWidth(getSupportedActivity()) - DensityUtil.dip2px(getSupportedActivity(), 20), picList.get(i), imageView);
             imageView.setOnClickListener(v -> {
                 int position = Integer.valueOf(imageView.getTag().toString());
-                PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), position);
+                PicPreviewHelper.getInstance().setUrl(imageView, picList.get(position)).preview(getSupportedActivity(), 0);
             });
             getDataBinding().containerLayout.addView(innerView);
         }

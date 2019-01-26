@@ -76,14 +76,13 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
         int itemHeight; // 点击的item到listView顶部距离
         if (list.get(position).courseType == 1) { // 上元在线
-            getDataBinding().vpMain.setCurrentItem(0);
             itemHeight = onlineCourseFragment.getItemHeight(list.get(position).courseSort);
+            ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(0)).callOnClick();
         } else { // 上元会计
-            getDataBinding().vpMain.setCurrentItem(1);
             itemHeight = accountantCourseFragment.getItemHeight(list.get(position).courseSort);
+            ((ColorTransitionPagerTitleView) commonNavigator.getPagerTitleView(1)).callOnClick();
         }
         getDataBinding().scrollView.smoothScrollTo(0, itemHeight + ScreenUtil.getScreenWidth(getSupportedActivity()) * 9 / 16 + DensityUtil.dip2px(getSupportedActivity(), 268) - NotchUtil.getNotchHeight(getSupportedActivity()));
-        SYApplication.getInstance().setHost(list.get(position).courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
     };
 
     @Override
