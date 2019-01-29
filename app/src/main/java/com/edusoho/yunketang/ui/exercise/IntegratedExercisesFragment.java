@@ -278,7 +278,9 @@ public class IntegratedExercisesFragment extends BaseFragment<FragmentIntegrated
         mediaPlayer.setOnCompletionListener(mp -> {
             timeThread = null;
             isPlaying.set(false);
-            audioCurrentTime.set(DateUtils.second2Min(mediaPlayer.getDuration() / 1000));
+            if (isPrepared) {
+                audioCurrentTime.set(DateUtils.second2Min(mediaPlayer.getDuration() / 1000));
+            }
         });
     }
 

@@ -137,6 +137,6 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
      * 检测更新
      */
     public void onUpdateClick(View view) {
-        UpdateHelper.checkUpdate(this, true, true);
+        UpdateHelper.checkUpdate(this, true, false);
     }
 }

@@ -1,7 +1,6 @@
 package com.edusoho.yunketang.ui.exercise;
 
 import android.databinding.ObservableField;
-import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -353,7 +351,9 @@ public class SingleSelectFragment extends BaseFragment<FragmentSingleSelectBindi
         mediaPlayer.setOnCompletionListener(mp -> {
             timeThread = null;
             isPlaying.set(false);
-            audioCurrentTime.set(DateUtils.second2Min(mediaPlayer.getDuration() / 1000));
+            if (isPrepared) {
+                audioCurrentTime.set(DateUtils.second2Min(mediaPlayer.getDuration() / 1000));
+            }
         });
     }
 

@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
@@ -35,6 +36,8 @@ import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.bean.base.Message;
 import com.edusoho.yunketang.bean.event.ChildPositionEvent;
 import com.edusoho.yunketang.databinding.ActivityExerciseBinding;
+import com.edusoho.yunketang.helper.PicLoadHelper;
+import com.edusoho.yunketang.helper.PicPreviewHelper;
 import com.edusoho.yunketang.helper.QuestionHelper;
 import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.http.SYDataListener;
@@ -42,6 +45,7 @@ import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.ui.testlib.AnswerReportActivity;
 import com.edusoho.yunketang.utils.BitmapUtil;
 import com.edusoho.yunketang.utils.DateUtils;
+import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
@@ -204,10 +208,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
     };
 
     public List<String> answerAnalysisPicList = new ArrayList<>();
-    public SYBaseAdapter answerAnalysisPicAdapter = new SYBaseAdapter();
-
     public List<String> correctAnswerPicList = new ArrayList<>();
-    public SYBaseAdapter correctAnswerPicAdapter = new SYBaseAdapter();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -290,10 +291,6 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         isShowAnswerCardIcon.set(isClassExercise || isModuleExercise || isExamTest);
         // 答题卡adapter
         adapter.init(this, R.layout.item_answer_report, list);
-        // 正确答案图片adapter
-        correctAnswerPicAdapter.init(this, R.layout.item_pic, correctAnswerPicList);
-        // 答案解析图片adapter
-        answerAnalysisPicAdapter.init(this, R.layout.item_pic, answerAnalysisPicList);
         // 题目pagerAdapter
         viewPagerAdapter = new QuestionViewPagerAdapter(getSupportFragmentManager(), questionList);
         getDataBinding().viewPager.setOffscreenPageLimit(2);
@@ -547,6 +544,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                             question.questionSum = currentLoadQuestionStemSum;
                             question.classification = currentLoadQuestionStem.classification;
                             question.alias = currentLoadQuestionStem.alias;
+                            question.sort = currentLoadQuestionStem.sort;
                             for (Question.QuestionDetails details : question.details) {
                                 details.options = details.getChoiceList();
                             }
@@ -1077,14 +1075,38 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             // 正确答案图片
             String correctResultUrl = currentQuestion.details.get(childQuestionIndex).correctResultUrl;
             if (!TextUtils.isEmpty(correctResultUrl)) {
+                getDataBinding().correctAnswerPicContainer.removeAllViews();
+                correctAnswerPicList.clear();
                 correctAnswerPicList.addAll(Arrays.asList(correctResultUrl.split(",")));
-                correctAnswerPicAdapter.notifyDataSetChanged();
+                for (int i = 0; i < correctAnswerPicList.size(); i++) {
+                    View innerView = LayoutInflater.from(ExerciseActivity.this).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    imageView.setTag(String.valueOf(i));
+                    PicLoadHelper.load(ExerciseActivity.this, ScreenUtil.getScreenWidth(ExerciseActivity.this) - DensityUtil.dip2px(ExerciseActivity.this, 20), correctAnswerPicList.get(i), imageView);
+                    imageView.setOnClickListener(v -> {
+                        int tag = Integer.valueOf(imageView.getTag().toString());
+                        PicPreviewHelper.getInstance().setUrl(imageView, correctAnswerPicList.get(tag)).preview(ExerciseActivity.this, 0);
+                    });
+                    getDataBinding().correctAnswerPicContainer.addView(innerView);
+                }
             }
             // 答案解析图片
             String resultResolveUrl = currentQuestion.details.get(childQuestionIndex).resultResolveUrl;
             if (!TextUtils.isEmpty(resultResolveUrl)) {
+                getDataBinding().answerAnalysisPicContainer.removeAllViews();
+                answerAnalysisPicList.clear();
                 answerAnalysisPicList.addAll(Arrays.asList(resultResolveUrl.split(",")));
-                answerAnalysisPicAdapter.notifyDataSetChanged();
+                for (int i = 0; i < answerAnalysisPicList.size(); i++) {
+                    View innerView = LayoutInflater.from(ExerciseActivity.this).inflate(R.layout.item_pic, null);
+                    ImageView imageView = innerView.findViewById(R.id.imageView);
+                    imageView.setTag(String.valueOf(i));
+                    PicLoadHelper.load(ExerciseActivity.this, ScreenUtil.getScreenWidth(ExerciseActivity.this) - DensityUtil.dip2px(ExerciseActivity.this, 20), answerAnalysisPicList.get(i), imageView);
+                    imageView.setOnClickListener(v -> {
+                        int tag = Integer.valueOf(imageView.getTag().toString());
+                        PicPreviewHelper.getInstance().setUrl(imageView, answerAnalysisPicList.get(tag)).preview(ExerciseActivity.this, 0);
+                    });
+                    getDataBinding().answerAnalysisPicContainer.addView(innerView);
+                }
             }
         }
         // 背景模糊
@@ -1444,6 +1466,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
                 examAnswer.questionId = question.questionId;
                 examAnswer.classification = question.subclassification;
                 examAnswer.index = question.questionSort;
+                examAnswer.identificationIndex = question.identificationIndex;
+                examAnswer.sort = question.sort;
                 examAnswer.correctResults = getCorrectAnswer(question);
                 examAnswer.userResults = getAnswerList(question);
                 // 添加ExamAnswer对象
