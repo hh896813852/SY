@@ -174,7 +174,7 @@ public class PracticeActivity extends BaseActivity<ActivityPracticeBinding> {
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
             onRefreshListener.onRefresh();
         }
-        if (requestCode == AnswerReportActivity.FROM_REPORT_REQUEST_CODE) {
+        if (requestCode == AnswerReportActivity.FROM_REPORT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             onRefreshListener.onRefresh();
         }
         if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {

@@ -51,10 +51,8 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
 
     private int prePayExamIndex;    // 准备支付的试卷的下标
     public ObservableField<String> examinationName = new ObservableField<>();
-    public ObservableField<String> examinationPrice = new ObservableField<>();
     public ObservableField<Boolean> isLogin = new ObservableField<>(false);
     public ObservableField<Boolean> hasData = new ObservableField<>(true);
-    public ObservableField<Integer> payType = new ObservableField<>(PayParams.PAY_TYPE_WECHAT);
 
     private boolean isLoading;
     private boolean canLoadMore;
@@ -83,7 +81,7 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
                         intent.putExtra(AnswerReportActivity.EXAMINATION_ID, list.get(position).examinationId);
                         intent.putExtra(AnswerReportActivity.MODULE_ID, moduleId);
                         intent.putExtra(AnswerReportActivity.SELECTED_COURSE, selectedCourse);
-                        startActivity(intent);
+                        startActivityForResult(intent, AnswerReportActivity.FROM_REPORT_REQUEST_CODE);
                     } else { // 开始（此处无继续状态）
                         if (list.get(position).chargeMode == 0 || list.get(position).isPay) { // 免费 或者 已经购买
                             Intent intent = new Intent(PastExamActivity.this, ExerciseActivity.class);
@@ -132,10 +130,19 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
             adapter.notifyItemChanged(prePayExamIndex);
         }
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
+
+
+
+
+
+
             onRefreshListener.onRefresh();
         }
         if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             isLogin.set(SYApplication.getInstance().isLogin());
+            onRefreshListener.onRefresh();
+        }
+        if (requestCode == AnswerReportActivity.FROM_REPORT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             onRefreshListener.onRefresh();
         }
     }

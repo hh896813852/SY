@@ -670,9 +670,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="95dp"
                                     android:layout_marginTop="9dp"
-                                    android:text="@{viewModel.correctAnswer}"
                                     android:textColor="@color/theme_color"
                                     android:textSize="17sp"
+                                    bind:htmlText="@{viewModel.correctAnswer}"
                                     tools:text="C" />
                             </FrameLayout>
 
@@ -699,9 +699,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="10dp"
                                 android:lineSpacingExtra="5dp"
-                                android:text="@{viewModel.answerAnalysis}"
                                 android:textColor="@color/text_black"
                                 android:textSize="17sp"
+                                bind:htmlText="@{viewModel.answerAnalysis}"
                                 tools:text="答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析答案解析" />
 
                             <LinearLayout
