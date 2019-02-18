@@ -65,6 +65,9 @@ public class PicPreviewHelper {
     }
 
     public void preview(Activity activity, int currentIndex) {
+        if (mThumbViewInfoList == null) {
+            return;
+        }
         // 打开预览界面
         GPreviewBuilder.from(activity)                     // activity实例必须
                 .setData(mThumbViewInfoList)               // 集合

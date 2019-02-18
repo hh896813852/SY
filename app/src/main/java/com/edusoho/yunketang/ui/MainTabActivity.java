@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.edusoho.yunketang.R;
-import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.adapter.CommonViewPagerAdapter;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.BaseFragment;
@@ -57,8 +56,6 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
         initData();
         // 初始化
         initView();
-        // 检测更新
-        checkUpdate();
     }
 
     private void initData() {
@@ -115,6 +112,10 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
                     if (permission.granted) {
                         // 权限允许
                         LogUtil.i("RxPermissions", "允许：" + permission.name);
+                        if (permission.name.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            // 检测更新
+                            checkUpdate();
+                        }
                     } else if (permission.shouldShowRequestPermissionRationale) {
                         // 权限拒绝，等待下次询问
                         LogUtil.i("RxPermissions", "权限拒绝，等待下次询问：" + permission.name);

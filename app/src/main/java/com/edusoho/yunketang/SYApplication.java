@@ -28,6 +28,9 @@ import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 
 import tv.danmaku.ijk.media.exo2.Exo2PlayerManager;
@@ -57,6 +60,8 @@ public class SYApplication extends MultiDexApplication {
         QbSdk.initX5Environment(getBaseContext(), null);
         // Bugly初始化
         CrashReport.initCrashReport(getApplicationContext(), "79d447ff05", false);
+        // 关闭Android9.0弹出框（Detected problems with API compatibility）
+        closeAndroidPDialog();
     }
 
     public static SYApplication getInstance() {
@@ -178,6 +183,30 @@ public class SYApplication extends MultiDexApplication {
             }
         };
         registerActivityLifecycleCallbacks(lifecycleCallbacks);
+    }
+
+    /**
+     * 关闭Android9.0弹出框（Detected problems with API compatibility）
+     */
+    private void closeAndroidPDialog(){
+        try {
+            Class aClass = Class.forName("android.content.pm.PackageParser$Package");
+            Constructor declaredConstructor = aClass.getDeclaredConstructor(String.class);
+            declaredConstructor.setAccessible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            Class cls = Class.forName("android.app.ActivityThread");
+            Method declaredMethod = cls.getDeclaredMethod("currentActivityThread");
+            declaredMethod.setAccessible(true);
+            Object activityThread = declaredMethod.invoke(null);
+            Field mHiddenApiWarningShown = cls.getDeclaredField("mHiddenApiWarningShown");
+            mHiddenApiWarningShown.setAccessible(true);
+            mHiddenApiWarningShown.setBoolean(activityThread, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public int screenW;

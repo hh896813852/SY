@@ -144,7 +144,7 @@ public class RegisterActivity extends BaseActivity<ActivityRegisterBinding> {
             showSingleToast("密码不能为空");
             return;
         }
-        if (!StringUtils.checkPasswordDigtAndLetter(password.get())) {
+        if (!StringUtils.checkPasswordDigitAndLetter(password.get())) {
             showSingleToast("密码必须为6-20位字母数字组合");
             return;
         }

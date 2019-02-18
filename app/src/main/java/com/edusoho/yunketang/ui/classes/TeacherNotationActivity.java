@@ -57,20 +57,17 @@ public class TeacherNotationActivity extends BaseActivity<ActivityTeacherNotatio
         configuration.lineMode = LinePagerIndicator.MODE_WRAP_CONTENT;
         configuration.lineHeight = DensityUtil.dip2px(this, 3f);
         // set MagicIndicator
-        CommonNavigator commonNavigator = MagicIndicatorBuilder.buildCommonNavigator2(this, configuration, new MagicIndicatorBuilder.OnNavigatorClickListener2() {
-            @Override
-            public void onNavigatorClickListener2(int index, List<TextView> textViews) {
-                for (int i = 0; i < textViews.size(); i++) {
-                    if (index == i) {
-                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-                    } else {
-                        textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                        textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-                    }
+        CommonNavigator commonNavigator = MagicIndicatorBuilder.buildCommonNavigator2(this, configuration, (index, textViews) -> {
+            for (int i = 0; i < textViews.size(); i++) {
+                if (index == i) {
+                    textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                } else {
+                    textViews.get(i).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    textViews.get(i).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 }
-                getDataBinding().vpMain.setCurrentItem(index, true);
             }
+            getDataBinding().vpMain.setCurrentItem(index, true);
         });
         getDataBinding().tabIndicator.setNavigator(commonNavigator);
     }

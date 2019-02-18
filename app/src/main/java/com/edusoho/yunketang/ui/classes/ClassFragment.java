@@ -75,30 +75,38 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
             TextView classStatusView = view.findViewById(R.id.classStatusView);
             view.findViewById(R.id.itemView1).setVisibility(TextUtils.isEmpty(list.get(position).batch) ? View.VISIBLE : View.GONE);
             view.findViewById(R.id.itemView2).setVisibility(TextUtils.isEmpty(list.get(position).batch) ? View.GONE : View.VISIBLE);
-            if (position <= lastChangeColorPosition) {
-                classNameView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_white));
-                classStatusView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_white));
-            } else {
-                classNameView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_black));
-                classStatusView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_dark_gray));
+            if (getActivity() != null) {
+                if (position <= lastChangeColorPosition) {
+                    classNameView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_white));
+                    classStatusView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_white));
+                } else {
+                    classNameView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_black));
+                    classStatusView.setTextColor(ContextCompat.getColor(getSupportedActivity(), R.color.text_dark_gray));
+                }
             }
             // 查看课表
             view.findViewById(R.id.classScheduleView).setOnClickListener(v -> {
-                Intent intent = new Intent(getSupportedActivity(), ClassScheduleActivity.class);
-                intent.putExtra(ClassScheduleActivity.CLASS_ID, list.get(position).id);
-                getSupportedActivity().startActivity(intent);
+                if (getActivity() != null) {
+                    Intent intent = new Intent(getSupportedActivity(), ClassScheduleActivity.class);
+                    intent.putExtra(ClassScheduleActivity.CLASS_ID, list.get(position).id);
+                    getSupportedActivity().startActivity(intent);
+                }
             });
             // 查看作业
             view.findViewById(R.id.taskView1).setOnClickListener(v -> {
-                Intent intent = new Intent(getSupportedActivity(), CourseworkActivity.class);
-                intent.putExtra(CourseworkActivity.CLASS_INFO, list.get(position));
-                getSupportedActivity().startActivity(intent);
+                if (getActivity() != null) {
+                    Intent intent = new Intent(getSupportedActivity(), CourseworkActivity.class);
+                    intent.putExtra(CourseworkActivity.CLASS_INFO, list.get(position));
+                    getSupportedActivity().startActivity(intent);
+                }
             });
             // 查看作业
             view.findViewById(R.id.taskView2).setOnClickListener(v -> {
-                Intent intent = new Intent(getSupportedActivity(), CourseworkActivity.class);
-                intent.putExtra(CourseworkActivity.CLASS_INFO, list.get(position));
-                getSupportedActivity().startActivity(intent);
+                if (getActivity() != null) {
+                    Intent intent = new Intent(getSupportedActivity(), CourseworkActivity.class);
+                    intent.putExtra(CourseworkActivity.CLASS_INFO, list.get(position));
+                    getSupportedActivity().startActivity(intent);
+                }
             });
             return view;
         }
@@ -217,6 +225,7 @@ public class ClassFragment extends BaseFragment<FragmentClassBinding> {
         SYDataTransport.create(SYConstants.UNREAD_MSG_COUNT)
                 .addParam("studentId", SYApplication.getInstance().getUser().syjyUser.id)
                 .execute(new SYDataListener<MsgInfo>() {
+
 
                     @Override
                     public void onSuccess(MsgInfo data) {

@@ -228,7 +228,11 @@ public class ClassScheduleActivity extends BaseActivity<ActivityClassScheduleBin
         //正确设置方式 原因：注意事项有说明
         startDate.set(firstDay.getYear(), firstDay.getMonth() - 1, 1);
         endDate.set(lastDay.getYear(), lastDay.getMonth() - 1, DateUtils.getLastDayOfMonth(lastDay.getYear(), lastDay.getMonth()));
-
+        // 如果开始时间 大于 结束时间，则对调两个时间
+        if (startDate.getTimeInMillis() > endDate.getTimeInMillis()) {
+            startDate.set(lastDay.getYear(), lastDay.getMonth() - 1, 1);
+            endDate.set(firstDay.getYear(), firstDay.getMonth() - 1, DateUtils.getLastDayOfMonth(firstDay.getYear(), firstDay.getMonth()));
+        }
         // 时间选择器
         TimePickerBuilder timePicker = new TimePickerBuilder(this, (date, v) -> {
             // 选中事件回调

@@ -254,6 +254,7 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding> {
                             }
                         } else {
                             showSuccess();
+
                         }
                     }
                 });

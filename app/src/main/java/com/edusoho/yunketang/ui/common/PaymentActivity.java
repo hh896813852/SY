@@ -1,8 +1,11 @@
 package com.edusoho.yunketang.ui.common;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.databinding.ObservableField;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -20,6 +23,9 @@ import com.edusoho.yunketang.helper.PayHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
 import com.edusoho.yunketang.utils.RequestCodeUtil;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author huhao on 2017/6/9 0009.
@@ -45,6 +51,9 @@ public class PaymentActivity extends BaseActivity<ActivityPaymentBinding> {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
+            fixOrientation();
+        }
         super.onCreate(savedInstanceState);
         initData();
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_from_bottom);
@@ -143,5 +152,45 @@ public class PaymentActivity extends BaseActivity<ActivityPaymentBinding> {
     @Override
     public void onBackPressed() {
         finishActivity();
+    }
+
+    /**
+     * 是否透明
+     */
+    private boolean isTranslucentOrFloating() {
+        boolean isTranslucentOrFloating = false;
+        try {
+            int[] styleableRes = (int[]) Class.forName("com.android.internal.R$styleable").getField("Window").get(null);
+            final TypedArray ta = obtainStyledAttributes(styleableRes);
+            Method m = ActivityInfo.class.getMethod("isTranslucentOrFloating", TypedArray.class);
+            m.setAccessible(true);
+            isTranslucentOrFloating = (boolean) m.invoke(null, ta);
+            m.setAccessible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isTranslucentOrFloating;
+    }
+
+    private boolean fixOrientation() {
+        try {
+            Field field = Activity.class.getDeclaredField("mActivityInfo");
+            field.setAccessible(true);
+            ActivityInfo o = (ActivityInfo) field.get(this);
+            o.screenOrientation = -1;
+            field.setAccessible(false);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
+            return;
+        }
+        super.setRequestedOrientation(requestedOrientation);
     }
 }

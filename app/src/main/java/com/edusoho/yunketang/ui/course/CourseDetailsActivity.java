@@ -235,11 +235,15 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
 
                         @Override
                         public void onSuccess(String data) {
-                            if (data.length() > 100) { // 简单判断下成功返回了...
-                                courseMember = JsonUtil.fromJson(data, CourseMember.class);
+                            try {
+                                if (data.length() > 100) { // 简单判断下成功返回了...
+                                    courseMember = JsonUtil.fromJson(data, CourseMember.class);
+                                }
+                                catalogueFragment.setIsCourseMember(courseMember != null);
+                                isJoined.set(courseMember != null);
+                            } catch (Exception ignored) {
+
                             }
-                            catalogueFragment.setIsCourseMember(courseMember != null);
-                            isJoined.set(courseMember != null);
                         }
                     });
         }

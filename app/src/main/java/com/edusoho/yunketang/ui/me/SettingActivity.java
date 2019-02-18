@@ -1,26 +1,15 @@
 package com.edusoho.yunketang.ui.me;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
 import android.databinding.ObservableField;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
-import android.support.v4.content.FileProvider;
-import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
-import android.webkit.MimeTypeMap;
-import android.widget.TextView;
 
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
-import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.annotation.Layout;
 import com.edusoho.yunketang.bean.Setting;
@@ -29,10 +18,8 @@ import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.helper.UpdateHelper;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.AppUtil;
-import com.edusoho.yunketang.utils.BitmapUtil;
-import com.edusoho.yunketang.utils.html.MyHtmlTagHandler;
-
-import java.io.File;
+import com.edusoho.yunketang.utils.LogUtil;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 @Layout(value = R.layout.activity_setting, title = "设置")
 public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
@@ -137,6 +124,34 @@ public class SettingActivity extends BaseActivity<ActivitySettingBinding> {
      * 检测更新
      */
     public void onUpdateClick(View view) {
-        UpdateHelper.checkUpdate(this, true, false);
+        permissionCheck();
+    }
+
+    /**
+     * 权限检测申请
+     */
+    private void permissionCheck() {
+        RxPermissions rxPermissions = new RxPermissions(this);
+        rxPermissions.requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(permission -> {
+                    if (permission.granted) {
+                        // 权限允许
+                        UpdateHelper.checkUpdate(this, true, false);
+                    } else if (permission.shouldShowRequestPermissionRationale) {
+                        // 权限拒绝，等待下次询问
+                        LogUtil.i("RxPermissions", "权限拒绝，等待下次询问：" + permission.name);
+                    } else {
+                        // 拒绝权限，不再弹出询问框，请前往APP应用设置打开此权限
+                        LogUtil.i("RxPermissions", "拒绝权限，不再弹出询问框：" + permission.name);
+                    }
+                });
+    }
+
+    /**
+     * 跳转拨号界面
+     */
+    public void onCallClick(View view) {
+        Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "400-666-7863"));//跳转到拨号界面，同时传递电话号码
+        startActivity(dialIntent);
     }
 }

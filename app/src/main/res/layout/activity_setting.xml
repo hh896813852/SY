@@ -268,6 +268,24 @@
                 android:layout_marginRight="30dp"
                 android:drawableRight="@drawable/icon_arrow_right_gray2"
                 android:gravity="center_vertical"
+                android:onClick="onCallClick"
+                android:text="客服电话：400-666-7863"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/line_gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:drawableRight="@drawable/icon_arrow_right_gray2"
+                android:gravity="center_vertical"
                 android:onClick="onUpdateClick"
                 android:text="版本更新"
                 android:textSize="14sp" />

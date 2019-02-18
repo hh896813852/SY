@@ -164,11 +164,11 @@ public class MyBoughtExamActivity extends BaseActivity<ActivityMyBoughtExamBindi
     }
 
     private void loadData() {
-        if (SYApplication.getInstance().getUser() == null) {
+        if (SYApplication.getInstance().getUser() == null || SYApplication.getInstance().getUser().syjyUser == null) {
             return;
         }
         SYDataTransport.create(SYConstants.MY_BOUGHT_EXAM)
-                .addParam("userId", getLoginUser().syjyUser.id)
+                .addParam("userId", SYApplication.getInstance().getUser().syjyUser.id)
                 .addParam("page", pageNo)
                 .addParam("limit", SYConstants.PAGE_SIZE)
                 .addProgressing(list.size() == 0 && !getDataBinding().swipeView.isRefreshing(), this, "正在加载试卷列表...")

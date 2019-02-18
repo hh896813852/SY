@@ -123,14 +123,14 @@ public class StringUtils {
     /**
      * 密码判断
      */
-    public static boolean checkPasswordDigtOrLetter(String password) {
+    public static boolean checkPasswordDigitOrLetter(String password) {
         return !TextUtils.isEmpty(password) && password.matches("^[0-9a-zA-Z_]+$") && password.length() >= 6 && password.length() <= 20;
     }
 
     /**
      * 密码判断 (6-20位数字字母组合)
      */
-    public static boolean checkPasswordDigtAndLetter(String password) {
+    public static boolean checkPasswordDigitAndLetter(String password) {
         String check = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z_]{6,20}$";
         Pattern regex = Pattern.compile(check);
         Matcher matcher = regex.matcher(password);

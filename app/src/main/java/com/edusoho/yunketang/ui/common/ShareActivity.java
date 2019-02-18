@@ -1,8 +1,12 @@
 package com.edusoho.yunketang.ui.common;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +21,8 @@ import com.edusoho.yunketang.databinding.ActivityShareBinding;
 import com.edusoho.yunketang.wxapi.WXshare;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -39,6 +45,9 @@ public class ShareActivity extends BaseActivity<ActivityShareBinding> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(0, 0);
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
+            fixOrientation();
+        }
         super.onCreate(savedInstanceState);
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_out_from_bottom);
         getDataBinding().llView.startAnimation(animation);
@@ -117,9 +126,10 @@ public class ShareActivity extends BaseActivity<ActivityShareBinding> {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        share.unregister();
+        if (share != null) {
+            share.unregister();
+        }
     }
-
 
     /**
      * 加载课程图片并压缩@param url
@@ -140,5 +150,45 @@ public class ShareActivity extends BaseActivity<ActivityShareBinding> {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    /**
+     * 是否透明
+     */
+    private boolean isTranslucentOrFloating() {
+        boolean isTranslucentOrFloating = false;
+        try {
+            int[] styleableRes = (int[]) Class.forName("com.android.internal.R$styleable").getField("Window").get(null);
+            final TypedArray ta = obtainStyledAttributes(styleableRes);
+            Method m = ActivityInfo.class.getMethod("isTranslucentOrFloating", TypedArray.class);
+            m.setAccessible(true);
+            isTranslucentOrFloating = (boolean) m.invoke(null, ta);
+            m.setAccessible(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isTranslucentOrFloating;
+    }
+
+    private boolean fixOrientation() {
+        try {
+            Field field = Activity.class.getDeclaredField("mActivityInfo");
+            field.setAccessible(true);
+            ActivityInfo o = (ActivityInfo) field.get(this);
+            o.screenOrientation = -1;
+            field.setAccessible(false);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O && isTranslucentOrFloating()) {
+            return;
+        }
+        super.setRequestedOrientation(requestedOrientation);
     }
 }

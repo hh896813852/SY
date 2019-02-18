@@ -130,12 +130,6 @@ public class PastExamActivity extends BaseActivity<ActivityPastExamBinding> {
             adapter.notifyItemChanged(prePayExamIndex);
         }
         if (requestCode == ExerciseActivity.FROM_EXERCISE_CODE) {
-
-
-
-
-
-
             onRefreshListener.onRefresh();
         }
         if (requestCode == LoginActivity.LOGIN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {

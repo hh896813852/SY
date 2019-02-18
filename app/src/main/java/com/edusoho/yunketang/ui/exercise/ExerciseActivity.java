@@ -906,7 +906,8 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         } else {
             isAnswerAnalysisTagShowed.set(true);
         }
-        questionTypeName.set(question.getQuestionTypeName());
+//        questionTypeName.set(question.getQuestionTypeName());
+        questionTypeName.set(question.alias);
         questionTypeInfo.set(question.questionType == 0 ? "共" + question.questionSum + "题" : question.questionSort + "/" + question.questionSum);
     }
 
@@ -1074,9 +1075,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             answerAnalysis.set(currentQuestion.details.get(childQuestionIndex).resultResolve);
             // 正确答案图片
             String correctResultUrl = currentQuestion.details.get(childQuestionIndex).correctResultUrl;
+            getDataBinding().correctAnswerPicContainer.removeAllViews();
+            correctAnswerPicList.clear();
             if (!TextUtils.isEmpty(correctResultUrl)) {
-                getDataBinding().correctAnswerPicContainer.removeAllViews();
-                correctAnswerPicList.clear();
                 correctAnswerPicList.addAll(Arrays.asList(correctResultUrl.split(",")));
                 for (int i = 0; i < correctAnswerPicList.size(); i++) {
                     View innerView = LayoutInflater.from(ExerciseActivity.this).inflate(R.layout.item_pic, null);
@@ -1092,9 +1093,9 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
             }
             // 答案解析图片
             String resultResolveUrl = currentQuestion.details.get(childQuestionIndex).resultResolveUrl;
+            getDataBinding().answerAnalysisPicContainer.removeAllViews();
+            answerAnalysisPicList.clear();
             if (!TextUtils.isEmpty(resultResolveUrl)) {
-                getDataBinding().answerAnalysisPicContainer.removeAllViews();
-                answerAnalysisPicList.clear();
                 answerAnalysisPicList.addAll(Arrays.asList(resultResolveUrl.split(",")));
                 for (int i = 0; i < answerAnalysisPicList.size(); i++) {
                     View innerView = LayoutInflater.from(ExerciseActivity.this).inflate(R.layout.item_pic, null);

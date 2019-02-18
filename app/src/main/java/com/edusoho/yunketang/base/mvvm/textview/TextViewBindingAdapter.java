@@ -4,9 +4,12 @@ import android.databinding.BindingAdapter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.UnderlineSpan;
 import android.widget.TextView;
 
 import com.edusoho.yunketang.utils.BitmapUtil;
@@ -31,7 +34,19 @@ public class TextViewBindingAdapter {
             return drawable;
         }, new MyHtmlTagHandler("syfont"));
         SpannableStringBuilder spanBuilder = new SpannableStringBuilder(html);
-        textView.setText(spanBuilder);
+        // 如果含有{{包裹文字}}，则将"包裹文字"添加下划线
+        if (spanBuilder.toString().contains("{{") && spanBuilder.toString().contains("}}")) {
+            int start = spanBuilder.toString().indexOf("{{");
+            int end = spanBuilder.toString().indexOf("}}");
+            spanBuilder.delete(start, start + 2);
+            spanBuilder.delete(end - 2, end);
+            SpannableString spannableString = new SpannableString(spanBuilder);
+            UnderlineSpan underlineSpan = new UnderlineSpan();
+            spannableString.setSpan(underlineSpan, start, end - 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            textView.setText(spannableString);
+        } else {
+            textView.setText(spanBuilder);
+        }
         //设置可以点击超连接
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }

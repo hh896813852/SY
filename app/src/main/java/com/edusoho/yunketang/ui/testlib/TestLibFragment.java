@@ -234,13 +234,16 @@ public class TestLibFragment extends BaseFragment<FragmentTestLibBinding> {
         getDataBinding().titleLayout.setLayoutParams(params);
 
         isFirstSelect.set(AppPreferences.getSelectedCourse() == null || AppPreferences.getSelectedCourse().businessId == 0);
-        if (isFirstSelect.get() && getSupportedActivity() != null) {
-            StatusBarUtil.setImmersiveStatusBar(getSupportedActivity(), true);
+        if (isFirstSelect.get()) {
+            selectedCourse = new EducationCourse();
+            if (getSupportedActivity() != null) {
+                StatusBarUtil.setImmersiveStatusBar(getSupportedActivity(), true);
+            }
+        } else {
+            selectedCourse = AppPreferences.getSelectedCourse();
         }
 
         adapter.init(getSupportedActivity(), R.layout.item_business_module, moduleList);
-
-        selectedCourse = new EducationCourse();
 
         configuration = new MagicIndicatorBuilder.MagicIndicatorConfiguration(getSupportedActivity());
         configuration.isAdjustMode = false;

@@ -115,7 +115,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
      * 初始化ExpandListView
      */
     private void initExpand() {
-        expandableAdapter = new CatalogueExpandableAdapter(this, expandableList, false, courseProject.tryLookable);
+        expandableAdapter = new CatalogueExpandableAdapter(this, expandableList, false, courseProject == null ? 1 : courseProject.tryLookable);
         getDataBinding().expandableView.setAdapter(expandableAdapter);
         // 去掉分割线
         getDataBinding().expandableView.setDivider(null);

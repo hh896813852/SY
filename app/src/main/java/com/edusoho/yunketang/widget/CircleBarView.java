@@ -16,9 +16,8 @@ import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.utils.DensityUtil;
 
 /**
- * Created by anlia on 2017/10/10.
+ * @author huhao on 2018/12/10.
  */
-
 public class CircleBarView extends View {
 
     private Paint bgPaint;//绘制背景圆弧的画笔

@@ -43,6 +43,7 @@ public class PersonalInfoActivity extends BaseActivity {
     private static final int REQUEST_IMAGE = RequestCodeUtil.next();
 
     public ObservableField<String> avatar = new ObservableField<>();
+    public ObservableField<String> loginAccount = new ObservableField<>();
     public ObservableField<String> nickname = new ObservableField<>();
     public ObservableField<String> sex = new ObservableField<>();
     public ObservableField<String> personSign = new ObservableField<>();
@@ -88,6 +89,7 @@ public class PersonalInfoActivity extends BaseActivity {
         optionsItems.add("女");
 
         avatar.set(TextUtils.isEmpty(loginUser.headImg) ? "" : loginUser.headImg);
+        loginAccount.set(loginUser.mobile);
         nickname.set(TextUtils.isEmpty(loginUser.nickName) ? "" : loginUser.nickName);
         sex.set(loginUser.sex == 0 ? "" : getSex(loginUser.sex));
         personSign.set(TextUtils.isEmpty(loginUser.personSign) ? "" : loginUser.personSign);

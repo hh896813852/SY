@@ -85,7 +85,7 @@ public class PaymentsPresenter implements PaymentsContract.Presenter {
             mView.onDisplay(mOrderInfo);
         } else {
             HttpUtils.getInstance()
-                    .addTokenHeader(TextUtils.isEmpty(SYApplication.getInstance().token) ? SYApplication.getInstance().getUser().syzxToken : SYApplication.getInstance().token)
+                    .addTokenHeader(TextUtils.isEmpty(SYApplication.getInstance().getUser().syzxToken) ? SYApplication.getInstance().getUser().sykjToken : SYApplication.getInstance().getUser().syzxToken)
                     .createApi(OrderApi.class)
                     .postOrderInfo(mTargetType, mTargetId)
                     .subscribeOn(Schedulers.io())

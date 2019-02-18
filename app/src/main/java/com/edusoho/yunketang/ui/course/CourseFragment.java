@@ -20,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edusoho.yunketang.edu.bean.CourseMember;
 import com.edusoho.yunketang.ui.MainTabActivity;
+import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.NotchUtil;
 import com.edusoho.yunketang.utils.ScreenUtil;
@@ -251,14 +253,18 @@ public class CourseFragment extends BaseFragment<FragmentCourseBinding> {
 
                     @Override
                     public void onSuccess(String data) {
-                        isOnlineBannerLoaded = true;
-                        List<Banner> banners = new Gson().fromJson(data, new TypeToken<List<Banner>>() {
-                        }.getType());
-                        for (Banner banner : banners) {
-                            bannerUrls.add(banner.url);
+                        try {
+                            isOnlineBannerLoaded = true;
+                            List<Banner> banners = new Gson().fromJson(data, new TypeToken<List<Banner>>() {
+                            }.getType());
+                            for (Banner banner : banners) {
+                                bannerUrls.add(banner.url);
+                            }
+                            // 开始轮播
+                            startBanner();
+                        } catch (Exception ignored) {
+
                         }
-                        // 开始轮播
-                        startBanner();
                     }
                 });
 

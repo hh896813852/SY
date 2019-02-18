@@ -110,8 +110,10 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
      */
     public void setIsCourseMember(boolean isCourseMember) {
         this.isCourseMember = isCourseMember;
-        expandableAdapter.setIsCourseMember(isCourseMember);
-        expandableAdapter.notifyDataSetChanged();
+        if (expandableAdapter != null) {
+            expandableAdapter.setIsCourseMember(isCourseMember);
+            expandableAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
