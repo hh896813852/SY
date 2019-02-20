@@ -684,7 +684,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         if (moduleId != 0) {
             dataTransport.addParam("moduleId", moduleId);
         }
-        dataTransport.execute(null);
+        dataTransport.execute();
     }
 
     /**

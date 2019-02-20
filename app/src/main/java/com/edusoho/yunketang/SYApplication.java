@@ -25,7 +25,6 @@ import com.edusoho.yunketang.utils.volley.StringVolleyRequest;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 
 import java.lang.reflect.Constructor;
@@ -58,8 +57,6 @@ public class SYApplication extends MultiDexApplication {
         // threetenabp初始化（日历控件有使用）
         AndroidThreeTen.init(this);
         QbSdk.initX5Environment(getBaseContext(), null);
-        // Bugly初始化
-        CrashReport.initCrashReport(getApplicationContext(), "79d447ff05", false);
         // 关闭Android9.0弹出框（Detected problems with API compatibility）
         closeAndroidPDialog();
     }
