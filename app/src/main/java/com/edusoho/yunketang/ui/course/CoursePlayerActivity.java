@@ -11,44 +11,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.edusoho.yunketang.base.annotation.Translucent;
-import com.edusoho.yunketang.edu.api.CourseApi;
-import com.edusoho.yunketang.edu.bean.ErrorResult;
-import com.edusoho.yunketang.edu.bean.TaskEvent;
-import com.edusoho.yunketang.edu.http.HttpUtils;
-import com.edusoho.yunketang.edu.http.SubscriberProcessor;
-import com.edusoho.yunketang.helper.AppPreferences;
-import com.edusoho.yunketang.helper.ToastHelper;
-import com.edusoho.yunketang.ui.common.ShareActivity;
-import com.edusoho.yunketang.utils.DialogUtil;
-import com.edusoho.yunketang.utils.NetworkUtils;
-import com.edusoho.yunketang.widget.dialog.SimpleDialog;
-import com.google.gson.reflect.TypeToken;
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
-import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
-import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.adapter.CatalogueExpandableAdapter;
 import com.edusoho.yunketang.base.BaseActivity;
 import com.edusoho.yunketang.base.annotation.Layout;
+import com.edusoho.yunketang.base.annotation.Translucent;
 import com.edusoho.yunketang.bean.User;
 import com.edusoho.yunketang.bean.lesson.LessonItem;
 import com.edusoho.yunketang.databinding.ActivityCoursePlayerBinding;
+import com.edusoho.yunketang.edu.api.CourseApi;
 import com.edusoho.yunketang.edu.bean.CourseItem;
 import com.edusoho.yunketang.edu.bean.CourseProject;
 import com.edusoho.yunketang.edu.bean.CourseTask;
+import com.edusoho.yunketang.edu.bean.TaskEvent;
+import com.edusoho.yunketang.edu.http.HttpUtils;
+import com.edusoho.yunketang.edu.http.SubscriberProcessor;
+import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.helper.DialogHelper;
 import com.edusoho.yunketang.helper.RegisterOtherPlatformHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.edusoho.yunketang.ui.common.ValidateActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
+import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
+import com.edusoho.yunketang.utils.LogUtil;
+import com.edusoho.yunketang.utils.NetworkUtils;
 import com.edusoho.yunketang.utils.StringUtils;
 import com.edusoho.yunketang.widget.SYVideoPlayer;
+import com.edusoho.yunketang.widget.dialog.SimpleDialog;
+import com.google.gson.reflect.TypeToken;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
+import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -371,7 +370,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                 .subscribe(new SubscriberProcessor<TaskEvent>() {
                     @Override
                     public void onNext(TaskEvent taskEvent) {
-                        showToast(taskEvent.result.status);
+                        LogUtil.i("111111", "进度状态：" + taskEvent.result.status);
                     }
                 });
     }
