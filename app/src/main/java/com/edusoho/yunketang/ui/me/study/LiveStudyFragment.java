@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
@@ -36,10 +37,12 @@ public class LiveStudyFragment extends BaseFragment<FragmentMyStudyLiveBinding> 
     private List<Study> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
+        SYApplication.getInstance().setHost(list.get(position).courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
         // 跳转课程详情页
         Intent intent = new Intent(getSupportedActivity(), CourseDetailsActivity.class);
         intent.putExtra(CourseDetailsActivity.COURSE_TYPE, list.get(position).courseType); // 1、上元在线 2、上元会计
         intent.putExtra(CourseDetailsActivity.COURSE_ID, list.get(position).id);
+        intent.putExtra(CourseDetailsActivity.IS_MEMBER, true);
         startActivityForResult(intent, CourseDetailsActivity.FROM_COURSE_CODE);
     };
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {

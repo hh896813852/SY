@@ -9,11 +9,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
-import com.edusoho.yunketang.bean.Course;
-import com.edusoho.yunketang.helper.AppPreferences;
-import com.edusoho.yunketang.ui.common.ShareActivity;
-import com.edusoho.yunketang.utils.RequestCodeUtil;
-import com.google.gson.reflect.TypeToken;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
@@ -32,6 +27,7 @@ import com.edusoho.yunketang.edu.bean.CourseMember;
 import com.edusoho.yunketang.edu.bean.CourseProject;
 import com.edusoho.yunketang.edu.bean.CourseSet;
 import com.edusoho.yunketang.edu.bean.ErrorResult;
+import com.edusoho.yunketang.edu.bean.TaskEvent;
 import com.edusoho.yunketang.edu.http.HttpUtils;
 import com.edusoho.yunketang.edu.http.SubscriberProcessor;
 import com.edusoho.yunketang.edu.order.confirm.ConfirmOrderActivity;
@@ -42,13 +38,16 @@ import com.edusoho.yunketang.helper.DialogHelper;
 import com.edusoho.yunketang.helper.RegisterOtherPlatformHelper;
 import com.edusoho.yunketang.http.SYDataListener;
 import com.edusoho.yunketang.http.SYDataTransport;
+import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.edusoho.yunketang.ui.common.ValidateActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.DensityUtil;
 import com.edusoho.yunketang.utils.HttpUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.ProgressDialogUtil;
+import com.edusoho.yunketang.utils.RequestCodeUtil;
 import com.edusoho.yunketang.utils.StringUtils;
+import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle.LifecycleProvider;
 import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.navi.NaviLifecycle;
@@ -61,6 +60,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -72,6 +72,7 @@ import rx.schedulers.Schedulers;
 public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseDetailsBinding> {
     public static final int FROM_COURSE_CODE = RequestCodeUtil.next();
     public static final String COURSE_TYPE = "course_type";
+    public static final String IS_MEMBER = "is_member";
     public static final String COURSE_ID = "course_id";
     private int courseType; // 1、上元在线  2、上元会计
     public int courseId;
@@ -109,6 +110,7 @@ public class CourseDetailsActivity extends NaviLifecycleActivity<ActivityCourseD
         super.onCreate(savedInstanceState);
         courseType = getIntent().getIntExtra(COURSE_TYPE, 0);
         courseId = getIntent().getIntExtra(COURSE_ID, 0);
+        catalogueFragment.setIsCourseMember(getIntent().getBooleanExtra(IS_MEMBER, false));
         // 初始化
         initView();
         // 获得VIP

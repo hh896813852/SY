@@ -10,6 +10,7 @@ import java.io.Serializable;
  */
 
 public class CourseTask implements Serializable {
+    public boolean isSelected;
     public int        id;
     public int        courseId;
     public int        seq;

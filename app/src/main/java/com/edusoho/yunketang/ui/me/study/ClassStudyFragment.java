@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.edusoho.yunketang.R;
+import com.edusoho.yunketang.SYApplication;
 import com.edusoho.yunketang.SYConstants;
 import com.edusoho.yunketang.adapter.SYBaseAdapter;
 import com.edusoho.yunketang.base.BaseFragment;
@@ -36,6 +37,7 @@ public class ClassStudyFragment extends BaseFragment<FragmentMyStudyClassBinding
     private List<Classroom> list = new ArrayList<>();
     public SYBaseAdapter adapter = new SYBaseAdapter();
     public AdapterView.OnItemClickListener onItemClick = (parent, view, position, id) -> {
+        SYApplication.getInstance().setHost(list.get(position).courseType == 1 ? SYConstants.HTTP_URL_ONLINE : SYConstants.HTTP_URL_ACCOUNTANT);
         // 跳转班级教室
         Intent intent = new Intent(getSupportedActivity(), ClassroomActivity.class);
         intent.putExtra(ClassroomActivity.COURSE_TYPE, list.get(position).courseType); // 1、上元在线 2、上元会计

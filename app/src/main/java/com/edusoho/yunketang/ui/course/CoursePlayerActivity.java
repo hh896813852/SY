@@ -12,7 +12,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edusoho.yunketang.base.annotation.Translucent;
+import com.edusoho.yunketang.edu.api.CourseApi;
+import com.edusoho.yunketang.edu.bean.ErrorResult;
+import com.edusoho.yunketang.edu.bean.TaskEvent;
+import com.edusoho.yunketang.edu.http.HttpUtils;
+import com.edusoho.yunketang.edu.http.SubscriberProcessor;
 import com.edusoho.yunketang.helper.AppPreferences;
+import com.edusoho.yunketang.helper.ToastHelper;
 import com.edusoho.yunketang.ui.common.ShareActivity;
 import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.NetworkUtils;
@@ -45,7 +51,13 @@ import com.edusoho.yunketang.utils.StringUtils;
 import com.edusoho.yunketang.widget.SYVideoPlayer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @Translucent(value = false)
 @Layout(value = R.layout.activity_course_player, rightButtonRes = R.drawable.icon_share_white)
@@ -56,6 +68,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
     public static final String COURSE_COVER = "course_cover";
     public static final String COURSE_TYPE = "course_type";
     public static final String COURSE_TASK = "course_task";
+    public static final String IS_MEMBER = "is_member";
     public static final String COURSE_CATALOGUE = "course_catalogue"; // 课程目录
     private int courseId;
     private int courseType; // 1、上元在线  2、上元会计
@@ -117,6 +130,8 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
     private void initExpand() {
         expandableAdapter = new CatalogueExpandableAdapter(this, expandableList, false, courseProject == null ? 1 : courseProject.tryLookable);
         getDataBinding().expandableView.setAdapter(expandableAdapter);
+        expandableAdapter.setIsCourseMember(getIntent().getBooleanExtra(IS_MEMBER, false));
+        expandableAdapter.setIsPlayActivity(true);
         // 去掉分割线
         getDataBinding().expandableView.setDivider(null);
         // 子项点击
@@ -190,6 +205,8 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                         super.onAutoComplete(url, objects);
                         // 播放完重置进度和时间
                         ((SYVideoPlayer) objects[1]).resetProgressAndTime();
+                        // 记录播放完成
+                        onRecord(true);
                     }
                 })
                 .setLockClickListener((view, lock) -> { // 锁屏点击
@@ -274,6 +291,8 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         videoPlayer.setUp(lessonUrl, true, "");
         // 播放
         videoPlayer.startPlayLogic();
+        // 记录播放中
+        onRecord(false);
     }
 
     @Override
@@ -335,6 +354,46 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
     }
 
     /**
+     * 记录学习状态，如果已经Finish，自动忽略-
+     *
+     * @param isFinish 是否完成
+     */
+    private void onRecord(boolean isFinish) {
+        if (currentTask == null) {
+            return;
+        }
+        if (currentTask.isFinish()) {
+            return;
+        }
+        getTaskResult(isFinish)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SubscriberProcessor<TaskEvent>() {
+                    @Override
+                    public void onNext(TaskEvent taskEvent) {
+                        showToast(taskEvent.result.status);
+                    }
+                });
+    }
+
+    private Map<String, String> mFieldMaps = new HashMap<>();
+
+    private Observable<TaskEvent> getTaskResult(boolean isFinish) {
+        if (isFinish) {
+            return HttpUtils.getInstance()
+                    .addTokenHeader(SYApplication.getInstance().token)
+                    .createApi(CourseApi.class)
+                    .setCourseTaskFinish(courseProject.id, currentTask.id);
+        } else {
+            mFieldMaps.put("lastTime", "");
+            return HttpUtils.getInstance()
+                    .addTokenHeader(SYApplication.getInstance().token)
+                    .createApi(CourseApi.class)
+                    .setCourseTaskDoing(courseProject.id, currentTask.id, mFieldMaps);
+        }
+    }
+
+    /**
      * 评价点击
      */
     public void onEvaluateClick(View view) {
@@ -386,7 +445,6 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         intent.putExtra(ShareActivity.SHARE_THUMB_URL, courseProject.courseSet.cover.small);
         startActivity(intent);
     }
-
 
     /**
      * 去登录

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.edusoho.yunketang.R;
 import com.edusoho.yunketang.edu.bean.CourseItem;
 import com.edusoho.yunketang.edu.bean.CourseTask;
+import com.edusoho.yunketang.edu.bean.TaskResultEnum;
 import com.edusoho.yunketang.utils.DateUtils;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
     private Drawable iconExpand;
     private Drawable iconUnExpand;
     private boolean isCourseMember;
+    private boolean isPlayActivity;
     private int tryLookable;
 
     public CatalogueExpandableAdapter(Context context, List<CourseItem> expandableList, int tryLookable) {
@@ -48,6 +50,10 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
 
     public void setIsCourseMember(boolean isCourseMember) {
         this.isCourseMember = isCourseMember;
+    }
+
+    public void setIsPlayActivity(boolean isPlayActivity) {
+        this.isPlayActivity = isPlayActivity;
     }
 
     /**
@@ -197,6 +203,33 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
             convertView.setVisibility(View.GONE);
         } else {
             convertView.setVisibility(View.VISIBLE);
+            if (courseItem.task.isSelected) {
+                childViewHolder.playImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_pause_green));
+                childViewHolder.taskNo.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
+                childViewHolder.taskTitle.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
+                childViewHolder.taskBackTip.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
+                if (isPlayActivity) {
+                    childViewHolder.taskBackTip.setText("正在播放");
+                } else {
+                    childViewHolder.taskBackTip.setText(DateUtils.second2Min(courseItem.task.length));
+                }
+            } else {
+                childViewHolder.playImage.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.icon_pause_white));
+                childViewHolder.taskNo.setTextColor(ContextCompat.getColor(context, R.color.text_dark_gray));
+                childViewHolder.taskTitle.setTextColor(ContextCompat.getColor(context, R.color.text_dark_gray));
+                childViewHolder.taskBackTip.setTextColor(ContextCompat.getColor(context, R.color.text_dark_gray));
+                if (isPlayActivity) {
+                    if (courseItem.task.result == null) {
+                        childViewHolder.taskBackTip.setText(DateUtils.second2Min(courseItem.task.length));
+                    } else if (TaskResultEnum.FINISH.toString().equals(courseItem.task.result.status)) {
+                        childViewHolder.taskBackTip.setText("已学完");
+                    } else if (TaskResultEnum.START.toString().equals(courseItem.task.result.status)) {
+                        childViewHolder.taskBackTip.setText("学习中");
+                    }
+                } else {
+                    childViewHolder.taskBackTip.setText(DateUtils.second2Min(courseItem.task.length));
+                }
+            }
             if ("live".equals(courseItem.task.type)) {
                 childViewHolder.taskFrontTip.setVisibility(View.GONE);
                 childViewHolder.playImage.setVisibility(View.VISIBLE);
@@ -205,15 +238,18 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
             } else {
                 childViewHolder.taskFrontTip.setVisibility(View.VISIBLE);
                 childViewHolder.playImage.setVisibility(View.GONE);
-                childViewHolder.taskBackTip.setText(DateUtils.second2Min(courseItem.task.length));
-                if (isShowTryLookable(courseItem.task)) {
-                    childViewHolder.taskFrontTip.setText("试看");
-                    childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.text_yellow));
-                } else if (courseItem.task.isFree == 1 && !isCourseMember) {
-                    childViewHolder.taskFrontTip.setText("免费");
-                    childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
-                } else {
+                if (isCourseMember) {
                     childViewHolder.taskFrontTip.setVisibility(View.GONE);
+                } else {
+                    if (courseItem.task.isFree == 1) {
+                        childViewHolder.taskFrontTip.setText("免费");
+                        childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.theme_color));
+                    } else if (isShowTryLookable(courseItem.task)) {
+                        childViewHolder.taskFrontTip.setText("试看");
+                        childViewHolder.taskFrontTip.setTextColor(ContextCompat.getColor(context, R.color.text_yellow));
+                    } else {
+                        childViewHolder.taskFrontTip.setVisibility(View.GONE);
+                    }
                 }
             }
         }
@@ -272,7 +308,6 @@ public class CatalogueExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     private boolean isShowTryLookable(CourseTask task) {
-        return !isCourseMember && task.type.equals("video") && task.isFree == 0 && tryLookable == 1
-                && task.activity != null && "cloud".equals(task.activity.mediaStorage);
+        return task.type.equals("video") && tryLookable == 1 && task.activity != null && "cloud".equals(task.activity.mediaStorage);
     }
 }

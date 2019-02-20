@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':liveplayer-sdk-ui', ':playbackui', ':baijiayun'

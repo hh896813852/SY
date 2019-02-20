@@ -50,6 +50,7 @@ public class ClassCatalogueFragment extends BaseFragment<FragmentClassCatalogueB
         Intent intent = new Intent(getSupportedActivity(), CourseDetailsActivity.class);
         intent.putExtra(CourseDetailsActivity.COURSE_TYPE, courseType); // 1、上元在线 2、上元会计
         intent.putExtra(CourseDetailsActivity.COURSE_ID, list.get(position).courseSet.id);
+        intent.putExtra(CourseDetailsActivity.IS_MEMBER, true);
         getSupportedActivity().startActivity(intent);
     };
 

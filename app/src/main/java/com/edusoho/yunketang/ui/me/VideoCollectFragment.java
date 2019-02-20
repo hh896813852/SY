@@ -95,6 +95,7 @@ public class VideoCollectFragment extends BaseFragment<FragmentVideoCollectBindi
         Intent intent = new Intent(getSupportedActivity(), CourseDetailsActivity.class);
         intent.putExtra(CourseDetailsActivity.COURSE_TYPE, list.get(position).courseType); // 1、上元在线 2、上元会计
         intent.putExtra(CourseDetailsActivity.COURSE_ID, list.get(position).id);
+        intent.putExtra(CourseDetailsActivity.IS_MEMBER, true);
         getSupportedActivity().startActivityForResult(intent, CourseDetailsActivity.FROM_COURSE_CODE);
     };
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {

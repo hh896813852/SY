@@ -45,6 +45,7 @@ public class VideoStudyFragment extends BaseFragment<FragmentMyStudyVideoBinding
         Intent intent = new Intent(getSupportedActivity(), CourseDetailsActivity.class);
         intent.putExtra(CourseDetailsActivity.COURSE_TYPE, list.get(position).courseType); // 1、上元在线 2、上元会计
         intent.putExtra(CourseDetailsActivity.COURSE_ID, list.get(position).courseSet.id);
+        intent.putExtra(CourseDetailsActivity.IS_MEMBER, true);
         startActivityForResult(intent, CourseDetailsActivity.FROM_COURSE_CODE);
     };
     public SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {
