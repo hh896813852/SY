@@ -38,7 +38,6 @@ import com.edusoho.yunketang.ui.common.ValidateActivity;
 import com.edusoho.yunketang.ui.login.LoginActivity;
 import com.edusoho.yunketang.utils.DialogUtil;
 import com.edusoho.yunketang.utils.JsonUtil;
-import com.edusoho.yunketang.utils.LogUtil;
 import com.edusoho.yunketang.utils.NetworkUtils;
 import com.edusoho.yunketang.utils.StringUtils;
 import com.edusoho.yunketang.widget.SYVideoPlayer;

@@ -30,7 +30,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="240dp" />
 
-                <include layout="@layout/layout_title_black_with_right_image" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:onClick="onBackButtonClick"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_arrow_left_color_gray" />
+
+                    <TextView
+                        android:id="@+id/actionbarTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginRight="60dp"
+                        android:gravity="center"
+                        android:text="设置标题"
+                        android:textColor="@color/text_black"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/imageButton"
+                        android:layout_width="50dp"
+
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:scaleType="centerInside" />
+                </FrameLayout>
             </FrameLayout>
 
             <ExpandableListView
