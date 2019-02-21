@@ -1731,7 +1731,7 @@ public class ExerciseActivity extends BaseActivity<ActivityExerciseBinding> {
         public void onTick(long millisUntilFinished) {
             leftExamSecond = (int) (millisUntilFinished / 1000);
             leftTime.set(DateUtils.second2Min2(leftExamSecond));
-            if ((int) (millisUntilFinished / 1000) == 3 * 60) {
+            if (leftExamSecond == 3 * 60) {
                 ToastHelper.showCustomToast(ExerciseActivity.this);
             }
         }

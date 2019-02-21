@@ -137,6 +137,16 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         getDataBinding().expandableView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             currentTask = expandableList.get(groupPosition).childList.get(childPosition).task;
             loadTaskData(currentTask.id);
+            for (CourseItem groupItem : expandableList) {
+                if (groupItem.childList != null) {
+                    for (CourseItem childItem : groupItem.childList) {
+                        if (childItem.task != null) {
+                            childItem.task.isSelected = currentTask.id == childItem.task.id;
+                        }
+                    }
+                }
+            }
+            expandableAdapter.notifyDataSetChanged();
             return false;
         });
     }
@@ -205,7 +215,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                         // 播放完重置进度和时间
                         ((SYVideoPlayer) objects[1]).resetProgressAndTime();
                         // 记录播放完成
-                        onRecord(true);
+                        onRecord(true, currentTask.id);
                     }
                 })
                 .setLockClickListener((view, lock) -> { // 锁屏点击
@@ -291,7 +301,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
         // 播放
         videoPlayer.startPlayLogic();
         // 记录播放中
-        onRecord(false);
+        onRecord(false, currentTask.id);
     }
 
     @Override
@@ -357,7 +367,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
      *
      * @param isFinish 是否完成
      */
-    private void onRecord(boolean isFinish) {
+    private void onRecord(boolean isFinish, int taskId) {
         if (currentTask == null) {
             return;
         }
@@ -370,7 +380,15 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                 .subscribe(new SubscriberProcessor<TaskEvent>() {
                     @Override
                     public void onNext(TaskEvent taskEvent) {
-                        LogUtil.i("111111", "进度状态：" + taskEvent.result.status);
+                        for (CourseItem groupItem : expandableList) {
+                            if (groupItem.childList != null) {
+                                for (CourseItem childItem : groupItem.childList) {
+                                    if (childItem.task != null && taskId == childItem.task.id) {
+                                        childItem.task.result = taskEvent.result;
+                                    }
+                                }
+                            }
+                        }
                     }
                 });
     }
