@@ -8,12 +8,9 @@ import android.text.TextUtils;
 
 import com.alipay.sdk.app.PayTask;
 import com.edusoho.yunketang.bean.PayParams;
-import com.edusoho.yunketang.utils.JsonUtil;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-
-import org.json.JSONObject;
 
 import java.util.Map;
 

@@ -13,8 +13,6 @@ android {
         // 实现图片高斯模糊
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
-        // 仅支持中文
-        resConfigs "zh"
     }
 
     useLibrary 'org.apache.http.legacy'
@@ -129,7 +127,8 @@ dependencies {
     // 条件选择器
     implementation 'com.contrarywind:Android-PickerView:4.1.6'
     // 支付宝api
-    implementation(name: 'alipaySdk-15.5.7', ext: 'aar')
+    implementation files('libs/alipaySdk-20180601.jar')
+    //    implementation(name: 'alipaySdk-15.5.7', ext: 'aar')
     // 微信支付（不包含统计功能）
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     // Matisse
@@ -142,4 +141,5 @@ dependencies {
     implementation 'com.ycjiang:ImagePreview:2.2.2'
     // 腾讯TBS浏览器
     implementation files('libs/tbs_sdk_thirdapp_v3.5.0.jar')
+    implementation 'com.edusoho.live:gensee:0.1.0-SNAPSHOT@aar'
 }

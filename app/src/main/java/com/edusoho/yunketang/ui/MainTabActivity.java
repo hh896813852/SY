@@ -107,7 +107,8 @@ public class MainTabActivity extends BaseActivity<ActivityMainTabBinding> {
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.requestEach(Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO)
                 .subscribe(permission -> {
                     if (permission.granted) {
                         // 权限允许

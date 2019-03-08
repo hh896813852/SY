@@ -22,6 +22,7 @@ import com.edusoho.yunketang.helper.AppPreferences;
 import com.edusoho.yunketang.utils.JsonUtil;
 import com.edusoho.yunketang.utils.RequestUtil;
 import com.edusoho.yunketang.utils.volley.StringVolleyRequest;
+import com.gensee.fastsdk.GenseeLive;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;

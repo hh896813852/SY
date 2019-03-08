@@ -1,12 +1,14 @@
 package com.edusoho.yunketang.edu.utils;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.edusoho.baijiayun.ChooseActivity;
 import com.edusoho.yunketang.edu.bean.CourseTask;
+import com.edusoho.yunketang.edu.plugin.appview.GenseeLivePlayerAction;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -37,9 +39,9 @@ public class LiveTaskLauncher {
 //                case Constants.LiveProvider.APOLLO:
 //                    new AthenaLivePlayerAction((Activity) mContext).invoke(liveParams, mCourseTask);
 //                    break;
-//                case Constants.LiveProvider.GENSEE:
-//                    new GenseeLivePlayerAction((Activity) mContext).invoke(liveParams);
-//                    break;
+                case Constants.LiveProvider.GENSEE:
+                    new GenseeLivePlayerAction((Activity) mContext).invoke(liveParams);
+                    break;
 //                case Constants.LiveProvider.TALKFUN:
 //                    Bundle talkfunBundle = new Bundle();
 //                    talkfunBundle.putBoolean("replayState", Boolean.valueOf(liveParams.get("replayState")));
