@@ -203,7 +203,6 @@ public class MagicIndicatorBuilder {
                     @Override
                     public void onLeave(int index, int totalCount, float leavePercent, boolean leftToRight) {
                     }
-
                     @Override
                     public void onEnter(int index, int totalCount, float enterPercent, boolean leftToRight) {
                     }

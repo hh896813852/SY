@@ -146,6 +146,10 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                 }
             }
             expandableAdapter.notifyDataSetChanged();
+
+
+
+
             return false;
         });
     }
@@ -249,6 +253,7 @@ public class CoursePlayerActivity extends BaseActivity<ActivityCoursePlayerBindi
                             // 将数据中富文本内容转成可被解析的json数据
                             String json = StringUtils.jsonStringConvert(data);
                             LessonItem lessonItem = JsonUtil.fromJson(json, LessonItem.class);
+                         //   lessonItem.mediaUri = "http://edusoho.gensee.com/webcast/site/entry/join-065df0ae6cc44863a6fb80f64b810f41?token=260806&nickName=%E9%99%86%E5%BA%86%E8%B6%85&uid=1000013525&k=1552284503910e84f8ed588a31756072";
                             if (lessonItem != null && !TextUtils.isEmpty(lessonItem.mediaUri)) {
                                 String lessonUrl = lessonItem.type.equals("video") ? lessonItem.mediaUri : lessonItem.audioUri;
                                 canPlay(filterUrl(lessonUrl));

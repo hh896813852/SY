@@ -122,7 +122,7 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/bg_scroll_foot" />
 
-            <com.edusoho.yunketang.widget.ChildViewPager
+            <com.edusoho.yunketang.widget.ChildViewPagers
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

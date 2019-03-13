@@ -4,6 +4,7 @@ package com.edusoho.yunketang;
  * Created by huhao on 18/11/8.
  */
 public class SYConstants {
+
     public static final int SYJY_LOGIN = 1;
     public static final int SYZX_LOGIN = 2;
     public static final int SYKJ_LOGIN = 3;
@@ -12,12 +13,12 @@ public class SYConstants {
     public static final int PAGE_SIZE_20 = 20;
 //    public static String HTTP_URL = "http://39.105.174.45:8087/shangyuan-app-web/"; // 刘健云服务器
 //    public static String HTTP_URL = "http://192.168.0.253:8087/shangyuan-app-web/"; // 刘健本地环境
-//    public static String HTTP_URL = "http://192.168.0.237:8088/shangyuan-app-web/"; // 余斌本地环境
-//    public static String HTTP_URL = "http://test.233863.com/shangyuan-app-web/"; // 上元教育测试环境
+//    public static String HTTP_URL = "http://192.168.0.237:8087/shangyuan-app-web/"; // 余斌本地环境
+//    public static String HTTP_URL = "http://192.168.0.92:8087/shangyuan-app-web/"; // 欧俊本地环境
+//      public static String HTTP_URL = "http://test.233863.com/shangyuan-app-web/"; // 上元教育测试环境
     public static String HTTP_URL = "http://sy.233863.com/shangyuan-app-web/";   // 上元教育正式环境
     public static String HTTP_URL_ONLINE = "http://www.233863.com/";     // 上元在线
     public static String HTTP_URL_ACCOUNTANT = "http://www.sykjxy.com/"; // 上元会计
-
     /**
      * 验证手机号码是否已经注册
      */

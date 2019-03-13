@@ -46,7 +46,6 @@ public class SYApplication extends MultiDexApplication {
     public int courseType = 1; // 1、上元在线 2、上元会计
     public String token;
     public String domain = "www.233863.com";
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -61,11 +60,9 @@ public class SYApplication extends MultiDexApplication {
         // 关闭Android9.0弹出框（Detected problems with API compatibility）
         closeAndroidPDialog();
     }
-
     public static SYApplication getInstance() {
         return application;
     }
-
     public User getUser() {
         if (user == null) {
             String json = AppPreferences.getUserInfo();
@@ -75,13 +72,11 @@ public class SYApplication extends MultiDexApplication {
         }
         return user;
     }
-
     public void reSaveUser() {
         String json = JsonUtil.toJson(this.user);
         // 保存
         AppPreferences.setUserInfo(json);
     }
-
     public void setUser(User user) {
         if (user != null) {
             this.user = user;

@@ -45,7 +45,9 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
     private boolean isCourseMember;
     private int courseType;
     private int courseProjectId;
-
+    //全局定义
+    private long lastClickTime = 0L;
+    private static final int FAST_CLICK_DELAY_TIME = 2000;  // 快速点击间隔
     @Override
     public void onResume() {
         super.onResume();
@@ -68,6 +70,11 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
         getDataBinding().expandableView.setDivider(null);
         // 子项点击
         getDataBinding().expandableView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME){
+                return false;
+            }
+            lastClickTime = System.currentTimeMillis();
+
             CourseTask currentTask = expandableList.get(groupPosition).childList.get(childPosition).task;
             for (CourseItem groupItem : expandableList) {
                 if (groupItem.childList != null) {
@@ -87,23 +94,31 @@ public class CatalogueFragment extends BaseFragment<FragmentCatalogueBinding> {
                     } else {
                         showToast("直播已结束");
                     }
+                }else {
+                    playBack(currentTask);
                 }
             } else {
-                // 检查是否可学习
-                if (checkLearnAble(currentTask)) {
-                    Intent intent = new Intent(getSupportedActivity(), CoursePlayerActivity.class);
-                    intent.putExtra(CoursePlayerActivity.COURSE_PROJECT, ((CourseDetailsActivity) getActivity()).courseProject);
-                    intent.putExtra(CoursePlayerActivity.COURSE_COVER, ((CourseDetailsActivity) getActivity()).coverUrl.get());
-                    intent.putExtra(CoursePlayerActivity.COURSE_TYPE, courseType);
-                    intent.putExtra(CoursePlayerActivity.COURSE_ID, ((CourseDetailsActivity) getActivity()).courseId);
-                    intent.putExtra(CoursePlayerActivity.COURSE_TASK, currentTask);
-                    intent.putExtra(CoursePlayerActivity.IS_MEMBER, isCourseMember);
-                    intent.putExtra(CoursePlayerActivity.COURSE_CATALOGUE, JsonUtil.toJson(expandableList));
-                    startActivity(intent);
-                }
+                playBack(currentTask);
             }
             return false;
         });
+    }
+    /**
+     * 回放视频
+     */
+    public void  playBack(  CourseTask currentTask){
+        // 检查是否可学习
+        if (checkLearnAble(currentTask)) {
+            Intent intent = new Intent(getSupportedActivity(), CoursePlayerActivity.class);
+            intent.putExtra(CoursePlayerActivity.COURSE_PROJECT, ((CourseDetailsActivity) getActivity()).courseProject);
+            intent.putExtra(CoursePlayerActivity.COURSE_COVER, ((CourseDetailsActivity) getActivity()).coverUrl.get());
+            intent.putExtra(CoursePlayerActivity.COURSE_TYPE, courseType);
+            intent.putExtra(CoursePlayerActivity.COURSE_ID, ((CourseDetailsActivity) getActivity()).courseId);
+            intent.putExtra(CoursePlayerActivity.COURSE_TASK, currentTask);
+            intent.putExtra(CoursePlayerActivity.IS_MEMBER, isCourseMember);
+            intent.putExtra(CoursePlayerActivity.COURSE_CATALOGUE, JsonUtil.toJson(expandableList));
+            startActivity(intent);
+        }
     }
 
     /**
